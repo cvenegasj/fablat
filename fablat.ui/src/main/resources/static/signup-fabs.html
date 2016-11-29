@@ -1,0 +1,50 @@
+<div layout="column" layout-padding ng-controller="SignUp2Ctrl">
+
+	<h2 class="md-title inset">Select the Lab that you are associated with:</h2>
+	
+	<div layout="row" layout-align="center">
+		<md-content flex="85" layout-margin>
+			<md-card layout="column" layout-padding>
+			
+				<div layout="row" layout-sm="column" layout-align="space-around" ng-show="loading">
+   					<md-progress-circular md-mode="indeterminate"></md-progress-circular>
+ 				</div>
+ 				
+				<section layout="row">
+					<div flex layout="column" layout-padding layout-wrap>
+						<div layout="column" ng-repeat="labCountry in labs1 | groupBy:'country_code':'labsByCountry1'">
+							<p class="font-size-4 uppercase color-2">{{labCountry.country_code}}</p>
+							<md-button class="custom-button-1 md-accent" ng-repeat="item in labCountry.items" ng-click="showConfirm($event, item.id, item.name)" role="link" md-ink-ripple>
+								<span class="font-size-2">{{item.name}}</span> <span class="font-size-1 color-1">{{item.city}}</span>
+							</md-button>
+						</div>
+					</div>
+					
+					<div flex layout="column" layout-padding layout-wrap>
+						<div layout="column" ng-repeat="labCountry in labs2 | groupBy:'country_code':'labsByCountry2'">
+							<p class="font-size-4 uppercase color-2">{{labCountry.country_code}}</p>
+							<md-button class="custom-button-1 md-accent" ng-repeat="item in labCountry.items" ng-click="showConfirm($event, item.id, item.name)" role="link" md-ink-ripple>
+								<span class="font-size-2">{{item.name}}</span> <span class="font-size-1 color-1">{{item.city}}</span>
+							</md-button>
+						</div>
+					</div>
+					
+					<div flex layout="column" layout-padding layout-wrap>
+						<div layout="column" ng-repeat="labCountry in labs3 | groupBy:'country_code':'labsByCountry3'">
+							<p class="font-size-4 uppercase color-2">{{labCountry.country_code}}</p>
+							<md-button class="custom-button-1 md-accent" ng-repeat="item in labCountry.items" ng-click="showConfirm($event, item.id, item.name)" role="link" md-ink-ripple>
+								<span class="font-size-2">{{item.name}}</span> <span class="font-size-1 color-1">{{item.city}}</span>
+							</md-button>
+						</div>
+					</div>
+				</section>
+				
+				<md-divider></md-divider>
+
+                <md-button class="md-primary" ng-click="saveNomade()">
+                	<span>I am a Fab Nomade</span>
+                </md-button>      
+			</md-card>
+		</md-content>
+	</div>
+</div>

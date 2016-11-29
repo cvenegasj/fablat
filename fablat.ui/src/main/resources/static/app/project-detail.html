@@ -1,0 +1,219 @@
+<md-tabs md-dynamic-height md-border-bottom>
+      
+      <md-tab label="General">
+        <md-content class="md-padding" ng-controller="ProjectDetailCtrl">
+			<div layout="row" layout-sm="column" layout-align="space-around" ng-show="loading">
+    			<md-progress-circular md-mode="indeterminate"></md-progress-circular>
+  			</div>
+			
+			<section ng-show="!loading" class="inset-2">
+				<h3 class="md-display-2 color-1" style="margin-bottom: 0; margin-top: 20px;">PROJECT</h3>
+				
+				<div layout="row">
+					<h4 class="md-headline" style="margin-top: 0; margin-bottom: 5px;">{{project.name}}</h4>
+				
+					<md-menu style="margin-top: -4px;" ng-if="isProjectMember">
+				      <md-button aria-label="Open settings interactions menu" class="md-icon-button" ng-click="openMenu($mdOpenMenu, $event)">
+				        <md-icon md-font-set="material-icons">settings</md-icon>
+				      </md-button>
+				      <md-menu-content width="4">
+				      	<md-menu-item ng-if="isCoordinator">
+				      	  <md-button ng-click="editConfiguration($event, project.idProject)">					         
+				            Edit project configuration
+				          </md-button>
+				        </md-menu-item>
+				        <md-menu-item>
+				          <md-button ng-click="leaveProject($event, project.idProject)">					         
+				            Leave project
+				          </md-button>
+				        </md-menu-item>
+				        <md-menu-item>
+				          <md-button ng-click="toggleNotifications(project.idProject)">
+				            {{item.notificationsEnabled ? 'Disable' : 'Enable' }} notifications
+				          </md-button>
+				        </md-menu-item>			       
+				      </md-menu-content>
+				    </md-menu> 
+				</div>
+				
+				<md-button class="md-raised md-accent" ng-if="!isProjectMember" ng-click="joinProject()" style="float: right;">
+					Join the project
+				</md-button>
+			</section>
+			
+			<section style="max-width: 70%; margin: auto;" ng-show="!loading">
+				<md-content layout-fill>
+					<md-card>
+						<md-card-content>
+							<h4 class="font-size-3 color-1" style="margin-top: 0; font-weight: normal;">Description</h4>
+							
+							<div layout="column" flex ng-cloak>
+								<div style="margin-bottom: 15px;">
+									{{project.description}}
+								</div>
+							    <div>
+							    	<md-icon md-font-set="material-icons" aria-label="Schedule">schedule</md-icon> Reunion days: 
+							    	<span ng-if="project.reunionDays != null && project.reunionTime != null">{{project.reunionDays}} {{project.reunionTime}}</span>
+							    	<span class="font-size-3 color-1" ng-if="project.reunionDays == null || project.reunionTime == null">not specified</span>
+							    </div>
+						 	</div>					    
+						</md-card-content>
+					</md-card>				
+				</md-content>
+			</section>
+			
+			<section style="max-width: 70%; margin: auto;" ng-show="!loading">
+				<md-content layout-fill>
+					<md-card>
+						<md-card-content>
+							<h4 class="font-size-3 color-1" style="margin-top: 0; font-weight: normal;">Coordinators</h4>
+							
+							<div flex ng-cloak>
+							    <md-grid-list
+							        md-cols-xs="3" md-cols-sm="4" md-cols-md="5" md-cols-gt-md="5"
+							        md-row-height-gt-md="1:1" md-row-height="1:1"
+							        md-gutter="7px" md-gutter-gt-sm="7px" >
+								    <md-grid-tile ng-repeat="item in project.coordinators">								    	
+									    <div style="position: relative;">
+									    	<md-menu class="menu-custom-1" ng-if="isProjectMember && isCoordinator && item.idFabber != user.id">
+										      <md-button aria-label="More" class="md-icon-button" ng-click="openMenu($mdOpenMenu, $event)">
+										        <md-icon md-font-set="material-icons">more_vert</md-icon>
+										      </md-button>
+										      <md-menu-content width="2">
+										      	<md-menu-item>
+										      	  <md-button ng-click="deleteFromProject(item.idFabber, $index, true)">					         
+										            Delete from project
+										          </md-button>
+										        </md-menu-item>	       
+										      </md-menu-content>
+										    </md-menu>
+										    
+										    <a ui-sref="fabberDetail({idFabber: item.idFabber})">
+												<user-avatar fabber="item" avatar-w="60" avatar-h="60"></user-avatar>
+										    </a>
+										    <div class="font-size-3 color-2 centered">{{item.firstName}} {{item.lastName}}</div>
+										</div>
+								    </md-grid-tile>						    
+							  </md-grid-list>
+						  </div>						    
+						</md-card-content>
+					</md-card>				
+				</md-content>
+			</section>
+			
+			<section style="max-width: 70%; margin: auto;" ng-show="!loading">
+				<md-content layout-fill>
+					<md-card>
+						<md-card-content>
+							<h4 class="font-size-3 color-1" style="margin-top: 0; font-weight: normal;">Collaborators</h4>
+							
+							<div flex ng-cloak>
+							    <md-grid-list
+							        md-cols-xs="3" md-cols-sm="4" md-cols-md="5" md-cols-gt-md="5"
+							        md-row-height-gt-md="1:1" md-row-height="1:1"
+							        md-gutter="10px" md-gutter-gt-sm="7px" >
+								    <md-grid-tile ng-repeat="item in project.collaborators">
+									    <div style="position: relative;">
+									    	<md-menu class="menu-custom-1" ng-if="isProjectMember && isCoordinator">
+										      <md-button aria-label="More" class="md-icon-button" ng-click="openMenu($mdOpenMenu, $event)">
+										        <md-icon md-font-set="material-icons">more_vert</md-icon>
+										      </md-button>
+										      <md-menu-content width="2">
+										      	<md-menu-item>
+										      	  <md-button ng-click="deleteFromProject(item.idFabber, $index, false)">					         
+										            Delete from project
+										          </md-button>
+										        </md-menu-item>
+										        <md-menu-item>
+										          <md-button ng-click="nameAsCoordinator(item.idFabber, $index)">					         
+										            Name as coordinator
+										          </md-button>
+										        </md-menu-item>		       
+										      </md-menu-content>
+										    </md-menu>
+										    
+										    <a ui-sref="fabberDetail({idFabber: item.idFabber})">
+												<user-avatar fabber="item" avatar-w="60" avatar-h="60"></user-avatar>
+										    </a>
+										    <div class="font-size-3 color-2 centered">{{item.firstName}} {{item.lastName}}</div>
+										</div>
+								    </md-grid-tile>						    
+							  </md-grid-list>
+						  </div>
+						</md-card-content>
+					</md-card>				
+				</md-content>
+			</section>
+		</md-content>
+      </md-tab>
+      
+      <md-tab label="Project's replications">
+        <md-content class="md-padding" ng-controller="ProjectReplicationsCtrl">
+        	
+        	<h3 class="md-title inset-2">Upcoming workshops</h3>
+        	
+        	<section style="max-width: 70%; margin: auto;">
+	        	<md-button class="md-raised md-accent" ng-click="newWorkshop($event)" ng-if="project.currentUserStatus === 'JOINED'">
+		        	<span>New workshop</span>
+		        </md-button>
+	        	
+	        	<md-card>
+					<md-card-content>  		
+						<div layout="row" layout-sm="column" layout-align="space-around" ng-show="loading">
+	    					<md-progress-circular md-mode="indeterminate"></md-progress-circular>
+	  					</div>
+	  					
+	  					<p class="centered font-size-3 color-1" ng-if="workshops.length === 0">No items to show.</p>
+	  					
+						<md-list class="md-dense" ng-cloak> 
+						<md-list-item class="md-3-line secondary-button-padding" ng-repeat="item in workshops">
+							<div class="md-list-item-text" layout="column">
+					            <h3><a ui-sref="workshopDetail({idWorkshop: item.idWorkshop})" class="font-size-4 custom-anchor-1">{{item.projectName}}: Workshop Replication {{item.replicationNumber}}</a></h3>
+					            <h4>{{item.dateTime}} ~ {{item.membersCount}} {{item.membersCount > 1 ? "members" : "member"}} organizing</h4>
+					            <p>{{item.isPaid ? item.price + " " + item.currency : "FREE"}}</p>
+					        </div>
+						     					    
+						    <md-menu class="md-secondary">
+						      <md-button aria-label="Open settings interactions menu" class="md-icon-button" ng-click="openMenu($mdOpenMenu, $event)">
+						        <md-icon md-font-set="material-icons">settings</md-icon>
+						      </md-button>
+						      <md-menu-content width="4">
+						        <md-menu-item>
+						          <md-button ng-click="leaveWorkshop($event, item.idWorkshop, $index)">					         
+						            Leave workshop
+						          </md-button>
+						        </md-menu-item>
+						        <md-menu-item>
+						          <md-button ng-click="toggleNotifications(item.idWorkshop, $index)">
+						            {{item.notificationsEnabled ? 'Disable' : 'Enable' }} notifications
+						          </md-button>
+						        </md-menu-item>			       
+						      </md-menu-content>
+						    </md-menu> 
+						     
+						    <md-divider hide-sm ng-if="!$last"></md-divider>
+							<md-divider hide-gt-sm ng-if="!$last"></md-divider>
+						</md-list-item>
+						</md-list> 
+	                </md-card-content>  		 
+				</md-card>
+			</section>
+			
+			<h3 class="md-title inset-2">Upcoming events</h3>
+			
+			<!-- TODO: Events API -->
+        	
+        	<section style="max-width: 70%; margin: auto;">
+	        	<md-button class="md-raised md-accent" ng-click="newEvent($event)">
+		        	<span>New event</span>
+		        </md-button>
+	        	
+	        	<md-card>
+					<md-card-content>  		
+						
+	                </md-card-content>  		 
+				</md-card>
+			</section>
+        </md-content>
+      </md-tab>
+</md-tabs>		

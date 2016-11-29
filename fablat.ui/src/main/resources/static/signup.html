@@ -1,0 +1,67 @@
+<div layout="column" class="md-inline-form" ng-controller="SignUp1Ctrl" ng-cloak>
+  
+  	<h2 class="md-title inset">Complete your data for signing up</h2>
+  	
+  	<form name="signUpForm1" ng-submit="submit()" layout="row" layout-align="center">
+  		<md-content flex="50" layout-marging>
+  			<md-card layout="column">  			
+  				<md-card-content>  				
+  					
+			     	<div layout="row">
+		  				<md-input-container flex>
+				        	<label>First Name</label>
+				        	<input required name="firstName" ng-model="user.firstName">
+				        	<div ng-messages="signUpForm1.firstName.$error">
+					        	<div ng-message="required">This is required.</div>
+					        </div>
+				      	</md-input-container>
+				     	<md-input-container flex>
+				        	<label>Last Name</label>
+				        	<input required name="lastName" ng-model="user.lastName">
+				        	<div ng-messages="signUpForm1.lastName.$error">
+					        	<div ng-message="required">This is required.</div>
+					        </div>
+				    	</md-input-container>	
+			     	</div>
+			     	
+			     	<div layout="row">		  				
+				     	<md-input-container flex>
+				        	<label>Email</label>
+				        	<input required name="email" ng-model="user.email" type="email">
+				        	<div ng-messages="signUpForm1.email.$error">
+					        	<div ng-message="required">This is required.</div>
+					        </div>
+				    	</md-input-container>	
+			     	</div>
+			     	
+			     	<div layout="row">		  				
+				     	<md-input-container flex>
+				        	<label>Password</label>
+				        	<input required name="password" ng-model="user.password" type="password">
+				        	<div ng-messages="signUpForm1.password.$error">
+					        	<div ng-message="required">This is required.</div>
+					        </div>
+				    	</md-input-container>	
+			     	</div>
+			     				      	
+			      	<div layout="row">
+			      		<md-input-container style="margin-right: 20px;">
+					        <md-checkbox ng-model="user.isFabAcademyGrad" aria-label="Checkbox 1">
+						    Fab Academy graduated?
+						    </md-checkbox>
+				         </md-input-container>
+				         <md-input-container ng-show="user.isFabAcademyGrad">
+					         <label>Year</label>
+					         <input ng-model="user.fabAcademyGradYear">
+				         </md-input-container>
+			      	</div>  				
+  				</md-card-content>  				
+  			</md-card>
+  			
+  			<div layout="row" layout-align="center">
+  				<md-button flex="30" class="md-raised md-accent" type="submit">Next</md-button>
+  			</div>
+  		</md-content>
+  	</form>
+    
+</div>

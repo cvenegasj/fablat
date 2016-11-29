@@ -1,0 +1,88 @@
+html {
+	text-rendering: optimizeLegibility;
+}
+
+#main-toolbar {
+	box-shadow: 0 2px 3px 0px rgba(0, 0, 0, 0.16);
+}
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak,
+	.x-ng-cloak {
+	display: none !important;
+}
+
+[ng-click]:hover {
+	cursor: pointer;
+}
+
+.inset {
+	padding-left: 10%;
+}
+
+.inset-2 {
+	padding-left: 7%;
+	padding-right: 15%;
+}
+
+.container1 {
+	border-radius: 4px;
+}
+
+.uppercase {
+	text-transform: uppercase;
+}
+
+.font-size-1 {
+	font-size: 10px;
+	line-height: 13px;
+}
+
+.font-size-2 {
+	font-size: 12px;
+	line-height: 15px;
+}
+
+.font-size-3 {
+	font-size: 14px;
+	line-height: 17px;
+}
+
+.font-size-4 {
+	font-size: 16px;
+	line-height: 19px;
+}
+
+.font-size-5 {
+	font-size: 18px;
+	line-height: 21px;
+}
+
+.color-1 {
+	color: #a4a4a4; /* light gray */
+}
+
+.color-2 {
+	color: #808080; /* medium gray */
+}
+
+.color-3 {
+	color: #5f5f5f; /* dark gray */
+}
+
+.custom-button-1 {
+	letter-spacing: normal;
+	margin: 0;
+}
+
+.custom-anchor-1 {
+	text-decoration: none;
+}
+
+.custom-autocomplete input {
+	min-width: 385px !important;
+}
+
+.centered {
+	text-align: center;
+}
+

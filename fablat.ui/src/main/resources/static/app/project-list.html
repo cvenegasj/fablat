@@ -1,0 +1,24 @@
+<!-- View for showing the general list of projects ordered A-Z -->
+		
+<div layout="column" ng-controller="ProjectListCtrl">
+
+	<h2 class="md-title inset">Select the workshop(s) you are associated with:</h2>
+	
+	<div layout="row" layout-align="center">
+		<md-content flex="55" layout-margin style="overflow: auto; height: 380px;">
+			<md-card>
+				<div layout="row" layout-sm="column" layout-align="space-around" ng-show="loading">
+   					<md-progress-circular md-mode="indeterminate"></md-progress-circular>
+ 					</div>
+				<md-list> 
+				<md-list-item class="secondary-button-padding" ng-repeat="item in projects">
+				    <p><span class="font-size-3">{{item.name}}</span> <span class="font-size-2 color-1">{{item.lineName}}</span></p>
+				    <md-button class="font-size-1 md-secondary md-raised md-warn md-hue-1" ng-show="item.currentUserStatus === 'NOT_JOINED'" ng-click="join(item.idProject, $index)">JOIN</md-button>
+				    <md-divider hide-sm ng-if="!$last"></md-divider>
+					<md-divider hide-gt-sm ng-if="!$last"></md-divider>
+				</md-list-item>
+				</md-list> 
+			</md-card>
+		</md-content>
+	</div>
+</div>

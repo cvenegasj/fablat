@@ -1,0 +1,33 @@
+server:
+  port: 5000
+  
+debug: true
+
+spring:
+  aop:
+    proxy-target-class: true
+
+security:
+  oauth2:
+    client:
+      accessTokenUri: http://custom-env-2.p2wn4fjmir.us-east-1.elasticbeanstalk.com/uaa/oauth/token
+      userAuthorizationUri: http://custom-env-2.p2wn4fjmir.us-east-1.elasticbeanstalk.com/uaa/oauth/authorize
+      clientId: fablat
+      clientSecret: c6d4f0e6125fcc1879b8dc42983c73ea1b1adf4f67a1cba0010d29ed8895017c
+      scope: openid
+    resource:
+      userInfoUri: http://custom-env-2.p2wn4fjmir.us-east-1.elasticbeanstalk.com/uaa/user
+
+zuul:
+  routes:
+    resource:
+      path: /resource/**
+      url: http://custom-env-1.p2wn4fjmir.us-east-1.elasticbeanstalk.com
+    user:
+      path: /user/**
+      url: http://custom-env-2.p2wn4fjmir.us-east-1.elasticbeanstalk.com/uaa/user
+      
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.web: DEBUG

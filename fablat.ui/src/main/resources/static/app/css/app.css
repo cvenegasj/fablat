@@ -1,0 +1,213 @@
+html {
+	text-rendering: optimizeLegibility;
+}
+
+#main-toolbar {
+	box-shadow: 0 2px 3px 0px rgba(0, 0, 0, 0.16);
+}
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak,
+	.x-ng-cloak {
+	display: none !important;
+}
+
+[ng-click]:hover {
+	cursor: pointer;
+}
+
+md-sidenav {
+	width: 270px !important;
+}
+
+/* fade animation */
+.animate-show {
+	transition: 0.75s ease-out opacity;
+	opacity: 1;
+}
+
+.animate-show.ng-hide {
+	height: 0;
+	min-height: 0;
+	opacity: 0;
+	overflow: hidden;
+}
+
+.inset {
+	padding-left: 10%;
+}
+
+.inset-2 {
+	padding-left: 7%;
+	padding-right: 15%;
+}
+
+.container1 {
+	border-radius: 4px;
+}
+
+.uppercase {
+	text-transform: uppercase;
+}
+
+.font-size-1 {
+	font-size: 10px;
+	line-height: 13px;
+}
+
+.font-size-2 {
+	font-size: 12px;
+	line-height: 15px;
+}
+
+.font-size-3 {
+	font-size: 14px;
+	line-height: 17px;
+}
+
+.font-size-4 {
+	font-size: 16px;
+	line-height: 19px;
+}
+
+.font-size-5 {
+	font-size: 18px;
+	line-height: 21px;
+}
+
+.color-1 {
+	color: #a4a4a4; /* light gray */
+}
+
+.color-2 {
+	color: #808080; /* medium gray */
+}
+
+.color-3 {
+	color: #5f5f5f; /* dark gray */
+}
+
+.custom-button-1 {
+	letter-spacing: normal;
+	margin: 0;
+}
+
+.custom-anchor-1 {
+	text-decoration: none;
+}
+
+.custom-autocomplete input {
+	min-width: 385px !important;
+}
+
+.centered {
+	text-align: center;
+}
+
+.logo {
+	text-decoration: none;
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 0 0 16px;
+	margin: 0 auto;
+}
+
+.logo>img {
+	height: 100px;
+	width: auto;
+	display: block;
+	margin-bottom: 15px;
+	margin-top: 15px;
+	transform-origin: 50% 0;
+	transform: scale(1.2);
+}
+
+.logo h1 {
+	color: #ffffff;
+}
+
+.user-avatar-1 {
+	text-decoration: none;
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.user-avatar-1>img {
+	height: 40px;
+	width: auto;
+	border-radius: 100%;
+	display: block;
+	transform-origin: 50% 0;
+	transform: scale(1.2);
+}
+
+/* for user avatar */
+
+.generic-avatar {
+	position: relative;
+	margin: 0 auto;
+}
+
+.avatar-circle {
+	display: block;
+	width: 100%;
+	height: 100%;
+	background: transparent;
+	border-radius: 100%;
+	margin: 0 auto;
+}
+
+.name {
+	display: block;
+	width: 100%;
+	overflow: hidden;
+	margin: auto;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+  	transform: translate(-50%,-50%);
+	color: #fff;
+	font-weight: 400;
+	font-size: 30px;
+	text-align: center;
+	text-transform: uppercase;
+}
+
+.project-name {
+	display: block;
+	width: 90%;
+	overflow: hidden;
+	margin: auto;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+  	transform: translate(-50%,-50%);
+	color: #fff;
+	font-weight: 400;
+	font-size: 12px;
+	text-align: center;
+	text-transform: uppercase;
+}
+
+.img-avatar {
+	top: 1px;
+	background-size: contain;
+	border-radius: 100%;
+	position: absolute;
+}
+
+.menu-custom-1 {
+	position: absolute;
+	right: 0;
+	top: -20px;
+	padding: 0;
+}
+
+.menu-custom-1 > .md-button {
+	padding: 0;
+	margin: 0;
+	width: auto;
+}
