@@ -1,5 +1,6 @@
 package org.fablat.resource.controller;
 
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -42,7 +43,7 @@ public class PublicController {
 
 		return model;
 	}
-	
+
 	@RequestMapping(value = "/signup", method = RequestMethod.POST)
 	public ResponseEntity<Void> signup(@RequestBody Map<String, String> params) {
 
@@ -74,7 +75,42 @@ public class PublicController {
 		}
 
 		fabberDAO.makePersistent(fabber);
-		
+
+		// Role for user
+		RoleFabber rf = new RoleFabber();
+		rf.setRole(roleDAO.findByName(Resources.ROLE_USER));
+		rf.setFabber(fabber);
+		roleFabberDAO.makePersistent(rf);
+
+		return new ResponseEntity<Void>(HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/signup-nomade", method = RequestMethod.POST)
+	public ResponseEntity<Void> save(@RequestBody Map<String, String> params, Principal principal) {
+
+		// Fabber creation
+		Fabber fabber = new Fabber();
+		fabber.setUsername(params.get("username"));
+		fabber.setEmail(params.get("email"));
+		fabber.setPassword(params.get("password"));
+
+		fabber.setFirstName(params.get("firstName"));
+		fabber.setLastName(params.get("lastName"));
+		fabber.setEnabled(true);
+
+		fabber.setIsFabAcademyGrad(Boolean.parseBoolean(params.get("isFabAcademyGrad")));
+		if (fabber.getIsFabAcademyGrad()) {
+			fabber.setFabAcademyGradYear(Integer.parseInt(params.get("fabAcademyGradYear")));
+		} else {
+			fabber.setFabAcademyGradYear(null);
+		}
+
+		// Lab nomade
+		fabber.setLab(null);
+		fabber.setIsNomade(true);
+
+		fabberDAO.makePersistent(fabber);
+
 		// Role for user
 		RoleFabber rf = new RoleFabber();
 		rf.setRole(roleDAO.findByName(Resources.ROLE_USER));

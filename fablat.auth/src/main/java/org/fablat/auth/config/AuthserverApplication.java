@@ -1,18 +1,17 @@
 package org.fablat.auth.config;
 
-import java.net.URISyntaxException;
 import java.security.Principal;
-import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
-import org.apache.commons.dbcp2.BasicDataSource;
 import org.fablat.auth.model.dao.FabberDAO;
 import org.fablat.auth.model.daoimpl.FabberDAOImpl;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -62,6 +61,9 @@ public class AuthserverApplication extends WebMvcConfigurerAdapter {
 	@Order(-20)
 	protected static class LoginConfig extends WebSecurityConfigurerAdapter {
 
+		@Value("${ui.url}")
+		private String uiUrl;
+		
 		@Autowired
 		private AuthenticationManager authenticationManager;
 
@@ -71,7 +73,7 @@ public class AuthserverApplication extends WebMvcConfigurerAdapter {
 			http
 			.formLogin().loginPage("/login")
 			// redirect to UI /app/index.html if success
-			.defaultSuccessUrl("http://lowcost-env.p2wn4fjmir.us-east-1.elasticbeanstalk.com/app/index.html", true).permitAll()
+			.defaultSuccessUrl(uiUrl, true).permitAll()
 			.and()
 				.requestMatchers().antMatchers("/login", "/oauth/authorize", "/oauth/confirm_access")
 			.and()
@@ -135,18 +137,12 @@ public class AuthserverApplication extends WebMvcConfigurerAdapter {
 		};
 	}
 
-	// database connection stuff -------------------------
-	@Bean(destroyMethod = "close")
-	public DataSource dataSource() throws ClassNotFoundException, SQLException, URISyntaxException {
-		BasicDataSource dataSource = new BasicDataSource();
-		dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-		// dataSource.setUrl("jdbc:mysql://localhost:3306/fablat_db");
-		dataSource.setUrl("jdbc:mysql://mysqlinstance.cq6tkpch7j8q.us-east-1.rds.amazonaws.com:3306/fablat_db");
-		dataSource.setUsername("root");
-		// dataSource.setPassword("admin");
-		dataSource.setPassword("01382155144");
-
-		return dataSource;
+	// Database connection stuff -------------------------
+	@Bean
+	public DataSource dataSource(DataSourceProperties properties) {
+		return properties.initializeDataSourceBuilder()
+	            // additional customizations
+	            .build();
 	}
 
 	@Autowired

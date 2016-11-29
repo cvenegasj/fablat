@@ -191,9 +191,18 @@ app.controller('SignUp2Ctrl', function($rootScope, $scope, $http, $filter, $mdDi
 	    });
 	  }
 	  
-	/*$scope.saveNomade = function() {
-		  $http.post('/resource/fabber/save-nomade', {}).then(function(response) {
-				$location.path("/signup-groups");				
+	$scope.saveNomade = function() {
+		  $http.post('/resource/public/signup-nomade', {
+				// idFabber: $rootScope.user.id,
+	    	  	username: $rootScope.user.email,
+				email: $rootScope.user.email,
+				password: $rootScope.user.password,
+				firstName: $rootScope.user.firstName,
+				lastName: $rootScope.user.lastName,
+				isFabAcademyGrad: $rootScope.user.isFabAcademyGrad,
+				fabAcademyGradYear: $rootScope.user.fabAcademyGradYear
+		  }).then(function(response) {
+			  $location.path("/signup-successful");		
 		  });
-	  }*/
+	 }
 });

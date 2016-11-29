@@ -1,21 +1,18 @@
 package org.fablat.resource.config;
 
-import java.net.URISyntaxException;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
 import javax.sql.DataSource;
 
-import org.apache.commons.dbcp2.BasicDataSource;
 import org.fablat.resource.model.dao.AttendantDAO;
 import org.fablat.resource.model.dao.FabberDAO;
+import org.fablat.resource.model.dao.GroupDAO;
+import org.fablat.resource.model.dao.LabDAO;
+import org.fablat.resource.model.dao.LocationDAO;
 import org.fablat.resource.model.dao.ProjectDAO;
 import org.fablat.resource.model.dao.ProjectMemberDAO;
-import org.fablat.resource.model.dao.LabDAO;
-import org.fablat.resource.model.dao.GroupDAO;
-import org.fablat.resource.model.dao.LocationDAO;
 import org.fablat.resource.model.dao.ReplicationAttendantDAO;
 import org.fablat.resource.model.dao.RoleDAO;
 import org.fablat.resource.model.dao.RoleFabberDAO;
@@ -24,11 +21,11 @@ import org.fablat.resource.model.dao.WorkshopLocationDAO;
 import org.fablat.resource.model.dao.WorkshopMemberDAO;
 import org.fablat.resource.model.daoimpl.AttendantDAOImpl;
 import org.fablat.resource.model.daoimpl.FabberDAOImpl;
+import org.fablat.resource.model.daoimpl.GroupDAOImpl;
+import org.fablat.resource.model.daoimpl.LabDAOImpl;
+import org.fablat.resource.model.daoimpl.LocationDAOImpl;
 import org.fablat.resource.model.daoimpl.ProjectDAOImpl;
 import org.fablat.resource.model.daoimpl.ProjectMemberDAOImpl;
-import org.fablat.resource.model.daoimpl.LabDAOImpl;
-import org.fablat.resource.model.daoimpl.GroupDAOImpl;
-import org.fablat.resource.model.daoimpl.LocationDAOImpl;
 import org.fablat.resource.model.daoimpl.ReplicationAttendantDAOImpl;
 import org.fablat.resource.model.daoimpl.RoleDAOImpl;
 import org.fablat.resource.model.daoimpl.RoleFabberDAOImpl;
@@ -39,6 +36,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScan.Filter;
@@ -90,17 +88,11 @@ public class ResourceApplication extends ResourceServerConfigurerAdapter {
 				//.ignoringAntMatchers("/public/**"); // No csrf for public API
     }
 
-	@Bean(destroyMethod = "close")
-	public DataSource dataSource() throws ClassNotFoundException, SQLException, URISyntaxException {
-		BasicDataSource dataSource = new BasicDataSource();
-		dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-		// dataSource.setUrl("jdbc:mysql://localhost:3306/fablat_db");
-		dataSource.setUrl("jdbc:mysql://mysqlinstance.cq6tkpch7j8q.us-east-1.rds.amazonaws.com:3306/fablat_db");
-		dataSource.setUsername("root");
-		// dataSource.setPassword("admin");
-		dataSource.setPassword("01382155144");
-
-		return dataSource;
+	@Bean
+	public DataSource dataSource(DataSourceProperties properties) {
+		return properties.initializeDataSourceBuilder()
+	            // additional customizations
+	            .build();
 	}
 
 	@Autowired

@@ -111,6 +111,7 @@ public class ProjectController {
 		Project p = projectDAO.findById(group.getIdProject());
 		Fabber f = fabberDAO.findByUsername(principal.getName());
 
+		// TODO: Action reserved only for ROLE_ADMIN_LAT
 		boolean isLatAdmin = false;
 
 		for (RoleFabber rf : f.getRoleFabbers()) {

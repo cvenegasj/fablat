@@ -4,7 +4,7 @@
 
 	<groupId>org.fablat</groupId>
 	<artifactId>fablat-resource</artifactId>
-	<version>0.5.3-SNAPSHOT</version>
+	<version>0.6.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>fablat-resource</name>
@@ -34,6 +34,11 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<!-- Spring JDBC for datasource config -->
+		<dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-jdbc</artifactId>
+		</dependency>
 		<!-- Dependencias Spring -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -43,11 +48,6 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
-		</dependency>
-		<!-- Database connection pool -->
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-dbcp2</artifactId>
 		</dependency>
 		<!-- MySQL Connector -->
 		<dependency>

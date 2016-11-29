@@ -45,12 +45,6 @@
 </head>
 
 <body>
-
-	<#if RequestParameters['error']??>
-		<div class="alert alert-danger">
-			There was a problem logging in. Please try again.
-		</div>
-	</#if>
 	
 	<div class="mdl-grid">
 	
@@ -62,6 +56,12 @@
 			<h2 class="mdl-card__title-text centered">Fab Lat Network</h2>
 		</div>
 		<div class="mdl-card__supporting-text">
+			<#if RequestParameters['error']??>
+				<div style="color: #D32F2F;">
+					There was a problem logging in. Please try again.
+				</div>
+			</#if>
+			
 			<form role="form" action="login" method="post" class="centered-flex">
 			  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
 			    <input class="mdl-textfield__input" type="text" id="username" name="username" />
@@ -107,7 +107,7 @@
 		  <button type="submit" class="btn btn-primary">Submit</button>
 		</form>
 		
-		<a href="http://localhost:8080/public.html">Do not have an account? Register here.</a>
+		<a href="http://lowcost-env.p2wn4fjmir.us-east-1.elasticbeanstalk.com/public.html">Do not have an account? Register here.</a>
 	</div> -->
 
 </body>
