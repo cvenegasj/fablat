@@ -27,8 +27,7 @@ app.config(function($mdThemingProvider, $urlRouterProvider, $stateProvider) {
       .dark();
     
     
-    // Routes config
-    
+    // Routes config  
     $urlRouterProvider.otherwise(function () {
         return '/';
     });

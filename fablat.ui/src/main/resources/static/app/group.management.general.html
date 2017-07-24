@@ -1,0 +1,70 @@
+<div class="md-padding" layout="column" flex>
+	<div class="generic-container-1">
+		<form class="custom-form">
+			<div class="header md-subhead">
+				Group settings
+			</div>
+			<div class="md-padding">
+				<div layout-gt-sm="row" class="form-group">
+					<label class="control-label" for="group-name" flex-gt-sm="20">Group name</label>
+					<md-input-container md-no-float class="md-block" flex>
+						<input ng-model="group.name" id="group-name">
+					</md-input-container>
+				</div>
+				<div layout-gt-sm="row" class="form-group">
+					<label class="control-label" for="group-description" flex-gt-sm="20">Description</label>
+					<md-input-container class="md-block" flex>
+						<textarea ng-model="group.description" id="group-description" md-maxlength="1500" rows="3" md-select-on-focus></textarea>
+					</md-input-container>
+				</div>
+				<div layout-gt-sm="row" class="form-group">
+					<label class="control-label" for="group-rd" flex-gt-sm="20">Reunion Day</label>
+					<md-input-container class="md-block" flex>
+						<md-select ng-model="group.reunionDay" class="md-no-underline" id="group-rd" style="width: 110px !important;">
+				          <md-option ng-value="item" ng-repeat="item in ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY']">
+				          	{{ item }}
+				          </md-option>
+				        </md-select>
+					</md-input-container>
+				</div>
+				<div layout-gt-sm="row" class="form-group">
+					<label class="control-label" for="group-rt-hora" flex-gt-sm="20">Reunion Time</label>
+					<md-input-container md-no-float class="md-block">
+						<input ng-model="group.reunionTimeHora" id="group-rt-hora" type="number" step="1" min="0" max="23" style="width: 60px;">
+						<div class="hint">hours</div>
+					</md-input-container>
+					<md-input-container md-no-float class="md-block">
+						<input ng-model="group.reunionTimeMinutes" type="number" step="1" min="0" max="59" style="width: 60px;">
+						<div class="hint">minutes</div>
+					</md-input-container>
+					<md-input-container class="md-block">
+						<md-select ng-model="group.reunionTimeMeridian" class="md-no-underline" style="width: 35px !important;">
+				          <md-option ng-value="item" ng-repeat="item in ['AM', 'PM']">
+				          	{{ item }}
+				          </md-option>
+				        </md-select>
+				        <div class="hint">Lima/Bogota/Quito, GMT-05:00</div>
+					</md-input-container>
+				</div>
+				<div layout-gt-sm="row" class="form-group">
+					<label class="control-label" for="group-main-url" flex-gt-sm="20">Main URL</label>
+					<md-input-container md-no-float class="md-block" flex>
+						<input ng-model="group.mainUrl" id="group-main-url" type="url">
+						<div class="hint">Facebook, Trello, Github, etc</div>
+					</md-input-container>
+				</div>
+				<div layout-gt-sm="row" class="form-group">
+					<label class="control-label" for="group-secondary-url" flex-gt-sm="20">Secondary URL</label>
+					<md-input-container md-no-float class="md-block" flex>
+						<input ng-model="group.secondaryUrl" id="group-secondary-url" type="url">
+					</md-input-container>
+				</div>		
+			</div>
+			<div class="actions" layout="row">
+				<md-button class="md-warn">Delete group</md-button>
+				<span flex></span>
+				<md-button class="md-primary md-raised">Save group</md-button>
+			</div>
+		</form>
+	</div>
+</div>

@@ -8,13 +8,12 @@ import java.util.Set;
 
 import org.fablat.resource.entities.Fabber;
 import org.fablat.resource.entities.Lab;
-import org.fablat.resource.entities.ProjectMember;
 import org.fablat.resource.entities.RoleFabber;
 import org.fablat.resource.model.dao.FabberDAO;
 import org.fablat.resource.model.dao.LabDAO;
-import org.fablat.resource.model.dao.ProjectDAO;
-import org.fablat.resource.util.FabberResource;
-import org.fablat.resource.util.FabberStatsResource;
+import org.fablat.resource.model.dao.SubGroupDAO;
+import org.fablat.resource.serializable.FabberResource;
+import org.fablat.resource.serializable.FabberStatsResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +32,7 @@ public class FabberController {
 	@Autowired
 	private LabDAO labDAO;
 	@Autowired
-	private ProjectDAO projectDAO;
+	private SubGroupDAO subGroupDAO;
 
 	// For getting the principal values needed in the UI
 	@RequestMapping(value = "/user-diggested", method = RequestMethod.GET)
@@ -153,26 +152,13 @@ public class FabberController {
 
 	@RequestMapping(value = "/current-stats", method = RequestMethod.GET)
 	public ResponseEntity<FabberStatsResource> currentStats(Principal principal) {
-
-		Fabber fabber = fabberDAO.findByUsername(principal.getName());
-		Integer nWorkshopsCoordinator = 0;
-		Integer nWorkshopsCollaborator = 0;
-		Integer nReplicationsCoordinator = 0;
-		Integer nReplicationsCollaborator = 0;
-
-		for (ProjectMember wm : fabber.getProjectMembers()) {
-			if (wm.getIsCoordinator()) {
-				nWorkshopsCoordinator++;
-			} else {
-				nWorkshopsCollaborator++;
-			}
-		}
+		
+		Integer nSubGroupsCoordinator = subGroupDAO.findManagedSubGroups(principal.getName()).size();
+		Integer nSubGroupsCollaborator = subGroupDAO.findNotManagedSubGroups(principal.getName()).size();
 
 		FabberStatsResource fsr = new FabberStatsResource();
-		fsr.setnWorkshopsCoordinator(nWorkshopsCoordinator);
-		fsr.setnWorkshopsCollaborator(nWorkshopsCollaborator);
-		fsr.setnReplicationsCoordinator(nReplicationsCoordinator);
-		fsr.setnReplicationsCollaborator(nReplicationsCollaborator);
+		fsr.setnSubGroupsCoordinator(nSubGroupsCoordinator);
+		fsr.setnSubGroupsCollaborator(nSubGroupsCollaborator);
 
 		return new ResponseEntity<FabberStatsResource>(fsr, HttpStatus.OK);
 	}
@@ -201,26 +187,13 @@ public class FabberController {
 
 	@RequestMapping(value = "/stats", method = RequestMethod.GET)
 	public ResponseEntity<FabberStatsResource> stats(@RequestParam(value = "idFabber") Long idFabber) {
-
-		Fabber fabber = fabberDAO.findById(idFabber);
-		Integer nProjectsCoordinator = 0;
-		Integer nProjectsCollaborator = 0;
-		Integer nReplicationsCoordinator = 0;
-		Integer nReplicationsCollaborator = 0;
-
-		for (ProjectMember pm : fabber.getProjectMembers()) {
-			if (pm.getIsCoordinator()) {
-				nProjectsCoordinator++;
-			} else {
-				nProjectsCollaborator++;
-			}
-		}
+		
+		Integer nSubGroupsCoordinator = subGroupDAO.findManagedSubGroups(idFabber).size();
+		Integer nSubGroupsCollaborator = subGroupDAO.findNotManagedSubGroups(idFabber).size();
 
 		FabberStatsResource fsr = new FabberStatsResource();
-		fsr.setnWorkshopsCoordinator(nProjectsCoordinator);
-		fsr.setnWorkshopsCollaborator(nProjectsCollaborator);
-		fsr.setnReplicationsCoordinator(nReplicationsCoordinator);
-		fsr.setnReplicationsCollaborator(nReplicationsCollaborator);
+		fsr.setnSubGroupsCoordinator(nSubGroupsCoordinator);
+		fsr.setnSubGroupsCollaborator(nSubGroupsCollaborator);
 
 		return new ResponseEntity<FabberStatsResource>(fsr, HttpStatus.OK);
 	}

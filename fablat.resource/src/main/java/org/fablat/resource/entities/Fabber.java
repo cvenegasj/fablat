@@ -42,10 +42,14 @@ public class Fabber implements java.io.Serializable {
 	private Integer fabAcademyGradYear;
 	private String cellPhoneNumber;
 	private Boolean isNomade;
+	private String mainQuote;
+	private String city;
+	private String country;
+	private String weekGoal;
 	private String avatarUrl;
 	private Boolean enabled;
 	private Lab lab;
-	private Set<ProjectMember> projectMembers = new HashSet<ProjectMember>();
+	private Set<GroupMember> groupMembers = new HashSet<GroupMember>();
 	private Set<RoleFabber> roleFabbers = new HashSet<RoleFabber>();
 
 	// rest of the attributes are inherited from fablabs.io API
@@ -145,6 +149,42 @@ public class Fabber implements java.io.Serializable {
 	public void setIsNomade(Boolean isNomade) {
 		this.isNomade = isNomade;
 	}
+	
+	@Column(name = "mainQuote")
+	public String getMainQuote() {
+		return mainQuote;
+	}
+
+	public void setMainQuote(String mainQuote) {
+		this.mainQuote = mainQuote;
+	}
+	
+	@Column(name = "city")
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	@Column(name = "country")
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
+	}
+	
+	@Column(name = "weekGoal")
+	public String getWeekGoal() {
+		return weekGoal;
+	}
+
+	public void setWeekGoal(String weekGoal) {
+		this.weekGoal = weekGoal;
+	}
 
 	@Column(name = "avatarUrl")
 	public String getAvatarUrl() {
@@ -176,12 +216,12 @@ public class Fabber implements java.io.Serializable {
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "fabber")
 	@Fetch(FetchMode.JOIN)
-	public Set<ProjectMember> getProjectMembers() {
-		return projectMembers;
+	public Set<GroupMember> getGroupMembers() {
+		return groupMembers;
 	}
 
-	public void setProjectMembers(Set<ProjectMember> projectMembers) {
-		this.projectMembers = projectMembers;
+	public void setGroupMembers(Set<GroupMember> groupMembers) {
+		this.groupMembers = groupMembers;
 	}
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "fabber")

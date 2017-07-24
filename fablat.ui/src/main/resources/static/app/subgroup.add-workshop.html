@@ -1,0 +1,97 @@
+<div class="md-padding" layout="column" flex>
+	<div class="generic-container-1">
+		<form class="custom-form">
+			<div class="header md-subhead">
+				Create a new workshop
+			</div>
+			<div class="md-padding">			
+				<div layout-gt-sm="row" class="form-group">
+					<label class="control-label" for="workshop-name" flex-gt-sm="20">Workshop name</label>
+					<md-input-container md-no-float class="md-block" flex>
+						<input ng-model="_workshop.name" id="workshop-name">
+					</md-input-container>
+				</div>
+				<div layout-gt-sm="row" class="form-group">
+					<label class="control-label" for="workshop-description" flex-gt-sm="20">Description</label>
+					<md-input-container class="md-block" flex>
+						<textarea ng-model="_workshop.description" id="workshop-description" md-maxlength="3500" rows="5" md-select-on-focus></textarea>
+					</md-input-container>
+				</div>
+				<div layout-gt-sm="row" class="form-group">
+					<label class="control-label" flex-gt-sm="20">Start date</label>
+					<md-input-container class="md-block" flex>
+						<md-datepicker ng-model="_workshop.startDate"></md-datepicker>
+					</md-input-container>
+				</div>
+				<div layout-gt-sm="row" class="form-group">
+					<label class="control-label" for="workshop-start-time-hours" flex-gt-sm="20">Start time</label>
+					<md-input-container md-no-float class="md-block">
+						<input ng-model="_workshop.startTimeHours" id="workshop-start-time-hours" type="number" step="1" min="0" max="23" style="width: 60px;">
+						<div class="hint">hours</div>
+					</md-input-container>
+					<md-input-container md-no-float class="md-block">
+						<input ng-model="_workshop.startTimeMinutes" type="number" step="1" min="0" max="59" style="width: 60px;">
+						<div class="hint">minutes</div>
+					</md-input-container>
+					<md-input-container md-no-float class="md-block">
+						<md-select ng-model="_workshop.startTimeMeridian" class="md-no-underline" style="width: 35px !important;">
+				          <md-option ng-value="item" ng-repeat="item in ['AM', 'PM']">
+				          	{{ item }}
+				          </md-option>
+				        </md-select>
+				        <div class="hint">Lima/Bogota/Quito, GMT-05:00</div>
+					</md-input-container>
+				</div>
+				<div layout-gt-sm="row" class="form-group">
+					<label class="control-label" flex-gt-sm="20">End date</label>
+					<md-input-container class="md-block" flex>
+						<md-datepicker ng-model="_workshop.endDate"></md-datepicker>
+					</md-input-container>
+				</div>
+				<div layout-gt-sm="row" class="form-group">
+					<label class="control-label" for="workshop-end-time-hours" flex-gt-sm="20">End time</label>
+					<md-input-container md-no-float class="md-block">
+						<input ng-model="_workshop.endTimeHours" id="workshop-end-time-hours" type="number" step="1" min="0" max="23" style="width: 60px;">
+						<div class="hint">hours</div>
+					</md-input-container>
+					<md-input-container md-no-float class="md-block">
+						<input ng-model="_workshop.endTimeMinutes" type="number" step="1" min="0" max="59" style="width: 60px;">
+						<div class="hint">minutes</div>
+					</md-input-container>
+					<md-input-container md-no-float class="md-block">
+						<md-select ng-model="_workshop.endTimeMeridian" class="md-no-underline" style="width: 35px !important;">
+				          <md-option ng-value="item" ng-repeat="item in ['AM', 'PM']">
+				          	{{ item }}
+				          </md-option>
+				        </md-select>
+				        <div class="hint">Lima/Bogota/Quito, GMT-05:00</div>
+					</md-input-container>
+				</div>
+				<div layout-gt-sm="row" class="form-group">
+					<label class="control-label" flex-gt-sm="20">Price</label>
+			    	<md-input-container class="md-block">
+						<md-checkbox ng-model="_workshop.isPaid" aria-label="Is paid?">
+							Is paid?
+						</md-checkbox>
+				    </md-input-container>
+			        <md-input-container md-no-float class="md-block" ng-show="_workshop.isPaid">
+				    	<input ng-model="_workshop.price" placeholder="Price" style="width: 80px; margin-left: 15px;">
+			        </md-input-container>
+			        <md-input-container md-no-float class="md-block">
+						<md-select ng-model="_workshop.timeMeridian" class="md-no-underline" style="width: 35px !important;" ng-show="_workshop.isPaid">
+				          <md-option ng-value="item" ng-repeat="item in ['PEN', 'USD', 'EUR']">
+				          	{{ item }}
+				          </md-option>
+				        </md-select>
+					</md-input-container>
+			        <span class="bold" style="line-height: 27px; margin-left: 15px;" ng-show="!_workshop.isPaid">FREE</span>
+			    </div>	
+			</div>
+			<div class="actions" layout="row">
+				<md-button ui-sref="subgroup.general({ idSubgroup: 10 })">Cancel</md-button>
+				<span flex></span>
+				<md-button class="md-primary md-raised">Save workshop</md-button>
+			</div>
+		</form>
+	</div>
+</div>

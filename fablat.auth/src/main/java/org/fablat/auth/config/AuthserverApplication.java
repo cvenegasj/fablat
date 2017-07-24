@@ -4,6 +4,7 @@ import java.security.Principal;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.fablat.auth.model.dao.FabberDAO;
 import org.fablat.auth.model.daoimpl.FabberDAOImpl;
 import org.hibernate.SessionFactory;
@@ -11,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -73,7 +74,7 @@ public class AuthserverApplication extends WebMvcConfigurerAdapter {
 			http
 			.formLogin().loginPage("/login")
 			// redirect to UI /app/index.html if success
-			.defaultSuccessUrl(uiUrl, true).permitAll()
+			.defaultSuccessUrl(uiUrl + "/app/index.html", true).permitAll()
 			.and()
 				.requestMatchers().antMatchers("/login", "/oauth/authorize", "/oauth/confirm_access")
 			.and()
@@ -139,10 +140,10 @@ public class AuthserverApplication extends WebMvcConfigurerAdapter {
 
 	// Database connection stuff -------------------------
 	@Bean
-	public DataSource dataSource(DataSourceProperties properties) {
-		return properties.initializeDataSourceBuilder()
-	            // additional customizations
-	            .build();
+	@ConfigurationProperties(prefix="spring.datasource")
+	public DataSource dataSource() {
+		// commons-dbcp2 pool
+		return new BasicDataSource();
 	}
 
 	@Autowired

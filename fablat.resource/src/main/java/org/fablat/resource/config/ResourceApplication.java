@@ -6,37 +6,35 @@ import java.util.UUID;
 
 import javax.sql.DataSource;
 
-import org.fablat.resource.model.dao.AttendantDAO;
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.fablat.resource.model.dao.FabberDAO;
 import org.fablat.resource.model.dao.GroupDAO;
+import org.fablat.resource.model.dao.GroupMemberDAO;
 import org.fablat.resource.model.dao.LabDAO;
 import org.fablat.resource.model.dao.LocationDAO;
-import org.fablat.resource.model.dao.ProjectDAO;
-import org.fablat.resource.model.dao.ProjectMemberDAO;
-import org.fablat.resource.model.dao.ReplicationAttendantDAO;
 import org.fablat.resource.model.dao.RoleDAO;
 import org.fablat.resource.model.dao.RoleFabberDAO;
-import org.fablat.resource.model.dao.WorkshopDAO;
-import org.fablat.resource.model.dao.WorkshopLocationDAO;
-import org.fablat.resource.model.dao.WorkshopMemberDAO;
-import org.fablat.resource.model.daoimpl.AttendantDAOImpl;
+import org.fablat.resource.model.dao.SubGroupDAO;
+import org.fablat.resource.model.dao.SubGroupMemberDAO;
+import org.fablat.resource.model.dao.WorkshopEventDAO;
+import org.fablat.resource.model.dao.WorkshopEventTutorDAO;
 import org.fablat.resource.model.daoimpl.FabberDAOImpl;
 import org.fablat.resource.model.daoimpl.GroupDAOImpl;
+import org.fablat.resource.model.daoimpl.GroupMemberDAOImpl;
 import org.fablat.resource.model.daoimpl.LabDAOImpl;
 import org.fablat.resource.model.daoimpl.LocationDAOImpl;
-import org.fablat.resource.model.daoimpl.ProjectDAOImpl;
-import org.fablat.resource.model.daoimpl.ProjectMemberDAOImpl;
-import org.fablat.resource.model.daoimpl.ReplicationAttendantDAOImpl;
 import org.fablat.resource.model.daoimpl.RoleDAOImpl;
 import org.fablat.resource.model.daoimpl.RoleFabberDAOImpl;
-import org.fablat.resource.model.daoimpl.WorkshopDAOImpl;
-import org.fablat.resource.model.daoimpl.WorkshopLocationDAOImpl;
-import org.fablat.resource.model.daoimpl.WorkshopMemberDAOImpl;
+import org.fablat.resource.model.daoimpl.SubGroupDAOImpl;
+import org.fablat.resource.model.daoimpl.SubGroupMemberDAOImpl;
+import org.fablat.resource.model.daoimpl.WorkshopEventDAOImpl;
+import org.fablat.resource.model.daoimpl.WorkshopEventTutorDAOImpl;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScan.Filter;
@@ -59,6 +57,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @EnableResourceServer
 public class ResourceApplication extends ResourceServerConfigurerAdapter {
+	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public Map<String, Object> home() {
 
@@ -89,10 +88,10 @@ public class ResourceApplication extends ResourceServerConfigurerAdapter {
     }
 
 	@Bean
+	@ConfigurationProperties(prefix="spring.datasource")
 	public DataSource dataSource(DataSourceProperties properties) {
-		return properties.initializeDataSourceBuilder()
-	            // additional customizations
-	            .build();
+		// commons-dbcp2 pool
+		return new BasicDataSource();
 	}
 
 	@Autowired
@@ -119,12 +118,6 @@ public class ResourceApplication extends ResourceServerConfigurerAdapter {
 	}
 
 	@Autowired
-	@Bean(name = "attendantDAO")
-	public AttendantDAO getAttendantDAO() {
-		return new AttendantDAOImpl();
-	}
-
-	@Autowired
 	@Bean(name = "fabberDAO")
 	public FabberDAO getFabberDAO() {
 		return new FabberDAOImpl();
@@ -134,6 +127,12 @@ public class ResourceApplication extends ResourceServerConfigurerAdapter {
 	@Bean(name = "groupDAO")
 	public GroupDAO getGroupDAO() {
 		return new GroupDAOImpl();
+	}
+	
+	@Autowired
+	@Bean(name = "groupMemberDAO")
+	public GroupMemberDAO getGroupMemberDAO() {
+		return new GroupMemberDAOImpl();
 	}
 	
 	@Autowired
@@ -149,24 +148,6 @@ public class ResourceApplication extends ResourceServerConfigurerAdapter {
 	}
 
 	@Autowired
-	@Bean(name = "projectDAO")
-	public ProjectDAO getProjectDAO() {
-		return new ProjectDAOImpl();
-	}
-
-	@Autowired
-	@Bean(name = "projectMemberDAO")
-	public ProjectMemberDAO getProjectMemberDAO() {
-		return new ProjectMemberDAOImpl();
-	}
-	
-	@Autowired
-	@Bean(name = "replicationAttendantDAO")
-	public ReplicationAttendantDAO getReplicationAttendantDAO() {
-		return new ReplicationAttendantDAOImpl();
-	}
-
-	@Autowired
 	@Bean(name = "roleDAO")
 	public RoleDAO getRoleDAO() {
 		return new RoleDAOImpl();
@@ -177,22 +158,28 @@ public class ResourceApplication extends ResourceServerConfigurerAdapter {
 	public RoleFabberDAO getRoleFabberDAO() {
 		return new RoleFabberDAOImpl();
 	}
-
+	
 	@Autowired
-	@Bean(name = "workshopDAO")
-	public WorkshopDAO getWorkshopDAO() {
-		return new WorkshopDAOImpl();
+	@Bean(name = "subGroupDAO")
+	public SubGroupDAO getSubGroupDAO() {
+		return new SubGroupDAOImpl();
 	}
 
 	@Autowired
-	@Bean(name = "workshopLocationDAO")
-	public WorkshopLocationDAO getWorkshopLocationDAO() {
-		return new WorkshopLocationDAOImpl();
+	@Bean(name = "subGroupMemberDAO")
+	public SubGroupMemberDAO getSubGroupMemberDAO() {
+		return new SubGroupMemberDAOImpl();
 	}
 
 	@Autowired
-	@Bean(name = "workshopMemberDAO")
-	public WorkshopMemberDAO getWorkshopMemberDAO() {
-		return new WorkshopMemberDAOImpl();
+	@Bean(name = "workshopEventDAO")
+	public WorkshopEventDAO getWorkshopEventDAO() {
+		return new WorkshopEventDAOImpl();
+	}
+	
+	@Autowired
+	@Bean(name = "workshopEventTutorDAO")
+	public WorkshopEventTutorDAO getWorkshopEventTutorDAO() {
+		return new WorkshopEventTutorDAOImpl();
 	}
 }

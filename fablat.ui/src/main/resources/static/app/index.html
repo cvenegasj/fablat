@@ -1,59 +1,91 @@
 <!DOCTYPE html>
 <html ng-app="FabLatApp">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="initial-scale=1" />
-
-<title>Fab Lat</title>
-<meta name="description" content="">
-<meta property="fb:admins" content="1296933646" />
-<meta property="og:site_name" content="Fab Lat" />
-<meta property="og:title" content="Fab Lat" />
-<meta property="og:description" content="" />
-<meta property="og:type" content="website" />
-<meta property="og:image" content="" />
-<meta property="og:url" content="" />
-
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/angular-material/1.1.1/angular-material.min.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-<link rel="stylesheet" href="css/angular-material-sidenav.css">
-<link rel="stylesheet" href="css/app.css">
+	<meta charset="utf-8">
+	<meta name="viewport" content="initial-scale=1" />
+	
+	<title>Fab Lat</title>
+	<meta name="description" content="">
+	<meta property="fb:admins" content="1296933646" />
+	<meta property="og:site_name" content="Fab Lat" />
+	<meta property="og:title" content="Fab Lat" />
+	<meta property="og:description" content="" />
+	<meta property="og:type" content="website" />
+	<meta property="og:image" content="" />
+	<meta property="og:url" content="" />
+	
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/angular-material/1.1.1/angular-material.min.css">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	<link rel="stylesheet" href="css/angular-material-sidenav.css">
+	<link rel="stylesheet" href="css/app.css">
 
 </head>
-<body layout="row" ng-cloak class="ng-cloak" ng-controller="AppCtrl" ng-show="authenticated">
+<body layout="row" ng-cloak ng-controller="AppCtrl" ng-show="authenticated">
 
-	<md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$mdMedia('gt-md')" ng-if="!hiddenSidenav">
-	  <header class="nav-header" ss-style-color="{'background-color': 'primary.hue-3'}">
-      	<a ng-href="#/" class="logo">
-            <img src="images/fab_logo.png" alt="" />
-            <h1 class="md-headline">Fab Lat Network</h1>
-        </a>
-      </header>
+	<md-sidenav id="left-sidenav" md-whiteframe="3" md-component-id="left" md-is-locked-open="$mdMedia('gt-sm')">
+		<header class="nav-header">
+	    	<a ng-href="#/" class="logo">
+	        	<img src="images/fab_logo.png" alt="" />
+	        	<h1 class="md-headline">Fab Lat Network</h1>
+	       </a>
+	    </header>
 
-    	<md-content flex role="navigation" ss-style-color="{'background-color': 'primary.default'}">
-        	<ss-sidenav flex menu="menu"></ss-sidenav>
+    	<md-content flex role="navigation">    
+       		<md-menu-content id="left-sidenav-menu" flex>
+		        <md-menu-item>
+		          <md-button ui-sref="dashboard" ui-sref-active="active">
+		          	Dashboard
+		          </md-button>
+		        </md-menu-item>
+		        <md-menu-item>
+		          <md-button ui-sref="groups" ui-sref-active="active">
+		          	Groups
+		          </md-button>
+		        </md-menu-item>
+		        <md-menu-item>
+		          <md-button ui-sref="workshops" ui-sref-active="active">
+		          	Workshops
+		          </md-button>
+		        </md-menu-item>
+		        <md-menu-item>
+		          <md-button>
+		          	General admin features
+		          </md-button>
+		        </md-menu-item>
+		    </md-menu-content> 	
     	</md-content>
 	</md-sidenav>
 
 	<div layout="column" flex role="main">
-		<md-toolbar>
+		<md-toolbar md-whiteframe="2">
 		    <div class="md-toolbar-tools">
-		        <md-button class="md-icon-button"
-		            aria-label="Menu Button"
-		            hide-gt-md
-		            ng-click="toggleSidenav('left');">
+		    	<md-button class="md-icon-button" aria-label="Menu Button" hide-gt-sm ng-click="toggleSidenav('left')">
 		            <md-icon md-font-set="material-icons" aria-label="Menu">menu</md-icon>
 		        </md-button>
-		
-		        <h2>{{model.title}}</h2>
-		
-		        <span flex></span>
-		        <md-button class="" ng-click="logout()">Logout</md-button>
+		        <h2>Fab Lat</h2>
+		        <span flex></span>			
+				<md-menu md-offset="0 50" md-position-mode="target-right target" ng-if="user.firstName && user.lastName">
+			    	<md-button aria-label="Open user avatar menu" class="md-icon-button" style="height: auto; width: auto;" ng-click="openMenu($mdOpenMenu, $event)">
+			        	<user-avatar md-menu-origin fabber="user" avatar-w="38" avatar-h="38" avatar-font-size="18"></user-avatar>    	
+			      	</md-button>
+			      	<md-menu-content width="3">
+				        <md-menu-item>
+				        	<md-button ui-sref="settings.profile">
+					            Settings
+				          	</md-button>
+				        </md-menu-item>
+				        <md-menu-item>
+				        	<md-button ng-click="logout()">
+				            	Sign out
+				          	</md-button>
+				        </md-menu-item>
+			    	</md-menu-content>
+				</md-menu>
 		    </div>
 		</md-toolbar>
 		
-		<md-content flex ui-view></md-content>
+		<md-content flex ui-view class="main-content"></md-content>
 	</div>
 	
 	

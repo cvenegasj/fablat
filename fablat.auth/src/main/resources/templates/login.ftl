@@ -12,7 +12,7 @@
 
 <style>
 
-.login-card.mdl-card {
+.login-card .mdl-card {
 	
 }
 
@@ -25,7 +25,7 @@
 	align-items: center;
 }
 
-.login-card .mdl-card__title>img {
+.login-card .mdl-card__title > img {
 	height: 55px; 
 	width: auto;
 	margin: 0 auto 10px;
@@ -75,8 +75,14 @@
 			  
 			  <input type="hidden" id="csrf_token" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 			  
-			  <div style="padding-top: 15px; padding-bottom: 30px;">
-			  	<a href="http://lowcost-env.p2wn4fjmir.us-east-1.elasticbeanstalk.com/public.html" style="color: #00C853;">Do not have an account? Register here.</a>
+			  <div style="margin-top: 15px; margin-bottom: 30px;">
+			  	<div style="display: inline-block; padding: 10px;">
+			  		<a href="http://lowcost-env.p2wn4fjmir.us-east-1.elasticbeanstalk.com/public.html" style="color: #00C853; font-size: 12px;">Create an account</a>
+			  	</div>
+			  	|
+			  	<div style="display: inline-block; padding: 10px;">
+			  		<a href="http://lowcost-env.p2wn4fjmir.us-east-1.elasticbeanstalk.com/public.html" style="color: #00C853; font-size: 12px;">Forgot your password?</a>
+			  	</div>
 			  </div>
 			  
 			  <div>

@@ -1,0 +1,63 @@
+<div class="md-padding" layout="column" flex>
+	<div class="generic-container-1">
+		<form class="custom-form">
+			<div class="header md-subhead">
+				Profile settings
+			</div>
+			<div class="md-padding">
+				<div layout-gt-sm="row" class="form-group">
+					<label class="control-label" for="user-first-name" flex-gt-sm="20">First name</label>
+					<md-input-container md-no-float class="md-block" flex>
+						<input ng-model="_user.firstName" id="user-first-name">
+					</md-input-container>
+				</div>
+				<div layout-gt-sm="row" class="form-group">
+					<label class="control-label" for="user-last-name" flex-gt-sm="20">Last name</label>
+					<md-input-container md-no-float class="md-block" flex>
+						<input ng-model="_user.lastName" id="user-last-name">
+					</md-input-container>
+				</div>
+				<div layout-gt-sm="row" class="form-group">
+					<label class="control-label" flex-gt-sm="20">Fab Academy</label>
+			    	<md-input-container class="md-block">
+						<md-checkbox ng-model="_user.isFabAcademyGrad" aria-label="Is Fab Academy graduated?">
+							Fab Academy graduated?
+						</md-checkbox>
+				    </md-input-container>
+			        <md-input-container md-no-float class="md-block" ng-show="_user.isFabAcademyGrad">
+				    	<input ng-model="_user.fabAcademyGradYear" placeholder="Year">
+			        </md-input-container>
+			    </div>
+			    <div layout-gt-sm="row" class="form-group">
+					<label class="control-label" for="user-city" flex-gt-sm="20">City</label>
+					<md-input-container md-no-float class="md-block" flex>
+						<input ng-model="_user.city" id="user-city">
+					</md-input-container>
+				</div>
+				<div layout-gt-sm="row" class="form-group">
+					<label class="control-label" for="user-country" flex-gt-sm="20">Country</label>
+					<md-input-container md-no-float class="md-block" flex>
+						<input ng-model="_user.country" id="user-country">
+					</md-input-container>
+				</div>
+				<div layout-gt-sm="row" class="form-group">
+					<label class="control-label" for="user-main-quote" flex-gt-sm="20">Main quote</label>
+					<md-input-container class="md-block" flex>
+						<textarea ng-model="_user.mainQuote" id="user-main-quote" md-maxlength="500" rows="2" md-select-on-focus></textarea>
+					</md-input-container>
+				</div>
+				<div layout-gt-sm="row" class="form-group">
+					<label class="control-label" for="user-week-goal" flex-gt-sm="20">Goal of the week</label>
+					<md-input-container class="md-block" flex>
+						<textarea ng-model="_user.weekGoal" id="user-week-goal" md-maxlength="500" rows="2" md-select-on-focus></textarea>
+					</md-input-container>
+				</div>		
+			</div>
+			<div class="actions" layout="row">
+				<md-button class="md-warn">Deactivate my account</md-button>
+				<span flex></span>
+				<md-button class="md-primary md-raised">Update settings</md-button>
+			</div>
+		</form>
+	</div>
+</div>

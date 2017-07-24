@@ -1,78 +1,286 @@
-var app = angular.module('FabLatApp', [ 'ui.router', 'ngMaterial', 'ng.group', 'sasrio.angular-material-sidenav', 'ngMessages' ]);
+var app = angular.module('FabLatApp', [ 'ui.router', 'ngMaterial', 'ng.group', 'ngMessages' ]);
 
-app.config(function($mdThemingProvider, $urlRouterProvider, $stateProvider, ssSideNavSectionsProvider) {
+app.config(function($mdThemingProvider, $mdIconProvider, $urlRouterProvider, $stateProvider) {
 
 	$mdThemingProvider.theme('default')
-	.primaryPalette('light-blue', {
-		'default': '700',
-		'hue-1': '300', 
-		'hue-2': '500',
-		'hue-3': '800' 
-	})
-	.accentPalette('green', {
+		.primaryPalette('cyan', {
+			'default': '500',
+			'hue-1': '300', 
+			'hue-2': '700',
+			'hue-3': '800' 
+		})
+		.accentPalette('light-blue', {
+			'default': '500',
+			'hue-1': '300', 
+			'hue-2': '700',
+			'hue-3': '900' 
+		})
+		.warnPalette('deep-orange', { 
+			
+		});
+	
+	// Neutral theme 
+	$mdThemingProvider.theme('neutral').primaryPalette('grey', {
 		'default': '500',
-		'hue-1': '300', 
-		'hue-2': '700',
-		'hue-3': '900' 
-	})
-	.warnPalette('deep-orange', { 
+		'hue-1': '50', 
+		'hue-2': '100',
+		'hue-3': '200' 
 	});
 	
-	$mdThemingProvider.theme('grey', 'default')
-    .primaryPalette('grey');
-	
-	// Configure a dark theme with primary foreground yellow
-    $mdThemingProvider.theme('docs-dark', 'default')
-      .primaryPalette('yellow')
-      .dark();
+	// Palettes for playing with colors
+	$mdThemingProvider.theme('darkRed').backgroundPalette('red').dark();
+	$mdThemingProvider.theme('darkPink').backgroundPalette('pink').dark();
+	$mdThemingProvider.theme('darkPurple').backgroundPalette('purple').dark();
+	$mdThemingProvider.theme('darkDeepPurple').backgroundPalette('deep-purple').dark();
+	$mdThemingProvider.theme('darkIndigo').backgroundPalette('indigo').dark();
+	$mdThemingProvider.theme('darkBlue').backgroundPalette('blue').dark();
+	$mdThemingProvider.theme('darkLightBlue').backgroundPalette('light-blue').dark();
+	$mdThemingProvider.theme('darkCyan').backgroundPalette('cyan').dark();
+	$mdThemingProvider.theme('darkTeal').backgroundPalette('teal').dark();
+	$mdThemingProvider.theme('darkGreen').backgroundPalette('green').dark();
+	$mdThemingProvider.theme('darkLightGreen').backgroundPalette('light-green').dark();
+	$mdThemingProvider.theme('darkLime').backgroundPalette('lime').dark();
+	$mdThemingProvider.theme('darkYellow').backgroundPalette('yellow').dark();
+	$mdThemingProvider.theme('darkAmber').backgroundPalette('amber').dark();
+	$mdThemingProvider.theme('darkOrange').backgroundPalette('orange').dark();
+	$mdThemingProvider.theme('darkDeepOrange').backgroundPalette('deep-orange').dark();
+	$mdThemingProvider.theme('darkBrown').backgroundPalette('brown').dark();
+	$mdThemingProvider.theme('darkGrey').backgroundPalette('grey').dark();
+	$mdThemingProvider.theme('darkBlueGrey').backgroundPalette('blue-grey').dark();
     
+	// Iconset
+	$mdIconProvider.defaultIconSet('images/mdi.svg');
     
     // Routes config
-    
-    $urlRouterProvider.otherwise(function () {
+    $urlRouterProvider.otherwise(function() {
         return '/';
     });
 
     $stateProvider.state({
-        name: 'home',
-        url: '/',
-        templateUrl: 'dashboard.html',
-        controller: function ($rootScope) {
-            $rootScope.model = {
-                title: 'Dashboard'
-            };
-        }
-    });
-
-    $stateProvider.state({
         name: 'dashboard',
-        url: '/dashboard',
-        templateUrl: 'dashboard.html',
-        controller: function ($rootScope) {
-            $rootScope.model = {
-                title: 'Dashboard'
-            };
-        }
+        url: '/',
+        templateUrl: 'dashboard.html'
     });
     
     $stateProvider.state({
-        name: 'projects',
-        url: '/project-manager',
-        templateUrl: 'project-manager.html',
+        name: 'groups',
+        url: '/groups',
+        templateUrl: 'groups.html'
+    });
+    
+    $stateProvider.state({
+        name: 'workshops',
+        url: '/workshops',
+        templateUrl: 'workshops.html'
+    });
+    
+    $stateProvider.state({
+        name: 'settings',
+        abstract: true,
+        url: '/settings',
+        templateUrl: 'settings.html'
+    });
+    
+    $stateProvider.state({
+        name: 'settings.profile',
+        url: '/profile',
+        templateUrl: 'settings.profile.html'
+    });
+    
+    $stateProvider.state({
+        name: 'settings.password',
+        url: '/password',
+        templateUrl: 'settings.password.html'
+    });
+    
+    /*========== group states ==========*/
+    $stateProvider.state({
+        name: 'group',
+        abstract: true,
+        url: '/group/:idGroup',
+        templateUrl: 'group.html'
+    });
+    
+    $stateProvider.state({
+        name: 'group.general',
+        url: '/general',
+        templateUrl: 'group.general.html'
+    });
+    
+    $stateProvider.state({
+        name: 'group.discussion',
+        url: '/discussion',
+        templateUrl: 'group.discussion.html'
+    });
+    
+    $stateProvider.state({
+        name: 'group.activity',
+        url: '/activity',
+        templateUrl: 'group.activity.html'
+    });
+    
+    $stateProvider.state({
+        name: 'group.management',
+        abstract: true,
+        url: '/management',
+        templateUrl: 'group.management.html'
+    });
+    
+    $stateProvider.state({
+        name: 'group.management.general',
+        url: '/general',
+        templateUrl: 'group.management.general.html'
+    });
+    
+    $stateProvider.state({
+        name: 'group.management.members',
+        url: '/members',
+        templateUrl: 'group.management.members.html'
+    });
+    
+    $stateProvider.state({
+        name: 'group.management.subgroups',
+        url: '/subgroups',
+        templateUrl: 'group.management.subgroups.html'
+    });
+    
+    
+    /*=========== subgroup states ===========*/
+    $stateProvider.state({
+        name: 'subgroup',
+        abstract: true,
+        url: '/subgroup/:idSubgroup',
+        templateUrl: 'subgroup.html'
+    });
+    
+    $stateProvider.state({
+        name: 'subgroup.general',
+        url: '/general',
+        templateUrl: 'subgroup.general.html'
+    });
+    
+    $stateProvider.state({
+        name: 'subgroup.discussion',
+        url: '/discussion',
+        templateUrl: 'subgroup.discussion.html'
+    });
+    
+    $stateProvider.state({
+        name: 'subgroup.ideas',
+        url: '/ideas',
+        templateUrl: 'subgroup.ideas.html'
+    });
+    
+    $stateProvider.state({
+        name: 'subgroup.activity',
+        url: '/activity',
+        templateUrl: 'subgroup.activity.html'
+    });
+    
+    $stateProvider.state({
+        name: 'subgroup.management',
+        abstract: true,
+        url: '/management',
+        templateUrl: 'subgroup.management.html'
+    });
+    
+    $stateProvider.state({
+        name: 'subgroup.management.general',
+        url: '/general',
+        templateUrl: 'subgroup.management.general.html'
+    });
+    
+    $stateProvider.state({
+        name: 'subgroup.management.members',
+        url: '/members',
+        templateUrl: 'subgroup.management.members.html'
+    });
+    
+    $stateProvider.state({
+        name: 'subgroup.management.workshops',
+        url: '/workshops',
+        templateUrl: 'subgroup.management.workshops.html'
+    });
+    
+    $stateProvider.state({
+        name: 'subgroup.addWorkshop',
+        url: '/addWorkshop',
+        templateUrl: 'subgroup.add-workshop.html'
+    });
+    
+    
+    /*=========== workshop states ===========*/
+    
+    $stateProvider.state({
+        name: 'workshop',
+        abstract: true,
+        url: '/workshop/:idWorkshop',
+        templateUrl: 'workshop.html'
+    });
+    
+    $stateProvider.state({
+        name: 'workshop.general',
+        url: '/general',
+        templateUrl: 'workshop.general.html'
+    });
+    
+    $stateProvider.state({
+        name: 'workshop.management',
+        abstract: true,
+        url: '/management',
+        templateUrl: 'workshop.management.html'
+    });
+    
+    $stateProvider.state({
+        name: 'workshop.management.general',
+        url: '/general',
+        templateUrl: 'workshop.management.general.html'
+    });
+    
+    $stateProvider.state({
+        name: 'workshop.management.tutors',
+        url: '/tutors',
+        templateUrl: 'workshop.management.tutors.html'
+    });
+    
+    
+    
+    
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    /******* old ********/
+    
+    $stateProvider.state({
+        name: 'subgroups',
+        url: '/subgroup-manager',
+        templateUrl: 'subgroup-manager.html',
         controller: function ($rootScope) {
         	$rootScope.model = {
-                title: 'Projects'
+                title: 'SubGroups'
             };
         }
     });
 
     $stateProvider.state({
-        name: 'replications',
-        url: '/replication-manager',
-        templateUrl: 'replication-manager.html',
+        name: 'events',
+        url: '/event-manager',
+        templateUrl: 'event-manager.html',
         controller: function ($rootScope) {
         	$rootScope.model = {
-                title: 'Replications'
+                title: 'Events'
             };
         }
     });
@@ -89,23 +297,23 @@ app.config(function($mdThemingProvider, $urlRouterProvider, $stateProvider, ssSi
     });
     
     $stateProvider.state({
-        name: 'projectList',
-        url: '/project/list',
-        templateUrl: 'project-list.html',
+        name: 'subgroupList',
+        url: '/subgroup/list',
+        templateUrl: 'subgroup-list.html',
         controller: function ($rootScope) {
         	$rootScope.model = {
-                title: 'Project List'
+                title: 'SubGroup List'
             };
         }
     });
     
     $stateProvider.state({
-        name: 'projectDetail',
-        url: '/project/detail/:idProject',
-        templateUrl: 'project-detail.html',
+        name: 'subgroupDetail',
+        url: '/subgroup/detail/:idSubGroup',
+        templateUrl: 'subgroup-detail.html',
         controller: function ($rootScope) {
         	$rootScope.model = {
-                title: 'Project Detail'
+                title: 'SubGroup Detail'
             };
         }
     });
@@ -153,72 +361,11 @@ app.config(function($mdThemingProvider, $urlRouterProvider, $stateProvider, ssSi
             };
         }
     });
-    
-    // Sidenav structure
-    
-    ssSideNavSectionsProvider.initWithTheme($mdThemingProvider);
-    ssSideNavSectionsProvider.initWithSections([{
-        id: 'section1',
-        name: 'General',
-        type: 'heading',
-        children: [{
-            id: 'dashboard',
-            name: 'Dashboard',
-            state: 'dashboard',
-            type: 'link'
-        }, {
-            id: 'projects',
-            name: 'Projects',
-            state: 'projects',
-            type: 'link'
-        }, {
-            id: 'replications',
-            name: 'Replications',
-            state: 'replications',
-            type: 'link'
-        }]
-    }, {
-        id: 'section2',
-        name: 'Account',
-        type: 'heading',
-        children: [{
-            id: 'personal_data',
-            name: 'Personal Data',
-            state: 'personalData',
-            type: 'link'
-        }]
-    }, {
-        id: 'section3',
-        name: 'Management',
-        type: 'heading',
-        hidden: true,
-        children: [{
-            id: 'general_manager_lat',
-            name: 'General Manager Lat',
-            state: 'generalManagerLat',
-            type: 'link',
-            hidden: true
-        }, {
-            id: 'general_manager_lab',
-            name: 'General Manager Lab',
-            state: 'generalManagerLab',
-            type: 'link',
-            hidden: true
-        }, {
-            id: 'data_visualization',
-            name: 'Data visualization',
-            state: 'dataVisualization',
-            type: 'link'
-        }]
-    }
-    ]);
+   
 });
 
 // General controller, runs on top of everything
-app.controller('AppCtrl', ['$rootScope', '$http', '$location', '$window', '$scope', '$mdBottomSheet','$mdSidenav', '$mdDialog', '$timeout', 'ssSideNav', function($rootScope, $http, $location, $window, $scope, $mdBottomSheet, $mdSidenav, $mdDialog, $timeout, ssSideNav) { 
-
-	// Sidenav menu
-	$scope.menu = ssSideNav;
+app.controller('AppCtrl', ['$rootScope', '$http', '$state', '$location', '$window', '$scope', '$mdSidenav', '$mdDialog', function($rootScope, $http, $state, $location, $window, $scope, $mdSidenav, $mdDialog) { 
 	
 	$rootScope.user = {};
 	
@@ -256,12 +403,12 @@ app.controller('AppCtrl', ['$rootScope', '$http', '$location', '$window', '$scop
 			
 			
 		    // Show or Hide menus by Roles
-			if ($rootScope.user.roles.indexOf("ROLE_ADMIN_LAT") !== -1) {
+			/*if ($rootScope.user.roles.indexOf("ROLE_ADMIN_GENERAL") !== -1) {
 				ssSideNav.setVisibleFor([{
 					id: 'section3',
 					value: true
 				}, {
-					id: 'general_manager_lat',
+					id: 'general_admin',
 					value: true
 				}]);
 			}
@@ -271,21 +418,21 @@ app.controller('AppCtrl', ['$rootScope', '$http', '$location', '$window', '$scop
 					id: 'section3',
 					value: true
 				}, {
-					id: 'general_manager_lab',
+					id: 'lab_admin',
 					value: true
 				}]);
-			}
+			} */
 			
 		} else {
 			$rootScope.authenticated = false;
 			console.log("not authenticated");
 			// redirect to login page
-			$window.location.href = '/login';
+			//$window.location.href = '/login';
 		}
 	}, function() {
 		$rootScope.authenticated = false;
 		console.log("error in authentication.");
-		$window.location.href = '/login'; // redirect to login page
+		//$window.location.href = '/login'; // redirect to login page
 	});
 
 	$scope.logout = function() {
@@ -306,58 +453,18 @@ app.controller('AppCtrl', ['$rootScope', '$http', '$location', '$window', '$scop
 	$scope.toggleSidenav = function(menuId) {
 		$mdSidenav(menuId).toggle();
 	};
-
-	  // Bottomsheet & Modal Dialogs
-	  $scope.alert = '';
-	  $scope.showListBottomSheet = function($event) {
-	    $scope.alert = '';
-	    $mdBottomSheet.show({
-	      template: '<md-bottom-sheet class="md-list md-has-header"><md-list><md-list-item class="md-2-line" ng-repeat="item in items" role="link" md-ink-ripple><md-icon md-svg-icon="{{item.icon}}" aria-label="{{item.name}}"></md-icon><div class="md-list-item-text"><h3>{{item.name}}</h3></div></md-list-item> </md-list></md-bottom-sheet>',
-	      controller: 'ListBottomSheetCtrl',
-	      targetEvent: $event
-	    }).then(function(clickedItem) {
-	      $scope.alert = clickedItem.name + ' clicked!';
-	    });
-	  };
-	  
-	  $scope.showAdd = function(ev) {
-	    $mdDialog.show({
-	      controller: DialogController,
-	      template: '<md-dialog aria-label="Form"> <md-content class="md-padding"> <form name="userForm"> <div layout layout-sm="column"> <md-input-container flex> <label>First Name</label> <input ng-model="user.firstName"> </md-input-container> <md-input-container flex> <label>Last Name</label> <input ng-model="user.lastName"> </md-input-container> </div> <md-input-container flex> <label>Message</label> <textarea ng-model="user.biography" columns="1" md-maxlength="150"></textarea> </md-input-container> </form> </md-content> <div class="md-actions" layout="row"> <span flex></span> <md-button ng-click="answer(\'not useful\')"> Cancel </md-button> <md-button ng-click="answer(\'useful\')" class="md-primary"> Save </md-button> </div></md-dialog>',
-	      targetEvent: ev,
-	    })
-	    .then(function(answer) {
-	      $scope.alert = 'You said the information was "' + answer + '".';
-	    }, function() {
-	      $scope.alert = 'You cancelled the dialog.';
-	    });
-	  };
-	  
-	  	
-    /*ssSideNav.setVisible('link_1');
-    ssSideNav.setVisibleFor([{
-      id: 'toggle_item_1',
-      value: true
-    }, {
-      id: 'link_1',
-      value: false
-    }]);
-
-    $timeout(function () {
-      ssSideNav.setVisible('toogle_2', false);
-    });
-
-    $timeout(function () {
-        // force selection on child dropdown menu item and select its state too.
-        ssSideNav.forceSelectionWithId('toogle_1_link_2');
-    }, 1000 * 3);*/
-    
-    //***************
+	
+	// Avatar menu
+	$scope.openMenu = function($mdOpenMenu, ev) {
+		$mdOpenMenu(ev);
+	};
 
 }]);
 
 
-//Controller for dashboard view: dashboard.html
+/*========== General controllers ==========*/
+
+// Controller for dashboard view: dashboard.html
 app.controller('DashboardCtrl', function($rootScope, $scope, $http, $filter) {
 	
 	$http.get('/resource').then(function(response) {
@@ -383,8 +490,8 @@ app.controller('DashboardCtrl', function($rootScope, $scope, $http, $filter) {
 	    $scope.loading2 = false;
 	});
 	
-	$http.get('/resource/project/list-exclusive-user').then(function(response) {
-		$scope.projects = response.data;
+	$http.get('/resource/subgroup/list-exclusive-user').then(function(response) {
+		$scope.subgroups = response.data;
 	}).finally(function() {
 	    // called no matter success or failure
 	    $scope.loading3 = false;
@@ -400,32 +507,213 @@ app.controller('DashboardCtrl', function($rootScope, $scope, $http, $filter) {
 });
 
 
-// Controller for projects list: project-list.html
-app.controller('ProjectListCtrl', function($scope, $http, $mdDialog) {
+// Controller for groups view: groups.html
+app.controller('GroupsCtrl', function($scope, $http, $mdDialog) {
+	
+	$scope.query = function(searchText) {
+	    return $http
+	      .get(BACKEND_URL + '/items/' + searchText)
+	      .then(function(data) {
+	        // Map the response object to the data object.
+	        return data;
+	      });
+	};
+	
+	
+	// New group dialog
+	$scope.addGroup = function(ev) {
+	    $mdDialog.show({
+	      controller: AddGroupDialogController,
+	      templateUrl: 'add-group-dialog.tmpl.html',
+	      parent: angular.element(document.body),
+	      targetEvent: ev,
+	      clickOutsideToClose: true,
+	      fullscreen: true // Only for -xs, -sm breakpoints.
+	    })
+	    .then(function(answer) {
+	      $scope.status = 'You said the information was "' + answer + '".';
+	    }, function() {
+	      $scope.status = 'You cancelled the dialog.';
+	    });
+	};
+	
+});
+
+
+/*========== Group controllers ==========*/
+// Controller in: group.html
+app.controller('GroupCtrl', function($scope, $http, $stateParams) {
+	
+	console.log($stateParams.idGroup);
+	
+	// inherits to children states
+	$scope.group = { name: "Open BioFab" };
+	
+});
+
+// Controller in: group.general.html
+app.controller('GroupGeneralCtrl', function($scope, $http, $stateParams, $mdDialog) {
+	
+	// New subgroup dialog
+	$scope.addSubgroup = function(ev) {
+	    $mdDialog.show({
+	      controller: AddSubgroupDialogController,
+	      templateUrl: 'add-subgroup-dialog.tmpl.html',
+	      parent: angular.element(document.body),
+	      targetEvent: ev,
+	      clickOutsideToClose: true,
+	      fullscreen: true // Only for -xs, -sm breakpoints.
+	    })
+	    .then(function(answer) {
+	      $scope.status = 'You said the information was "' + answer + '".';
+	    }, function() {
+	      $scope.status = 'You cancelled the dialog.';
+	    });
+	};
+	
+});
+
+
+
+
+/*========== Subgroup controllers ==========*/
+
+// Controller in: subgroup.html
+app.controller('SubgroupCtrl', function($scope, $http, $stateParams) {
+	
+	// inherits to children states
+	$scope.subgroup = { name: "DIYbio lab kit" };
+	
+	
+	
+});
+
+// Controller in: subgroup.general.html
+app.controller('SubgroupGeneralCtrl', function($scope, $http, $stateParams) {
+	
+	
+	
+});
+
+
+
+
+
+/*========== Dialog controllers ==========*/
+
+// Controller for: add-group-dialog.tmpl.html
+function AddGroupDialogController($scope, $mdDialog, $http) {
+	 
+	$scope.actionsDisabled = false;
+	
+	$scope.hide = function() {
+	    $mdDialog.hide();
+	};
+	$scope.cancel = function() {
+	    $mdDialog.cancel();
+	};
+	$scope.submit = function() {	
+		$scope.actionsDisabled = true;
+		//TODO: validate fields
+		 
+		
+		console.log($scope._group);
+		
+		// submit data
+		$http.post('/resource/group/save', {
+			name: $scope._group.name,
+			description: $scope._group.description
+		}).then(function(response) {	
+			console.log("saved!");
+			// pass data retrieved to parent controller
+			$mdDialog.hide(response.data);	
+		});
+				  
+	  };
+};
+
+// Controller for: add-subgroup-dialog.tmpl.html
+function AddSubgroupDialogController($scope, $mdDialog, $http) {
+	 
+	$scope.actionsDisabled = false;
+	
+	$scope.hide = function() {
+	    $mdDialog.hide();
+	};
+	$scope.cancel = function() {
+	    $mdDialog.cancel();
+	};
+	$scope.submit = function() {	
+		$scope.actionsDisabled = true;
+		//TODO: validate fields
+		 
+		
+		console.log($scope._subgroup);
+		
+		// submit data
+		$http.post('/resource/subgroup/save', {
+			name: $scope._subgroup.name,
+			description: $scope._subgroup.description
+		}).then(function(response) {	
+			console.log("saved!");
+			// pass data retrieved to parent controller
+			$mdDialog.hide(response.data);	
+		});
+				  
+	  };
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Olddddddddddddddddddd */ 
+
+// Controller for subgroups list: subgroup-list.html
+app.controller('SubGroupListCtrl', function($scope, $http, $mdDialog) {
 	
 	$scope.loading = true;
 	
-	$http.get('/resource/project/list-all-user').then(function(response) {
-		$scope.projects = response.data;
+	$http.get('/resource/subgroup/list-all-user').then(function(response) {
+		$scope.subgroups = response.data;
 	}).finally(function() {
 	    // called no matter success or failure
 	    $scope.loading = false;
 	});
 	
-	$scope.join = function(idProject, $index) {
-		$http.post('/resource/project/join', {
-			idProject: idProject
+	$scope.join = function(idSubGroup, $index) {
+		$http.post('/resource/subgroup/join', {
+			idSubGroup: idSubGroup
 		}).then(function(response) {
 			// toggle status
-			$scope.projects[$index].currentUserStatus = "JOINED";
+			$scope.subgroups[$index].currentUserStatus = "JOINED";
 		});
 	}
 	
 });
 
 
-// Controller for project manager view: project-manager.html
-app.controller('ProjectManagerCtrl', function($scope, $http, $mdDialog, $mdMedia) {
+// Controller for subgroup manager view: subgroup-manager.html
+app.controller('SubGroupManagerCtrl', function($scope, $http, $mdDialog, $mdMedia) {
 	
 	$scope.loading1 = true;
 	$scope.loading2 = true;
@@ -435,11 +723,11 @@ app.controller('ProjectManagerCtrl', function($scope, $http, $mdDialog, $mdMedia
 		$mdOpenMenu(ev);
 	};
 	
-	$scope.newProject = function(ev) {
+	$scope.newSubGroup = function(ev) {
 	    var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'))  && $scope.customFullscreen;
 	    $mdDialog.show({
-	      controller: NewProjectDialogController,
-	      templateUrl: 'new-project-dialog.tmpl.html',
+	      controller: NewSubGroupDialogController,
+	      templateUrl: 'new-subgroup-dialog.tmpl.html',
 	      parent: angular.element(document.body),
 	      targetEvent: ev,
 	      clickOutsideToClose:true,
@@ -448,7 +736,7 @@ app.controller('ProjectManagerCtrl', function($scope, $http, $mdDialog, $mdMedia
 	    .then(function(model) {
 	    	// alert("troll :D");
 	    	console.log(model);
-	    	$scope.projects1.push(model);
+	    	$scope.subgroups1.push(model);
 	    	
 	    }, function() {
 	      // cancelled dialog
@@ -461,33 +749,33 @@ app.controller('ProjectManagerCtrl', function($scope, $http, $mdDialog, $mdMedia
 	    });
 	};
 	
-	// get managed projects
-	$http.get('/resource/project/list-managed-user').then(function(response) {
-		$scope.projects1 = response.data;
+	// get managed subgroups
+	$http.get('/resource/subgroup/list-managed-user').then(function(response) {
+		$scope.subgroups1 = response.data;
 	}).finally(function() {
 	    // called no matter success or failure
 	    $scope.loading1 = false;
 	});
 	
-	// get not managed projects
-	$http.get('/resource/project/list-not-managed-user').then(function(response) {
-		$scope.projects2 = response.data;
+	// get not managed subgroups
+	$http.get('/resource/subgroup/list-not-managed-user').then(function(response) {
+		$scope.subgroups2 = response.data;
 	}).finally(function() {
 	    // called no matter success or failure
 	    $scope.loading2 = false;
 	});
 	
-	$scope.leaveProject = function(event, idProject, $index) {
+	$scope.leaveSubGroup = function(event, idSubGroup, $index) {
 		
 		$mdDialog.confirm()
-	        .title('Are you sure you want to leave this project?')
-			.textContent('You can still join the project later.')
+	        .title('Are you sure you want to leave this subgroup?')
+			.textContent('You can still join the subgroup later.')
 			.ariaLabel('Leave confirmation')
 			.targetEvent(event)
 			.ok('Leave')
 			.cancel('Cancel');
 		$mdDialog.show(confirm).then(function() {
-			$scope.status = 'You left the project.';
+			$scope.status = 'You left the subgroup.';
 			
 			/*$http.post('resource/group/leave', {
 				idGroup: idGroup
@@ -501,9 +789,9 @@ app.controller('ProjectManagerCtrl', function($scope, $http, $mdDialog, $mdMedia
 		  });
 	}
 	
-	$scope.toggleNotifications = function(idProject, $index) {
-		$http.post('/resource/project/toggle-notifications', {
-			idProject: idProject
+	$scope.toggleNotifications = function(idSubGroup, $index) {
+		$http.post('/resource/subgroup/toggle-notifications', {
+			idSubGroup: idSubGroup
 		}).then(function(response) {
 			
 		
@@ -513,34 +801,34 @@ app.controller('ProjectManagerCtrl', function($scope, $http, $mdDialog, $mdMedia
 });
 
 
-// Controller within: project-manager.html
-app.controller('ProjectsAllCtrl', function($scope, $http) {
+// Controller within: subgroup-manager.html
+app.controller('SubGroupsAllCtrl', function($scope, $http) {
 	
 	$scope.loading = true;
 	
-	$http.get('/resource/project/list-all-user').then(function(response) {
+	$http.get('/resource/subgroup/list-all-user').then(function(response) {
 		
-		$scope.projects = response.data;
+		$scope.subgroups = response.data;
 		
 	}).finally(function() {
 	    // called no matter success or failure
 	    $scope.loading = false;
 	});
 	
-	$scope.join = function(idProject, $index) {
-		$http.post('/resource/project/join', {
-			idProject: idProject
+	$scope.join = function(idSubGroup, $index) {
+		$http.post('/resource/subgroup/join', {
+			idSubGroup: idSubGroup
 		}).then(function(response) {
 			// toggle status
-			$scope.projects[$index].currentUserStatus = "JOINED";
+			$scope.subgroups[$index].currentUserStatus = "JOINED";
 		});
 	}
 	
 });
 
 
-// Controller for project detail view: project-detail.html
-app.controller('ProjectDetailCtrl', function($scope, $http, $stateParams, $state) {
+// Controller for subgroup detail view: subgroup-detail.html
+app.controller('SubGroupDetailCtrl', function($scope, $http, $stateParams, $state) {
 	
 	$scope.openMenu = function($mdOpenMenu, ev) {
 		$mdOpenMenu(ev);
@@ -548,74 +836,74 @@ app.controller('ProjectDetailCtrl', function($scope, $http, $stateParams, $state
 	
 	$scope.loading = true;
 	
-	$http.get('/resource/project/detail', {
+	$http.get('/resource/subgroup/detail', {
 		params: {
-			idProject: $stateParams.idProject
+			idSubGroup: $stateParams.idSubGroup
 		}
 	}).then(function(response) {		
-		$scope.project = response.data;		
+		$scope.subgroup = response.data;		
 	}).finally(function() {
 	    // called no matter success or failure
 	    $scope.loading = false;
 	});
 	
 	// for getting current user status
-	$http.get('/resource/project/get-current-user-status', {
+	$http.get('/resource/subgroup/get-current-user-status', {
 		params: {
-			idProject: $stateParams.idProject
+			idSubGroup: $stateParams.idSubGroup
 		}
 	}).then(function(response) {
 		
-		$scope.isProjectMember = response.data.isProjectMember;
+		$scope.isSubGroupMember = response.data.isSubGroupMember;
 		$scope.isCoordinator = response.data.isCoordinator;
 		
 	});
 	
-	$scope.joinProject = function() {
-		$http.post('/resource/project/join', {
-			idProject: $stateParams.idProject
+	$scope.joinSubGroup = function() {
+		$http.post('/resource/subgroup/join', {
+			idSubGroup: $stateParams.idSubGroup
 		}).then(function(response) {
 			// reload state
 			$state.go($state.current, {}, {reload: true});
 		});
 	}
 	
-	$scope.deleteFromProject = function(idFabber, $index, isCoordinator) {
-		$http.post('/resource/project/delete-user', {
-			idProject: $stateParams.idProject,
+	$scope.deleteFromSubGroup = function(idFabber, $index, isCoordinator) {
+		$http.post('/resource/subgroup/delete-user', {
+			idSubGroup: $stateParams.idSubGroup,
 			idFabber: idFabber
 		}).then(function(response) {
 			if (isCoordinator) {
-				$scope.project.coordinators.splice($index, 1);
+				$scope.subgroup.coordinators.splice($index, 1);
 			} else {
-				$scope.project.collaborators.splice($index, 1);
+				$scope.subgroup.collaborators.splice($index, 1);
 			}			
 		});
 	}
 	
 	$scope.nameAsCoordinator = function(idFabber, $index) {
-		$http.post('/resource/project/name-coordinator', {
-			idProject: $stateParams.idProject,
+		$http.post('/resource/subgroup/name-coordinator', {
+			idSubGroup: $stateParams.idSubGroup,
 			idFabber: idFabber
 		}).then(function(response) {
 			// delete from view model
-			$scope.project.collaborators.splice($index, 1);
-			$scope.project.coordinators.push(response.data);
+			$scope.subgroup.collaborators.splice($index, 1);
+			$scope.subgroup.coordinators.push(response.data);
 		});
 	}
 	
 });
 
 
-// Controller within: project-detail.html
-app.controller('ProjectReplicationsCtrl', function($scope, $http, $stateParams, $mdDialog, $mdMedia) {
+// Controller within: subgroup-detail.html
+app.controller('SubGroupEventsCtrl', function($scope, $http, $stateParams, $mdDialog, $mdMedia) {
 	
 	$scope.loading = true;
 	
-	// Get project's workshops
-	$http.get('/resource/project/list-upcoming-workshops', {
+	// Get subgroup's workshops
+	$http.get('/resource/subgroup/list-upcoming-workshops', {
 		params: {
-			idProject: $stateParams.idProject
+			idSubGroup: $stateParams.idSubGroup
 		}
 	}).then(function(response) {
 		
@@ -627,13 +915,13 @@ app.controller('ProjectReplicationsCtrl', function($scope, $http, $stateParams, 
 	});
 	
 	// For getting the current user state
-	$http.get('/resource/project/detail', {
+	$http.get('/resource/subgroup/detail', {
 		params: {
-			idProject: $stateParams.idProject
+			idSubGroup: $stateParams.idSubGroup
 		}
 	}).then(function(response) {
 		
-		$scope.project = response.data;
+		$scope.subgroup = response.data;
 		
 	}).finally(function() {
 	    // called no matter success or failure
@@ -676,8 +964,8 @@ app.controller('ProjectReplicationsCtrl', function($scope, $http, $stateParams, 
 });
 
 
-// Controller for replication manager view: replication-manager.html
-app.controller('ReplicationManagerCtrl', function($scope, $http) {
+// Controller for event manager view: event-manager.html
+app.controller('EventManagerCtrl', function($scope, $http) {
 	
 	$scope.openMenu = function($mdOpenMenu, ev) {
 		$mdOpenMenu(ev);
@@ -696,8 +984,8 @@ app.controller('ReplicationManagerCtrl', function($scope, $http) {
 });
 
 
-// Controller within: replication-manager.html
-app.controller('YourReplicationsCtrl', function($scope, $http) {
+// Controller within: event-manager.html
+app.controller('YourEventsCtrl', function($scope, $http) {
 	
 	$scope.openMenu = function($mdOpenMenu, ev) {
 		$mdOpenMenu(ev);
@@ -716,8 +1004,8 @@ app.controller('YourReplicationsCtrl', function($scope, $http) {
 });
 
 
-// Controller within: replication-manager.html 
-app.controller('YourPastReplicationsCtrl', function($scope, $http) {
+// Controller within: event-manager.html 
+app.controller('YourPastEventsCtrl', function($scope, $http) {
 	
 	$scope.openMenu = function($mdOpenMenu, ev) {
 		$mdOpenMenu(ev);
@@ -765,7 +1053,7 @@ app.controller('WorkshopDetailCtrl', function($scope, $http, $stateParams, $stat
 		}
 	}).then(function(response) {
 		
-		$scope.isProjectMember = response.data.isProjectMember;
+		$scope.isSubGroupMember = response.data.isSubGroupMember;
 		$scope.isWorkshopMember = response.data.isWorkshopMember;
 		$scope.isCoordinator = response.data.isCoordinator;
 		
@@ -890,7 +1178,7 @@ app.controller('PersonalDataCtrl', function($rootScope, $scope, $http) {
 });
 
 
-// Controller within: admin-general-manager.html
+// Controller within: admin-lat-general-manager.html
 app.controller('AdminLabManagerCtrl', function($scope, $http, $state) {
 	
 	$scope.loading = false;
@@ -922,8 +1210,8 @@ app.controller('AdminLabManagerCtrl', function($scope, $http, $state) {
 });
 
 
-// Controller within: admin-general-manager.html
-app.controller('AdminProjectManagerCtrl', function($scope, $http) {
+// Controller within: admin-lat-general-manager.html
+app.controller('AdminSubGroupManagerCtrl', function($scope, $http) {
 	
 	$scope.loading = true;
 	
@@ -931,28 +1219,28 @@ app.controller('AdminProjectManagerCtrl', function($scope, $http) {
 		$mdOpenMenu(ev);
 	};
 	
-	// get all groups
-	$http.get('/resource/project/list-all-admin').then(function(response) {
-		$scope.projects = response.data;
+	// get all subgroups
+	$http.get('/resource/subgroup/list-all-admin').then(function(response) {
+		$scope.subgroups = response.data;
 	}).finally(function() {
 	    // called no matter success or failure
 	    $scope.loading = false;
 	});
 	
-	$scope.deleteProject = function(idProject, $index) {		
-		$http.post('/resource/project/delete', {
-			idProject: idProject
+	$scope.deleteSubGroup = function(idSubGroup, $index) {		
+		$http.post('/resource/subgroup/delete', {
+			idSubGroup: idSubGroup
 		}).then(function(response) {
 			// update ui model
-			$scope.projects.splice($index, 1);
+			$scope.subgroups.splice($index, 1);
 		});
 	}	
 	
 });
 
 
-//Controller within: admin-general-manager.html
-app.controller('AdminReplicationManagerCtrl', function($scope, $http) {
+//Controller within: admin-lat-general-manager.html
+app.controller('AdminEventManagerCtrl', function($scope, $http) {
 	
 	$scope.loading = true;
 	
@@ -982,21 +1270,6 @@ app.controller('AdminReplicationManagerCtrl', function($scope, $http) {
 
 // ================= Extra controllers =====================
 
-app.controller('ListBottomSheetCtrl', function($scope, $mdBottomSheet) {
-	  $scope.items = [
-	    { name: 'Share', icon: 'social:ic_share_24px' },
-	    { name: 'Upload', icon: 'file:ic_cloud_upload_24px' },
-	    { name: 'Copy', icon: 'content:ic_content_copy_24px' },
-	    { name: 'Print this page', icon: 'action:ic_print_24px' },
-	  ];
-	  
-	  $scope.listItemClick = function($index) {
-	    var clickedItem = $scope.items[$index];
-	    $mdBottomSheet.hide(clickedItem);
-	  };
-});
-
-
 function DialogController($scope, $mdDialog) {
 	  $scope.hide = function() {
 	    $mdDialog.hide();
@@ -1010,8 +1283,8 @@ function DialogController($scope, $mdDialog) {
 };
 
 
-// Controller for: new-project-dialog.tmpl.html
-function NewProjectDialogController($scope, $mdDialog, $http) {
+// Controller for: new-subgroup-dialog.tmpl.html
+function NewSubGroupDialogController($scope, $mdDialog, $http) {
 	 
 	$scope.actionsDisabled = false;
 	
@@ -1026,14 +1299,14 @@ function NewProjectDialogController($scope, $mdDialog, $http) {
 		  //TODO: validate fields
 		  
 		
-		  console.log($scope.project);
+		  console.log($scope.subgroup);
 		  // submit data
-		  $http.post('/resource/project/save', {
-			name: $scope.project.name,
-			idGroup: $scope.project.group.idGroup,
-			description: $scope.project.description,
-			reunionDay: $scope.project.reunionDay,
-			reunionTime: $scope.project.reunionTime
+		  $http.post('/resource/subgroup/save', {
+			name: $scope.subgroup.name,
+			idGroup: $scope.subgroup.group.idGroup,
+			description: $scope.subgroup.description,
+			reunionDay: $scope.subgroup.reunionDay,
+			reunionTime: $scope.subgroup.reunionTime
 		}).then(function(response) {	
 			console.log("saved!");
 			// pass data retrieved to parent controller
@@ -1055,15 +1328,15 @@ function NewWorkshopDialogController($scope, $mdDialog, $http, $stateParams) {
 	$scope.actionsDisabled = false;
 	$scope.workshop = {};
 	$scope.workshop.isPaid = false;
-	$scope.workshop.idProject = $stateParams.idProject;
+	$scope.workshop.idSubGroup = $stateParams.idSubGroup;
 	
-	// for getting the project name and the next replication number
-	$http.get('/resource/project/brief', {
+	// for getting the subgroup name and the next replication number
+	$http.get('/resource/subgroup/brief', {
 		params: {
-			idProject: $stateParams.idProject
+			idSubGroup: $stateParams.idSubGroup
 		}
 	}).then(function(response) {
-		$scope.project = response.data;
+		$scope.subgroup = response.data;
 	});
 	
 	$scope.hide = function() {
@@ -1088,7 +1361,7 @@ function NewWorkshopDialogController($scope, $mdDialog, $http, $stateParams) {
 			coordinators: $scope.coordinators,
 			collaborators: $scope.collaborators,
 			locations: $scope.locations,
-			idProject: $scope.workshop.idProject
+			idSubGroup: $scope.workshop.idSubGroup
 		}).then(function(response) {	
 			console.log("saved!");
 			// pass data retrieved to parent controller
@@ -1103,9 +1376,9 @@ function NewWorkshopDialogController($scope, $mdDialog, $http, $stateParams) {
 	  $scope.searchText = null;
 	  $scope.selectedItem = null;
 	  
-	  $http.get('/resource/project/list-members-not-me', {
+	  $http.get('/resource/subgroup/list-members-not-me', {
 			params: {
-				idProject: $stateParams.idProject
+				idSubGroup: $stateParams.idSubGroup
 			}
 		}).then(function(response) {
 		  $scope.members = response.data;
@@ -1157,6 +1430,10 @@ function NewWorkshopDialogController($scope, $mdDialog, $http, $stateParams) {
 	  
 };
 
+
+
+//================= Custom directives =====================
+
 // Defining a custom directive for handling the user avatar
 // extracted from: http://plnkr.co/edit/UHq23coTUSrwnMKq1Itv?p=preview
 app.directive('userAvatar', ["avatarService", function (avatarService) {
@@ -1177,11 +1454,12 @@ app.directive('userAvatar', ["avatarService", function (avatarService) {
 		scope: {
 			mFabber: '=fabber',
 			avatarWidth: '@avatarW',
-			avatarHeight: '@avatarH'
+			avatarHeight: '@avatarH',
+			avatarFontSize: '@avatarFontSize'
 		},
 		template: '<div class="generic-avatar" style="width: {{avatarWidth}}px; height: {{avatarHeight}}px;">' +
 			'<div class="avatar-circle" style="background-color: {{genericAvatar.background}};"></div>' +
-			'<span class="name">{{genericAvatar.initials}}</span>' +
+			'<span class="name" style="font-size: {{avatarFontSize}}px;">{{genericAvatar.initials}}</span>' +
 			'<div class="img-avatar" data-ng-if="imageAvailable" style="background-image: url({{mFabber.avatar}})"></div>' +
 			'</div>',
 		controller: controller
@@ -1223,14 +1501,14 @@ app.directive('userAvatar', ["avatarService", function (avatarService) {
     }
 });
 
-// Project avatar
-app.directive('projectAvatar', ["projectAvatarService", function (projectAvatarService) {
+// Group avatar
+app.directive('groupAvatar', ["groupAvatarService", function (groupAvatarService) {
 	var controller = function ($scope) {		
-		$scope.$watch("mProject", function(newValue, oldValue, scope) {
+		$scope.$watch("mGroup", function(newValue, oldValue, scope) {
 			if (newValue) {
 				$scope.imageAvailable = false;
-				if (!$scope.mProject.avatar) {
-					$scope.genericAvatar = projectAvatarService.getAvatar($scope.mProject);
+				if (!$scope.mGroup.avatar) {
+					$scope.genericAvatar = groupAvatarService.getAvatar($scope.mGroup);
 				} else {
 					$scope.imageAvailable = true;
 				}	
@@ -1240,45 +1518,37 @@ app.directive('projectAvatar', ["projectAvatarService", function (projectAvatarS
 	return {
 		restrict: 'E',
 		scope: {
-			mProject: '=project',
+			mGroup: '=group',
 			avatarWidth: '@avatarW',
-			avatarHeight: '@avatarH'
+			avatarHeight: '@avatarH',
+			avatarFontSize: '@avatarFontSize'
 		},
 		template: '<div class="generic-avatar" style="width: {{avatarWidth}}px; height: {{avatarHeight}}px;">' +
 			'<div class="avatar-circle" style="background-color: {{genericAvatar.background}};"></div>' +
-			'<span class="project-name">{{genericAvatar.name}}</span>' +
+			'<span class="name" style="font-size: {{avatarFontSize}}px;">{{genericAvatar.initials}}</span>' +
 			'<div class="img-avatar" data-ng-if="imageAvailable" style="background-image:url({{mFabber.avatar}})"></div>' +
 			'</div>',
 		controller: controller
 	};
 }])
-.factory("projectAvatarService", function(){
-    var projectAvatarService = function(project) {
+.factory("groupAvatarService", function() {
+    var groupAvatarService = function(group) {
     	var colorCodes = ["#1abc9c", "#2ecc71", "#3498db", "#9b59b6", "#34495e", "#16a085", "#27ae60", 
     	                  "#2980b9", "#8e44ad", "#2c3e50", "#f1c40f", "#e67e22", "#e74c3c", "#95a5a6", 
     	                  "#f39c12", "#d35400", "#c0392b", "#bdc3c7", "#7f8c8d"];
       
-		var i1 = "", i2 = "", nameArray = [];
+		var i1 = "", nameArray = [];
 		
-		i1 = angular.uppercase(project.name.charAt(0));
-		nameArray = project.name.split(" ");
+		i1 = angular.uppercase(group.name.charAt(0));
 		
-		if (nameArray.length > 2) {
-			i2 = angular.uppercase(nameArray[nameArray.length - 1].charAt(0));
-		} else if(nameArray.length === 2) {
-			i2 = angular.uppercase(nameArray[1].charAt(0));
-		} else {
-			i2 = angular.uppercase(nameArray[0].charAt(0));
-		}
-		
-		var initials = i1 + "" + i2;
+		var initials = i1;
 		var charIndex = initials.charCodeAt(0) - 48,
 	    	colourIndex = charIndex % 19;
 		
 		var background = colorCodes[colourIndex];
-		return ({ "name": project.name, "background": background });
+		return ({ "initials": initials, "background": background });
     }
     return {
-      getAvatar: projectAvatarService
+      getAvatar: groupAvatarService
     }
 });

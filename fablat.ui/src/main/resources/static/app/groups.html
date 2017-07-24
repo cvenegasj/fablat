@@ -1,0 +1,242 @@
+<div ng-controller="GroupsCtrl" layout="column">
+	
+	<md-toolbar md-whiteframe="1" md-theme="neutral" class="md-hue-1">
+    	<div class="md-toolbar-tools" >
+	    	<h2 flex md-truncate>Groups</h2>
+	    	<span flex></span>
+	    	<md-button class="md-raised" md-colors="{background: 'background-500', color: 'primary-50'}" ng-click="addGroup($event)">New group</md-button> 
+	    	<md-autocomplete id="autocomplete-groups" md-selected-item="selectedItem" md-search-text="searchText" md-items="item in getMatches(searchText)" 
+				md-item-text="item.display" md-clear-button="true" md-min-length="3" placeholder="Search group" md-menu-class="autocomplete-groups-template" flex="30">
+				<md-item-template>
+			    	<span md-highlight-text="searchText">{{ item.display }}</span>
+			  	</md-item-template>
+			  	<md-not-found>
+			  		No matches found.
+			  	</md-not-found>
+			</md-autocomplete>
+		</div>
+	</md-toolbar>
+	
+	<!-- Cards container -->
+	<div class="md-padding" layout-xs="column" layout="row" flex>
+		<div flex layout="column" class="md-padding">
+			<md-card class="custom-card-4" md-theme="darkLightGreen">
+		    	<md-card-header>
+		        	<md-card-header-text>
+			            <a ui-sref="group.general({ idGroup: 21 })" class="custom-anchor-1"><span class="md-title font-15">OPEN BIOFAB</span></a>
+			            <span class="md-subhead font-12">10 members</span>
+		        	</md-card-header-text>
+		        	<md-button class="md-icon-button" aria-label="toggle" ng-init="showSubgroups = false;" ng-click="showSubgroups = !showSubgroups;">
+		            	<md-icon md-font-set="material-icons">{{ showSubgroups? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</md-icon>
+		            </md-button>      
+		            <button class="aux-button-1">Join</button>
+		        </md-card-header>
+		        <md-card-content ng-show="showSubgroups">
+		        	<md-list class="md-dense" flex style="padding: 0;">
+		        		<md-list-item class="md-2-line">					    
+				          <div class="md-list-item-text" style="margin: 0;">
+				            <a href="#/" class="custom-anchor-1"><h3 class="uppercase font-13">Phagebot</h3></a>
+				            <p class="font-12" style="font-weight: 400;">4 members</p>
+				          </div>
+				        </md-list-item>
+				        <md-list-item class="md-2-line">					    
+				          <div class="md-list-item-text" style="margin: 0;">
+				            <a href="#/" class="custom-anchor-1"><h3 class="uppercase font-13">DIYbio lab kit</h3></a>
+				            <p class="font-12" style="font-weight: 400;">2 members</p>
+				          </div>
+				        </md-list-item>
+				        <md-list-item class="md-2-line">					    
+				          <div class="md-list-item-text" style="margin: 0;">
+				            <a href="#/" class="custom-anchor-1"><h3 class="uppercase font-13">DIYbio lab kit</h3></a>
+				            <p class="font-12" style="font-weight: 400;">2 members</p>
+				          </div>
+				        </md-list-item>
+		        	</md-list>
+		        </md-card-content>
+		     </md-card>
+		     <md-card class="custom-card-4" md-theme="darkAmber">
+		    	<md-card-header>
+		        	<md-card-header-text>
+			            <span class="md-title font-15">OPEN BIOFAB</span> 
+			            <span class="md-subhead font-12">Coordinator · 10 members</span>
+		        	</md-card-header-text>
+		        	<md-button class="md-icon-button" aria-label="toggle" ng-init="showSubgroups2 = false;" ng-click="showSubgroups2 = !showSubgroups2;">
+		            	<md-icon md-font-set="material-icons">{{ showSubgroups2? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</md-icon>
+		            </md-button>
+		            <span class="aux-tag-1">Joined</span>
+		        </md-card-header>
+		        <md-card-content md-colors="{background: 'darkAmber-background-700'}" ng-show="showSubgroups2">
+		        	<md-list class="md-dense" flex style="padding: 0;">
+		        		<md-list-item class="md-2-line">					    
+				          <div class="md-list-item-text" style="margin: 0;">
+				            <h3 class="uppercase font-13">Phagebot</h3>
+				            <p class="font-12" style="font-weight: 400;">Collaborator · 4 members</p>
+				          </div>
+				        </md-list-item>
+				        <md-list-item class="md-2-line">					    
+				          <div class="md-list-item-text" style="margin: 0;">
+				            <h3 class="uppercase font-13">DIYbio lab kit</h3>
+				            <p class="font-12" style="font-weight: 400;">Coordinator · 2 members</p>
+				          </div>
+				        </md-list-item>
+		        	</md-list>
+		        </md-card-content>
+		     </md-card>
+		     <md-card class="custom-card-4" md-theme="darkBlue">
+			    	<md-card-header>
+			        	<md-card-header-text>
+				            <span class="md-title font-15">OPEN BIOFAB</span> 
+				            <span class="md-subhead font-12">Coordinator · 10 members</span>
+			        	</md-card-header-text>
+			        </md-card-header>
+			        <md-card-content md-colors="{background: 'darkBlue-background-700'}">
+			        	<md-list class="md-dense" flex style="padding: 0;">
+			        		<md-list-item class="md-2-line">					    
+					          <div class="md-list-item-text" style="margin: 0;">
+					            <h3 class="uppercase font-13">Phagebot</h3>
+					            <p class="font-12" style="font-weight: 400;">Collaborator · 4 members</p>
+					          </div>
+					        </md-list-item>
+					        <md-list-item class="md-2-line">					    
+					          <div class="md-list-item-text" style="margin: 0;">
+					            <h3 class="uppercase font-13">DIYbio lab kit</h3>
+					            <p class="font-12" style="font-weight: 400;">Coordinator · 2 members</p>
+					          </div>
+					        </md-list-item>
+			        	</md-list>
+			        </md-card-content>
+			     </md-card>
+			     <md-card class="custom-card-4" md-theme="darkAmber">
+			    	<md-card-header>
+			        	<md-card-header-text>
+				            <span class="md-title font-15">OPEN BIOFAB</span> 
+				            <span class="md-subhead font-12">Coordinator · 10 members</span>
+			        	</md-card-header-text>
+			        </md-card-header>
+			        <md-card-content md-colors="{background: 'darkAmber-background-700'}">
+			        	<md-list class="md-dense" flex style="padding: 0;">
+			        		<md-list-item class="md-2-line">					    
+					          <div class="md-list-item-text" style="margin: 0;">
+					            <h3 class="uppercase font-13">Phagebot</h3>
+					            <p class="font-12" style="font-weight: 400;">Collaborator · 4 members</p>
+					          </div>
+					        </md-list-item>
+					        <md-list-item class="md-2-line">					    
+					          <div class="md-list-item-text" style="margin: 0;">
+					            <h3 class="uppercase font-13">DIYbio lab kit</h3>
+					            <p class="font-12" style="font-weight: 400;">Coordinator · 2 members</p>
+					          </div>
+					        </md-list-item>
+			        	</md-list>
+			        </md-card-content>
+			     </md-card>
+		</div>
+		<div flex layout="column" class="md-padding">
+				<md-card class="custom-card-4" md-theme="darkBlue">
+			    	<md-card-header>
+			        	<md-card-header-text>
+				            <span class="md-title font-15">OPEN BIOFAB</span> 
+				            <span class="md-subhead font-12">Coordinator · 10 members</span>
+			        	</md-card-header-text>
+			        </md-card-header>
+			        <md-card-content md-colors="{background: 'darkBlue-background-700'}">
+			        	<md-list class="md-dense" flex style="padding: 0;">
+			        		<md-list-item class="md-2-line">					    
+					          <div class="md-list-item-text" style="margin: 0;">
+					            <h3 class="uppercase font-13">Phagebot</h3>
+					            <p class="font-12" style="font-weight: 400;">Collaborator · 4 members</p>
+					          </div>
+					        </md-list-item>
+					        <md-list-item class="md-2-line">					    
+					          <div class="md-list-item-text" style="margin: 0;">
+					            <h3 class="uppercase font-13">DIYbio lab kit</h3>
+					            <p class="font-12" style="font-weight: 400;">Coordinator · 2 members</p>
+					          </div>
+					        </md-list-item>
+			        	</md-list>
+			        </md-card-content>
+			     </md-card>
+			     <md-card class="custom-card-4" md-theme="darkAmber">
+			    	<md-card-header>
+			        	<md-card-header-text>
+				            <span class="md-title font-15">OPEN BIOFAB</span> 
+				            <span class="md-subhead font-12">Coordinator · 10 members</span>
+			        	</md-card-header-text>
+			        </md-card-header>
+			        <md-card-content md-colors="{background: 'darkAmber-background-700'}">
+			        	<md-list class="md-dense" flex style="padding: 0;">
+			        		<md-list-item class="md-2-line">					    
+					          <div class="md-list-item-text" style="margin: 0;">
+					            <h3 class="uppercase font-13">Phagebot</h3>
+					            <p class="font-12" style="font-weight: 400;">Collaborator · 4 members</p>
+					          </div>
+					        </md-list-item>
+					        <md-list-item class="md-2-line">					    
+					          <div class="md-list-item-text" style="margin: 0;">
+					            <h3 class="uppercase font-13">DIYbio lab kit</h3>
+					            <p class="font-12" style="font-weight: 400;">Coordinator · 2 members</p>
+					          </div>
+					        </md-list-item>
+			        	</md-list>
+			        </md-card-content>
+			     </md-card>
+			</div>
+			<div flex layout="column" class="md-padding">
+				<md-card class="custom-card-4" md-theme="darkDeepOrange">
+			    	<md-card-header>
+			        	<md-card-header-text>
+				            <span class="md-title font-15">OPEN BIOFAB</span> 
+				            <span class="md-subhead font-12">Coordinator · 10 members</span>
+			        	</md-card-header-text>
+			        </md-card-header>
+			        <md-card-content md-colors="{background: 'darkDeepOrange-background-700'}">
+			        	<md-list class="md-dense" flex style="padding: 0;">
+			        		<md-list-item class="md-2-line">					    
+					          <div class="md-list-item-text" style="margin: 0;">
+					            <h3 class="uppercase font-13">Phagebot</h3>
+					            <p class="font-12" style="font-weight: 400;">Collaborator · 4 members</p>
+					          </div>
+					        </md-list-item>
+					        <md-list-item class="md-2-line">					    
+					          <div class="md-list-item-text" style="margin: 0;">
+					            <h3 class="uppercase font-13">DIYbio lab kit</h3>
+					            <p class="font-12" style="font-weight: 400;">Coordinator · 2 members</p>
+					          </div>
+					        </md-list-item>
+			        	</md-list>
+			        </md-card-content>
+			     </md-card>
+			     <md-card class="custom-card-4" md-theme="darkAmber">
+			    	<md-card-header>
+			        	<md-card-header-text>
+				            <span class="md-title font-15">OPEN BIOFAB</span> 
+				            <span class="md-subhead font-12">Coordinator · 10 members</span>
+			        	</md-card-header-text>
+			        </md-card-header>
+			        <md-card-content md-colors="{background: 'darkAmber-background-700'}">
+			        	<md-list class="md-dense" flex style="padding: 0;">
+			        		<md-list-item class="md-2-line">					    
+					          <div class="md-list-item-text" style="margin: 0;">
+					            <h3 class="uppercase font-13">Phagebot</h3>
+					            <p class="font-12" style="font-weight: 400;">Collaborator · 4 members</p>
+					          </div>
+					        </md-list-item>
+					        <md-list-item class="md-2-line">					    
+					          <div class="md-list-item-text" style="margin: 0;">
+					            <h3 class="uppercase font-13">DIYbio lab kit</h3>
+					            <p class="font-12" style="font-weight: 400;">Coordinator · 2 members</p>
+					          </div>
+					        </md-list-item>
+			        	</md-list>
+			        </md-card-content>
+			     </md-card>
+			</div>
+	</div>
+	<!-- **** Cards containder **** -->
+	
+	<md-button class="md-fab md-fab-bottom-right" style="position: fixed !important;" aria-label="Add" ng-click="addGroup($event)">
+		<md-tooltip md-direction="left" md-visible="tooltipVisible">Create a group</md-tooltip>
+    	<md-icon md-font-set="material-icons" aria-label="Add">add</md-icon>
+    </md-button>
+
+</div>
