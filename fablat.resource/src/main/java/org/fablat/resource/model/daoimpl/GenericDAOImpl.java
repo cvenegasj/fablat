@@ -35,7 +35,6 @@ public abstract class GenericDAOImpl<T, ID extends Serializable> implements Gene
 		return getDomainClass().getName();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Transactional
 	public T findById(ID id) {
 		T entity;

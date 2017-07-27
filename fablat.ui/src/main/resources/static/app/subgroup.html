@@ -5,9 +5,9 @@
 	    	<h2 md-truncate>
 	    		<a ui-sref="groups" class="custom-anchor-1"><span>Groups</span></a>
 	    		<span><md-icon md-font-set="material-icons">keyboard_arrow_right</md-icon></span>
-	    		<a ui-sref="group.general({ idGroup: 21 })" class="custom-anchor-1"><span>Open BioFab</span></a>
+	    		<a ui-sref="group.general({ idGroup: subgroup.idGroup })" class="custom-anchor-1"><span>{{ subgroup.groupName }}</span></a>
 	    		<span><md-icon md-font-set="material-icons">keyboard_arrow_right</md-icon></span>
-	    		<span class="uppercase">DIYbio lab kit</span>
+	    		<span class="uppercase">{{ subgroup.name }}</span>
 	    	</h2>
 	    	<span flex></span>
 	    	<md-button class="md-icon-button" aria-label="More">

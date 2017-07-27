@@ -17,20 +17,15 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.fablat.resource.util.View;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-
-import com.fasterxml.jackson.annotation.JsonView;
 
 @SuppressWarnings("serial")
 @Entity
 @Table(name = "Group")
 public class Group implements java.io.Serializable {
 
-	@JsonView(View.Summary.class)
 	private Integer idGroup;
-	@JsonView(View.Summary.class)
 	private String name;
 	private String description;
 	private String reunionDay;
@@ -160,4 +155,30 @@ public class Group implements java.io.Serializable {
 	public void setSubGroups(Set<SubGroup> subGroups) {
 		this.subGroups = subGroups;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((idGroup == null) ? 0 : idGroup.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Group other = (Group) obj;
+		if (idGroup == null) {
+			if (other.idGroup != null)
+				return false;
+		} else if (!idGroup.equals(other.idGroup))
+			return false;
+		return true;
+	}
+
 }

@@ -8,38 +8,45 @@ import javax.sql.DataSource;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.fablat.resource.model.dao.FabberDAO;
+import org.fablat.resource.model.dao.GroupActivityDAO;
 import org.fablat.resource.model.dao.GroupDAO;
 import org.fablat.resource.model.dao.GroupMemberDAO;
 import org.fablat.resource.model.dao.LabDAO;
 import org.fablat.resource.model.dao.LocationDAO;
 import org.fablat.resource.model.dao.RoleDAO;
 import org.fablat.resource.model.dao.RoleFabberDAO;
+import org.fablat.resource.model.dao.SubGroupActivityDAO;
 import org.fablat.resource.model.dao.SubGroupDAO;
 import org.fablat.resource.model.dao.SubGroupMemberDAO;
-import org.fablat.resource.model.dao.WorkshopEventDAO;
-import org.fablat.resource.model.dao.WorkshopEventTutorDAO;
+import org.fablat.resource.model.dao.WorkshopDAO;
+import org.fablat.resource.model.dao.WorkshopTutorDAO;
 import org.fablat.resource.model.daoimpl.FabberDAOImpl;
+import org.fablat.resource.model.daoimpl.GroupActivityDAOImpl;
 import org.fablat.resource.model.daoimpl.GroupDAOImpl;
 import org.fablat.resource.model.daoimpl.GroupMemberDAOImpl;
 import org.fablat.resource.model.daoimpl.LabDAOImpl;
 import org.fablat.resource.model.daoimpl.LocationDAOImpl;
 import org.fablat.resource.model.daoimpl.RoleDAOImpl;
 import org.fablat.resource.model.daoimpl.RoleFabberDAOImpl;
+import org.fablat.resource.model.daoimpl.SubGroupActivityDAOImpl;
 import org.fablat.resource.model.daoimpl.SubGroupDAOImpl;
 import org.fablat.resource.model.daoimpl.SubGroupMemberDAOImpl;
-import org.fablat.resource.model.daoimpl.WorkshopEventDAOImpl;
-import org.fablat.resource.model.daoimpl.WorkshopEventTutorDAOImpl;
+import org.fablat.resource.model.daoimpl.WorkshopDAOImpl;
+import org.fablat.resource.model.daoimpl.WorkshopTutorDAOImpl;
 import org.hibernate.SessionFactory;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 import org.springframework.core.annotation.Order;
+import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -87,9 +94,10 @@ public class ResourceApplication extends ResourceServerConfigurerAdapter {
 				//.ignoringAntMatchers("/public/**"); // No csrf for public API
     }
 
+	// =========== Database connection settings ===========
 	@Bean
 	@ConfigurationProperties(prefix="spring.datasource")
-	public DataSource dataSource(DataSourceProperties properties) {
+	public DataSource dataSource() {
 		// commons-dbcp2 pool
 		return new BasicDataSource();
 	}
@@ -116,6 +124,19 @@ public class ResourceApplication extends ResourceServerConfigurerAdapter {
 		HibernateTransactionManager transactionManager = new HibernateTransactionManager(sessionFactory);
 		return transactionManager;
 	}
+	
+	// For handling Spring DataIntegrityViolationException and applying it transparently to all beans annotated with @Repository
+	// from: http://www.baeldung.com/spring-dataIntegrityviolationexception
+	@Bean
+	public PersistenceExceptionTranslationPostProcessor exceptionTranslation(){
+		return new PersistenceExceptionTranslationPostProcessor();
+	}
+	
+	@Bean
+	@Scope(scopeName = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+	public ModelMapper modelMapper() {
+	    return new ModelMapper();
+	}
 
 	@Autowired
 	@Bean(name = "fabberDAO")
@@ -133,6 +154,18 @@ public class ResourceApplication extends ResourceServerConfigurerAdapter {
 	@Bean(name = "groupMemberDAO")
 	public GroupMemberDAO getGroupMemberDAO() {
 		return new GroupMemberDAOImpl();
+	}
+	
+	@Autowired
+	@Bean(name = "groupActivityDAO")
+	public GroupActivityDAO getGroupActivityDAO() {
+		return new GroupActivityDAOImpl();
+	}
+	
+	@Autowired
+	@Bean(name = "subGroupActivityDAO")
+	public SubGroupActivityDAO getSubGroupActivityDAO() {
+		return new SubGroupActivityDAOImpl();
 	}
 	
 	@Autowired
@@ -172,14 +205,15 @@ public class ResourceApplication extends ResourceServerConfigurerAdapter {
 	}
 
 	@Autowired
-	@Bean(name = "workshopEventDAO")
-	public WorkshopEventDAO getWorkshopEventDAO() {
-		return new WorkshopEventDAOImpl();
+	@Bean(name = "workshopDAO")
+	public WorkshopDAO getWorkshopDAO() {
+		return new WorkshopDAOImpl();
 	}
 	
 	@Autowired
-	@Bean(name = "workshopEventTutorDAO")
-	public WorkshopEventTutorDAO getWorkshopEventTutorDAO() {
-		return new WorkshopEventTutorDAOImpl();
+	@Bean(name = "workshopTutorDAO")
+	public WorkshopTutorDAO getWorkshopTutorDAO() {
+		return new WorkshopTutorDAOImpl();
 	}
+	
 }

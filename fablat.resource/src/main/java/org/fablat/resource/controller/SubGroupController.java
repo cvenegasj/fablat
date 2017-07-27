@@ -4,23 +4,30 @@ import java.security.Principal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.fablat.resource.dto.GroupDTO;
+import org.fablat.resource.dto.SubGroupDTO;
+import org.fablat.resource.dto.WorkshopDTO;
 import org.fablat.resource.entities.Fabber;
+import org.fablat.resource.entities.Group;
+import org.fablat.resource.entities.GroupMember;
+import org.fablat.resource.entities.RoleFabber;
 import org.fablat.resource.entities.SubGroup;
 import org.fablat.resource.entities.SubGroupMember;
-import org.fablat.resource.entities.Group;
-import org.fablat.resource.entities.RoleFabber;
-import org.fablat.resource.entities.WorkshopEvent;
+import org.fablat.resource.entities.Workshop;
 import org.fablat.resource.model.dao.FabberDAO;
+import org.fablat.resource.model.dao.GroupDAO;
+import org.fablat.resource.model.dao.GroupMemberDAO;
 import org.fablat.resource.model.dao.SubGroupDAO;
 import org.fablat.resource.model.dao.SubGroupMemberDAO;
-import org.fablat.resource.model.dao.GroupDAO;
-import org.fablat.resource.model.dao.WorkshopEventDAO;
 import org.fablat.resource.serializable.SubGroupDetailResource;
 import org.fablat.resource.serializable.SubGroupMemberResource;
 import org.fablat.resource.serializable.SubGroupRequestWrapper;
@@ -30,37 +37,158 @@ import org.fablat.resource.util.Resources;
 import org.fablat.resource.util.View;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
 @RestController
-@RequestMapping("/subgroup")
+@RequestMapping("/auth/subgroups")
 public class SubGroupController {
 
+	private SimpleDateFormat timeFormatter = new SimpleDateFormat("h:mm a");
+	private SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("dd-MM-yyyy h:mm a");
+	private SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
 	@Autowired
-	private SubGroupDAO subGroupDAO;
+    private ModelMapper modelMapper;
 	@Autowired
 	private FabberDAO fabberDAO;
 	@Autowired
-	private GroupDAO groupDAO;
+	private SubGroupDAO subGroupDAO;
 	@Autowired
 	private SubGroupMemberDAO subGroupMemberDAO;
 	@Autowired
-	private WorkshopEventDAO workshopEventDAO;
+	private GroupDAO groupDAO;
+	@Autowired
+	private GroupMemberDAO groupMemberDAO;
+	
+	@RequestMapping(value = "/{idSubGroup}", method = RequestMethod.GET)
+    public SubGroupDTO findOne(@PathVariable("idSubGroup") Integer idSubGroup, Principal principal) {
+		SubGroup subGroup = subGroupDAO.findById(idSubGroup);
+		SubGroupDTO subGroupDTO = convertToDTO(subGroup);
+		
+		SubGroupMember userAsSubGroupMember = subGroupMemberDAO.findBySubGroupAndFabber(idSubGroup, principal.getName());
+		if (userAsSubGroupMember != null) {
+			subGroupDTO.setAmIMember(true);
+			subGroupDTO.setAmICoordinator(userAsSubGroupMember.getIsCoordinator());
+		} else {
+			subGroupDTO.setAmIMember(false);
+		}
+		
+		// subgroup's workshops
+		List<WorkshopDTO> workshops = new ArrayList<WorkshopDTO>();
+		for (Workshop w : subGroup.getWorkshops()) {
+			WorkshopDTO wDTO = convertToDTO(w); 
+			workshops.add(wDTO);
+		}
+		subGroupDTO.setWorkshops(workshops);
+		
+		// subgroup's members
+		
+		
+		
+		return subGroupDTO;
+	}
+	
+	@RequestMapping(method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
+    public SubGroupDTO create(@RequestBody SubGroupDTO subGroupDTO, Principal principal) {
+		SubGroup subGroup = modelMapper.map(subGroupDTO, SubGroup.class);
+		subGroup.setEnabled(true);
+		// set creation datetime 
+        Instant now = Instant.now();
+        ZonedDateTime zdtLima = now.atZone(ZoneId.of("GMT-05:00"));
+        subGroup.setCreationDateTime(Date.from(zdtLima.toInstant())); 
+		
+        // parent group
+        subGroup.setGroup(groupDAO.findById(subGroupDTO.getIdGroup()));
+        GroupMember gm = groupMemberDAO.findByGroupAndFabber(subGroupDTO.getIdGroup(), principal.getName());
+       	// creator
+        SubGroupMember sgm = new SubGroupMember();
+        sgm.setIsCoordinator(true);
+        sgm.setNotificationsEnabled(true);
+        sgm.setCreationDateTime(Date.from(zdtLima.toInstant()));
+        sgm.setGroupMember(gm);
+        sgm.setSubGroup(subGroup);
+        
+        subGroup.getSubGroupMembers().add(sgm);
+        SubGroup subGroupCreated = subGroupDAO.makePersistent(subGroup);
+       
+		return convertToDTO(subGroupCreated);
+	}
+	
+	//========== DTO conversion==========
+	private SubGroupDTO convertToDTO(SubGroup subGroup) {
+		SubGroupDTO subGroupDTO = new SubGroupDTO();
+		subGroupDTO.setIdSubGroup(subGroup.getIdSubGroup());
+		subGroupDTO.setName(subGroup.getName());
+		subGroupDTO.setDescription(subGroup.getDescription());
+		subGroupDTO.setReunionDay(subGroup.getReunionDay());
+		subGroupDTO.setReunionTime(subGroup.getReunionTime() != null ? timeFormatter.format(subGroup.getReunionTime()) : null);
+		subGroupDTO.setMainUrl(subGroup.getMainUrl());
+		subGroupDTO.setSecondaryUrl(subGroup.getSecondaryUrl());
+		subGroupDTO.setPhotoUrl(subGroup.getPhotoUrl());
+		subGroupDTO.setCreationDateTime(dateTimeFormatter.format(subGroup.getCreationDateTime()));
+		subGroupDTO.setIdGroup(subGroup.getGroup().getIdGroup());
+		subGroupDTO.setGroupName(subGroup.getGroup().getName());
+		
+		subGroupDTO.setMembersCount(subGroup.getSubGroupMembers().size());
+		
+		return subGroupDTO;
+	}
+	
+	private WorkshopDTO convertToDTO(Workshop workshop) {
+		WorkshopDTO workshopDTO = new WorkshopDTO();
+		workshopDTO.setIdWorkshop(workshop.getIdWorkshop());
+		workshopDTO.setReplicationNumber(workshop.getReplicationNumber());
+		workshopDTO.setName(workshop.getName());
+		// workshopDTO.setDescription(workshop.getDescription());
+		workshopDTO.setStartDate(dateFormatter.format(workshop.getStartDateTime()));
+		workshopDTO.setStartTime(timeFormatter.format(workshop.getStartDateTime()));
+		workshopDTO.setEndDate(dateFormatter.format(workshop.getEndDateTime()));
+		workshopDTO.setEndTime(timeFormatter.format(workshop.getEndDateTime()));
+		workshopDTO.setIsPaid(workshop.getIsPaid());
+		workshopDTO.setPrice(workshop.getPrice());
+		workshopDTO.setCurrency(workshop.getCurrency());
+		workshopDTO.setLabName(workshop.getLocation().getLab() != null ? workshop.getLocation().getLab().getName() : null);
+		
+		return workshopDTO;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/*============== old api =============*/
 
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	public ResponseEntity<SubGroupResource> save(@RequestBody SubGroupRequestWrapper auxRequestWrapper,
 			Principal principal) throws ParseException {
 
-		Fabber fabber = fabberDAO.findByUsername(principal.getName());
+		Fabber fabber = fabberDAO.findByEmail(principal.getName());
 		Group group = groupDAO.findById(auxRequestWrapper.getIdGroup());
 
 		// SubGroup creation
@@ -108,7 +236,7 @@ public class SubGroupController {
 	public ResponseEntity<Void> delete(@RequestBody SubGroup group, Principal principal) {
 
 		SubGroup s = subGroupDAO.findById(group.getIdSubGroup());
-		Fabber f = fabberDAO.findByUsername(principal.getName());
+		Fabber f = fabberDAO.findByEmail(principal.getName());
 
 		// TODO: Action reserved only for ROLE_ADMIN_LAT
 		boolean isLatAdmin = false;
@@ -136,7 +264,7 @@ public class SubGroupController {
 		SubGroupResource sr = new SubGroupResource();
 		sr.setIdSubGroup(s.getIdSubGroup());
 		sr.setName(s.getName());
-		sr.setWorkshopsNumber(s.getWorkshopEvents().size());
+		sr.setWorkshopsNumber(s.getWorkshops().size());
 
 		return new ResponseEntity<SubGroupResource>(sr, HttpStatus.OK);
 	}
@@ -268,7 +396,7 @@ public class SubGroupController {
 	@RequestMapping(value = "/join", method = RequestMethod.POST)
 	public ResponseEntity<Void> join(@RequestBody SubGroup subGroup, Principal principal) {
 
-		Fabber fabber = fabberDAO.findByUsername(principal.getName());
+		Fabber fabber = fabberDAO.findByEmail(principal.getName());
 		SubGroup s = subGroupDAO.findById(subGroup.getIdSubGroup());
 
 		// SubGroup member creation
@@ -338,7 +466,7 @@ public class SubGroupController {
 			@RequestParam(value = "idSubGroup") Integer idSubGroup) {
 
 		List<WorkshopResource> workshops = new ArrayList<WorkshopResource>();
-		List<WorkshopEvent> upcomingWorkshops = workshopEventDAO.findUpcomingBySubGroup(idSubGroup);
+		/*List<WorkshopEvent> upcomingWorkshops = workshopEventDAO.findUpcomingBySubGroup(idSubGroup);
 
 		for (WorkshopEvent workshop : upcomingWorkshops) {
 			WorkshopResource wr = new WorkshopResource();
@@ -354,7 +482,7 @@ public class SubGroupController {
 			wr.setSubGroupName(workshop.getSubGroup().getName());
 
 			workshops.add(wr);
-		}
+		}*/
 
 		return new ResponseEntity<List<WorkshopResource>>(workshops, HttpStatus.OK);
 	}

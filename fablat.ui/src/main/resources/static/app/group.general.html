@@ -4,15 +4,14 @@
 			<group-avatar group="group" avatar-w="65" avatar-h="65" avatar-font-size="26"></group-avatar>
 		</div>
 		<div>
-			<h3>Open BioFab</h3>
+			<h3>{{ group.name }}</h3>
 		</div>
-		<div style="margin-bottom: 20px;">Esta es la comunidad DIYbio de Fab Lab Lima :)</div>
-		<md-button class="md-raised md-accent">Join the group</md-button>
+		<div style="margin-bottom: 20px;">{{ group.description }}</div>
 	</div>
 	<div class="info">
-		<div><md-icon md-svg-icon="timetable" class="icon-16"></md-icon> Reunions: Mondays, 3pm</div>
-		<div><md-icon md-svg-icon="web" class="icon-16"></md-icon> Main URL: <a href="" class="custom-anchor-1">www.something.com</a></div>
-		<div><md-icon md-svg-icon="web" class="icon-16"></md-icon> Secondary URL: <a href="" class="custom-anchor-1">www.something.com</a></div>
+		<div ng-if="group.reunionDay && group.reunionTime"><md-icon md-svg-icon="timetable" class="icon-16"></md-icon> Reunions: {{ group.reunionDay }}, {{ group.reunionTime }}</div>
+		<div ng-if="group.mainUrl"><md-icon md-svg-icon="web" class="icon-16"></md-icon> Main URL: <a href="" class="custom-anchor-1">{{ group.mainUrl }}</a></div>
+		<div ng-if="group.secondaryUrl"><md-icon md-svg-icon="web" class="icon-16"></md-icon> Secondary URL: <a href="" class="custom-anchor-1">{{ group.secondaryUrl }}</a></div>
 	</div>
 	<div class="members">
 		<div layout="row" layout-align="center center">
@@ -87,51 +86,11 @@
 			<md-button class="md-raised md-accent" ng-click="addSubgroup($event)">New subgroup</md-button>
 		</div>
 		<div flex layout="row" layout-wrap>
-			<md-card class="custom-card-5" md-theme="" flex="20">
+			<md-card class="custom-card-5" md-theme="" flex="20" ng-repeat="item in group.subGroups">
 		    	<md-card-header>
 		        	<md-card-header-text>
-			            <a ui-sref="subgroup.general({ idSubgroup: 10 })" class="custom-anchor-1"><span class="md-title">Phagebot a alsdf asf asf as ffadfsad</span></a>
-			            <span class="md-subhead font-11">10 members</span>
-		        	</md-card-header-text>
-		        </md-card-header>
-		    </md-card>
-		    <md-card class="" md-theme="" flex="20">
-		    	<md-card-header>
-		        	<md-card-header-text>
-			            <a href="#/" class="custom-anchor-1"><span class="md-title font-14">Phagebot</span></a>
-			            <span class="md-subhead font-11">10 members</span>
-		        	</md-card-header-text>
-		        </md-card-header>
-		    </md-card>
-		    <md-card class="" md-theme="" flex="20">
-		    	<md-card-header>
-		        	<md-card-header-text>
-			            <a href="#/" class="custom-anchor-1"><span class="md-title font-14">Phagebot</span></a>
-			            <span class="md-subhead font-11">10 members</span>
-		        	</md-card-header-text>
-		        </md-card-header>
-		    </md-card>
-		    <md-card class="" md-theme="" flex="20">
-		    	<md-card-header>
-		        	<md-card-header-text>
-			            <a href="#/" class="custom-anchor-1"><span class="md-title font-14">Phagebot</span></a>
-			            <span class="md-subhead font-11">10 members</span>
-		        	</md-card-header-text>
-		        </md-card-header>
-		    </md-card>
-		    <md-card class="" md-theme="" flex="20">
-		    	<md-card-header>
-		        	<md-card-header-text>
-			            <a href="#/" class="custom-anchor-1"><span class="md-title font-14">Phagebot</span></a>
-			            <span class="md-subhead font-11">10 members</span>
-		        	</md-card-header-text>
-		        </md-card-header>
-		    </md-card>
-		    <md-card class="" md-theme="" flex="20">
-		    	<md-card-header>
-		        	<md-card-header-text>
-			            <a href="#/" class="custom-anchor-1"><span class="md-title font-14">Phagebot</span></a>
-			            <span class="md-subhead font-11">10 members</span>
+			            <a ui-sref="subgroup.general({ idSubgroup: item.idSubGroup })" class="custom-anchor-1"><span class="md-title">{{ item.name }}</span></a>
+			            <span class="md-subhead font-11">{{ item.membersCount === 1 ? "1 member" : item.membersCount + " members" }}</span>
 		        	</md-card-header-text>
 		        </md-card-header>
 		    </md-card>

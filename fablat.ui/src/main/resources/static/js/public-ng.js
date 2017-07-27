@@ -70,31 +70,7 @@ app.config(function($mdThemingProvider, $urlRouterProvider, $stateProvider) {
 // General controller, runs on top of everything
 app.controller('AppCtrl', ['$rootScope', '$http', '$location', '$window', '$scope', '$mdBottomSheet', '$mdDialog', '$timeout', function($rootScope, $http, $location, $window, $scope, $mdBottomSheet, $mdDialog, $timeout) { 
 
-	  // Bottomsheet & Modal Dialogs
-	  $scope.alert = '';
-	  $scope.showListBottomSheet = function($event) {
-	    $scope.alert = '';
-	    $mdBottomSheet.show({
-	      template: '<md-bottom-sheet class="md-list md-has-header"><md-list><md-list-item class="md-2-line" ng-repeat="item in items" role="link" md-ink-ripple><md-icon md-svg-icon="{{item.icon}}" aria-label="{{item.name}}"></md-icon><div class="md-list-item-text"><h3>{{item.name}}</h3></div></md-list-item> </md-list></md-bottom-sheet>',
-	      controller: 'ListBottomSheetCtrl',
-	      targetEvent: $event
-	    }).then(function(clickedItem) {
-	      $scope.alert = clickedItem.name + ' clicked!';
-	    });
-	  };
-	  
-	  $scope.showAdd = function(ev) {
-	    $mdDialog.show({
-	      controller: DialogController,
-	      template: '<md-dialog aria-label="Form"> <md-content class="md-padding"> <form name="userForm"> <div layout layout-sm="column"> <md-input-container flex> <label>First Name</label> <input ng-model="user.firstName"> </md-input-container> <md-input-container flex> <label>Last Name</label> <input ng-model="user.lastName"> </md-input-container> </div> <md-input-container flex> <label>Message</label> <textarea ng-model="user.biography" columns="1" md-maxlength="150"></textarea> </md-input-container> </form> </md-content> <div class="md-actions" layout="row"> <span flex></span> <md-button ng-click="answer(\'not useful\')"> Cancel </md-button> <md-button ng-click="answer(\'useful\')" class="md-primary"> Save </md-button> </div></md-dialog>',
-	      targetEvent: ev,
-	    })
-	    .then(function(answer) {
-	      $scope.alert = 'You said the information was "' + answer + '".';
-	    }, function() {
-	      $scope.alert = 'You cancelled the dialog.';
-	    });
-	  };
+	 
 
 }]);
 
@@ -102,6 +78,8 @@ app.controller('AppCtrl', ['$rootScope', '$http', '$location', '$window', '$scop
 app.controller('SignUp1Ctrl', function($rootScope, $scope, $http, $filter, $location) {	
 	
 	$rootScope.user = {};
+	$scope.user = {};
+	$scope.user.isFabAcademyGrad = false;
 	
 	$scope.submit = function() {
 		// TODO: validate input fields
@@ -112,6 +90,7 @@ app.controller('SignUp1Ctrl', function($rootScope, $scope, $http, $filter, $loca
 		$rootScope.user.lastName = $scope.user.lastName;
 		$rootScope.user.isFabAcademyGrad = $scope.user.isFabAcademyGrad;
 		$rootScope.user.fabAcademyGradYear = $scope.user.fabAcademyGradYear;
+		$rootScope.user.idLab = null;
 		
 		// redirect
 		$location.path("/signup2");
@@ -166,14 +145,19 @@ app.controller('SignUp2Ctrl', function($rootScope, $scope, $http, $filter, $mdDi
 	          .cancel('Cancel');
 	    
 	    $mdDialog.show(confirm).then(function() {
-	      $scope.status = 'Fab selected.';
+	      $scope.status = 'Fab Lab selected.';
 	      $rootScope.user.idLab = idLab;
 	      
 	      console.log($rootScope.user.email + ", " + $rootScope.user.password + ", " + $rootScope.user.firstName + ", " + $rootScope.user.lastName + ", " + $rootScope.user.isFabAcademyGrad + ", " + $rootScope.user.fabAcademyGradYear + ", " + $rootScope.user.idLab);
-	     
-	      $http.post('/resource/public/signup', {
-				// idFabber: $rootScope.user.id,
-	    	  	username: $rootScope.user.email,
+	      $scope.saveFabber();
+	      
+	    }, function() {
+	      $scope.status = 'Return to list.';
+	    });
+	  }
+	  
+	$scope.saveFabber = function() {
+		  $http.post('/resource/public/signup', {
 				email: $rootScope.user.email,
 				password: $rootScope.user.password,
 				firstName: $rootScope.user.firstName,
@@ -181,25 +165,6 @@ app.controller('SignUp2Ctrl', function($rootScope, $scope, $http, $filter, $mdDi
 				isFabAcademyGrad: $rootScope.user.isFabAcademyGrad,
 				fabAcademyGradYear: $rootScope.user.fabAcademyGradYear,
 				idLab: $rootScope.user.idLab
-			}).then(function(response) {
-				$location.path("/signup-successful");
-			});
-	      
-	    }, function() {
-	      $scope.status = 'Return to list.';
-	    });
-	  }
-	  
-	$scope.saveNomade = function() {
-		  $http.post('/resource/public/signup-nomade', {
-				// idFabber: $rootScope.user.id,
-	    	  	username: $rootScope.user.email,
-				email: $rootScope.user.email,
-				password: $rootScope.user.password,
-				firstName: $rootScope.user.firstName,
-				lastName: $rootScope.user.lastName,
-				isFabAcademyGrad: $rootScope.user.isFabAcademyGrad,
-				fabAcademyGradYear: $rootScope.user.fabAcademyGradYear
 		  }).then(function(response) {
 			  $location.path("/signup-successful");		
 		  });

@@ -19,7 +19,7 @@ public class UtilController {
 	private FabberDAO fabberDAO;
 
 	@RequestMapping(value = "/first", method = RequestMethod.GET)
-	public Map<String, Object> first(@RequestParam(value = "idFabber") Long idFabber, Principal principal) {
+	public Map<String, Object> first(@RequestParam(value = "idFabber") Integer idFabber, Principal principal) {
 
 		Map<String, Object> model = new HashMap<String, Object>();
 
@@ -30,7 +30,7 @@ public class UtilController {
 
 		if (fabAux != null) {
 			// update username in case it has changed
-			fabAux.setUsername(principal.getName());
+			// fabAux.setUsername(principal.getName());
 			fabberDAO.makePersistent(fabAux);
 			model.put("firstTime", "FALSE");
 		} else {

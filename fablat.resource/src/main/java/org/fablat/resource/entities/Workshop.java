@@ -26,34 +26,39 @@ import org.hibernate.annotations.FetchMode;
 
 @SuppressWarnings("serial")
 @Entity
-@Table(name = "WorkshopEvent")
-public class WorkshopEvent implements java.io.Serializable {
+@Table(name = "Workshop")
+public class Workshop implements java.io.Serializable {
 
-	private Integer idWorkshopEvent;
+	private Integer idWorkshop;
 	private Integer replicationNumber;
-	private Date dateTime;
+	private String name;
+	private String description;
+	private Date startDateTime;
+	private Date endDateTime;
 	private Boolean isPaid;
 	private BigDecimal price;
 	private String currency;
+	private String facebookUrl;
+	private String ticketsUrl;
 	private Date creationDateTime;
 	private Boolean enabled;
-	private SubGroup subGroup;
-	private Set<WorkshopEventTutor> workshopEventTutors = new HashSet<WorkshopEventTutor>();
 	private Location location;
+	private SubGroup subGroup;
+	private Set<WorkshopTutor> workshopTutors = new HashSet<WorkshopTutor>();
 
-	public WorkshopEvent() {
+	public Workshop() {
 
 	}
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "idWorkshopEvent", unique = true, nullable = false)
-	public Integer getIdWorkshopEvent() {
-		return idWorkshopEvent;
+	@Column(name = "idWorkshop", unique = true, nullable = false)
+	public Integer getIdWorkshop() {
+		return idWorkshop;
 	}
 
-	public void setIdWorkshopEvent(Integer idWorkshopEvent) {
-		this.idWorkshopEvent = idWorkshopEvent;
+	public void setIdWorkshop(Integer idWorkshop) {
+		this.idWorkshop = idWorkshop;
 	}
 
 	@Column(name = "replicationNumber", nullable = false)
@@ -65,14 +70,42 @@ public class WorkshopEvent implements java.io.Serializable {
 		this.replicationNumber = replicationNumber;
 	}
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "dateTime", nullable = false)
-	public Date getDateTime() {
-		return dateTime;
+	@Column(name = "name", nullable = false)
+	public String getName() {
+		return name;
 	}
 
-	public void setDateTime(Date dateTime) {
-		this.dateTime = dateTime;
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	@Column(name = "description", nullable = false)
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "startDateTime", nullable = false)
+	public Date getStartDateTime() {
+		return startDateTime;
+	}
+
+	public void setStartDateTime(Date startDateTime) {
+		this.startDateTime = startDateTime;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "endDateTime", nullable = false)
+	public Date getEndDateTime() {
+		return endDateTime;
+	}
+
+	public void setEndDateTime(Date endDateTime) {
+		this.endDateTime = endDateTime;
 	}
 
 	@Column(name = "isPaid", nullable = false)
@@ -102,6 +135,24 @@ public class WorkshopEvent implements java.io.Serializable {
 		this.currency = currency;
 	}
 
+	@Column(name = "facebookUrl")
+	public String getFacebookUrl() {
+		return facebookUrl;
+	}
+
+	public void setFacebookUrl(String facebookUrl) {
+		this.facebookUrl = facebookUrl;
+	}
+
+	@Column(name = "ticketsUrl")
+	public String getTicketsUrl() {
+		return ticketsUrl;
+	}
+
+	public void setTicketsUrl(String ticketsUrl) {
+		this.ticketsUrl = ticketsUrl;
+	}
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "creationDateTime", nullable = false)
 	public Date getCreationDateTime() {
@@ -121,6 +172,16 @@ public class WorkshopEvent implements java.io.Serializable {
 		this.enabled = enabled;
 	}
 
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "idLocation", nullable = false)
+	public Location getLocation() {
+		return location;
+	}
+
+	public void setLocation(Location location) {
+		this.location = location;
+	}
+
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "idSubGroup", nullable = false)
 	public SubGroup getSubGroup() {
@@ -131,23 +192,14 @@ public class WorkshopEvent implements java.io.Serializable {
 		this.subGroup = subGroup;
 	}
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "workshopEvent")
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "workshop")
 	@Fetch(FetchMode.JOIN)
-	public Set<WorkshopEventTutor> getWorkshopEventTutors() {
-		return workshopEventTutors;
+	public Set<WorkshopTutor> getWorkshopTutors() {
+		return workshopTutors;
 	}
 
-	public void setWorkshopEventTutors(Set<WorkshopEventTutor> workshopEventTutors) {
-		this.workshopEventTutors = workshopEventTutors;
+	public void setWorkshopTutors(Set<WorkshopTutor> workshopTutors) {
+		this.workshopTutors = workshopTutors;
 	}
 
-	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "idLocation", nullable = false)
-	public Location getLocation() {
-		return location;
-	}
-
-	public void setLocation(Location location) {
-		this.location = location;
-	}
 }

@@ -15,14 +15,27 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class CustomUserDetails implements UserDetails {
 
 	private static final long serialVersionUID = 1L;
-	private Collection<? extends GrantedAuthority> authorities;
-	private String password;
 	private String username;
+	private String password;
+	private Integer id;
+	private String email;
+	private String firstName;
+	private String lastName;
+	private Integer idLab;
+	private Collection<? extends GrantedAuthority> authorities;
 
 	public CustomUserDetails(Fabber user) {
+		// mandatory
 		this.username = user.getEmail();
 		this.password = user.getPassword(); // TODO: change by real password
 		this.authorities = translate(user.getRoleFabbers());
+		
+		// extra
+		this.id = user.getIdFabber();
+		this.email = user.getEmail();
+		this.firstName = user.getFirstName();
+		this.lastName = user.getLastName();
+		this.idLab = user.getLab() != null ? user.getLab().getIdLab() : null;
 	}
 
 	private Collection<? extends GrantedAuthority> translate(Set<RoleFabber> rolesFabber) {
@@ -44,17 +57,37 @@ public class CustomUserDetails implements UserDetails {
 		}
 		return authorities;
 	}
-
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return authorities;
+	
+	public String getUsername() {
+		return username;
 	}
-
+	
 	public String getPassword() {
 		return password;
 	}
+	
+	public Integer getId() {
+		return id;
+	}
 
-	public String getUsername() {
-		return username;
+	public String getEmail() {
+		return email;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public Integer getIdLab() {
+		return idLab;
+	}
+
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return authorities;
 	}
 
 	public boolean isAccountNonExpired() {

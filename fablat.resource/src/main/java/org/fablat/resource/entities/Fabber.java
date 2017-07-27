@@ -16,27 +16,18 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.fablat.resource.util.View;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-
-import com.fasterxml.jackson.annotation.JsonView;
 
 @SuppressWarnings("serial")
 @Entity
 @Table(name = "Fabber")
 public class Fabber implements java.io.Serializable {
 
-	@JsonView(View.Summary.class)
-	private Long idFabber;
-	@JsonView(View.Summary.class)
-	private String username;
-	@JsonView(View.Summary.class)
+	private Integer idFabber;
 	private String email;
 	private String password;
-	@JsonView(View.Summary.class)
 	private String firstName;
-	@JsonView(View.Summary.class)
 	private String lastName;
 	private Boolean isFabAcademyGrad;
 	private Integer fabAcademyGradYear;
@@ -61,21 +52,12 @@ public class Fabber implements java.io.Serializable {
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "idFabber", unique = true, nullable = false)
-	public Long getIdFabber() {
+	public Integer getIdFabber() {
 		return idFabber;
 	}
 
-	public void setIdFabber(Long idFabber) {
+	public void setIdFabber(Integer idFabber) {
 		this.idFabber = idFabber;
-	}
-
-	@Column(name = "username", unique = true, nullable = false)
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
 	}
 
 	@Column(name = "email", unique = true, nullable = false)
@@ -149,7 +131,7 @@ public class Fabber implements java.io.Serializable {
 	public void setIsNomade(Boolean isNomade) {
 		this.isNomade = isNomade;
 	}
-	
+
 	@Column(name = "mainQuote")
 	public String getMainQuote() {
 		return mainQuote;
@@ -158,7 +140,7 @@ public class Fabber implements java.io.Serializable {
 	public void setMainQuote(String mainQuote) {
 		this.mainQuote = mainQuote;
 	}
-	
+
 	@Column(name = "city")
 	public String getCity() {
 		return city;
@@ -176,7 +158,7 @@ public class Fabber implements java.io.Serializable {
 	public void setCountry(String country) {
 		this.country = country;
 	}
-	
+
 	@Column(name = "weekGoal")
 	public String getWeekGoal() {
 		return weekGoal;

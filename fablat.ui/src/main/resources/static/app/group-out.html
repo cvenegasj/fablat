@@ -1,0 +1,149 @@
+<div layout="column" ng-controller="GroupOutCtrl">
+	<md-toolbar md-whiteframe="1" md-theme="neutral" class="md-hue-1">
+    	<div class="md-toolbar-tools">
+	    	<h2 md-truncate>
+	    		<a ui-sref="groups" class="custom-anchor-1"><span>Groups</span></a>
+	    		<span><md-icon md-font-set="material-icons">keyboard_arrow_right</md-icon></span>
+	    		<span class="uppercase">{{ group.name }}</span>
+	    	</h2>
+		</div>
+	</md-toolbar>
+	
+	<div>
+		<div class="group-general-page md-padding" layout="column" flex>
+			<div class="header" layout="column" layout-align="center center">
+				<div style="margin-bottom: 10px;">
+					<group-avatar group="group" avatar-w="65" avatar-h="65" avatar-font-size="26"></group-avatar>
+				</div>
+				<div>
+					<h3>{{ group.name }}</h3>
+				</div>
+				<div style="margin-bottom: 20px;">{{ group.description }}</div>
+				<md-button class="md-raised md-accent" ng-click="">Join the group</md-button>
+			</div>
+			<div class="members">
+				<div layout="row" layout-align="center center">
+					<h4>Members</h4>
+				</div>
+				<md-divider></md-divider>
+				<div flex layout="row" layout-wrap style="margin-top: 30px;">
+					<div flex-gt-sm="15" flex="25" style="margin-bottom: 10px;">
+						<a ui-sref="fabberDetail({ idFabber: item.idFabber })">
+							<user-avatar fabber="user" avatar-w="50" avatar-h="50" avatar-font-size="18"></user-avatar>
+						</a>
+						<div class="font-12 color-2 centered" flex md-truncate style="margin-top: 5px;">Carlos Venegas</div>
+						<div class="font-12 color-2 centered">(coordinator)</div>
+					</div>
+					<div flex-gt-sm="15" flex="25">
+						<a href="" ui-sref="fabberDetail({idFabber: item.idFabber})">
+							<user-avatar fabber="user" avatar-w="50" avatar-h="50" avatar-font-size="18"></user-avatar>
+						</a>
+						<div class="font-12 color-2 centered" flex md-truncate>Carlos Venegas</div>
+						<div class="font-12 color-2 centered">(coordinator)</div>
+					</div>
+					<div flex-gt-sm="15" flex="25">
+						<a href="" ui-sref="fabberDetail({idFabber: item.idFabber})">
+							<user-avatar fabber="user" avatar-w="50" avatar-h="50" avatar-font-size="18"></user-avatar>
+						</a>
+						<div class="font-12 color-2 centered" flex md-truncate>Carlos Venegas</div>
+					</div>
+					<div flex-gt-sm="15" flex="25">
+						<a href="" ui-sref="fabberDetail({idFabber: item.idFabber})">
+							<user-avatar fabber="user" avatar-w="50" avatar-h="50" avatar-font-size="18"></user-avatar>
+						</a>
+						<div class="font-12 color-2 centered" flex md-truncate>Carlos Venegas</div>
+					</div>
+					<div flex-gt-sm="15" flex="25">
+						<a href="" ui-sref="fabberDetail({idFabber: item.idFabber})">
+							<user-avatar fabber="user" avatar-w="50" avatar-h="50" avatar-font-size="18"></user-avatar>
+						</a>
+						<div class="font-12 color-2 centered">Carlos Venegas</div>
+					</div>
+					<div flex-gt-sm="15" flex="25">
+						<a href="" ui-sref="fabberDetail({idFabber: item.idFabber})">
+							<user-avatar fabber="user" avatar-w="50" avatar-h="50" avatar-font-size="18"></user-avatar>
+						</a>
+						<div class="font-12 color-2 centered">Carlos Venegas</div>
+					</div>
+					<div flex-gt-sm="15" flex="25">
+						<a href="" ui-sref="fabberDetail({idFabber: item.idFabber})">
+							<user-avatar fabber="user" avatar-w="50" avatar-h="50" avatar-font-size="18"></user-avatar>
+						</a>
+						<div class="font-12 color-2 centered">Carlos Venegas</div>
+					</div>
+					<div flex-gt-sm="15" flex="25">
+						<a href="" ui-sref="fabberDetail({idFabber: item.idFabber})">
+							<user-avatar fabber="user" avatar-w="50" avatar-h="50" avatar-font-size="18"></user-avatar>
+						</a>
+						<div class="font-12 color-2 centered">Carlos Venegas</div>
+					</div>
+					<div flex-gt-sm="15" flex="25">
+						<a href="" ui-sref="fabberDetail({idFabber: item.idFabber})">
+							<user-avatar fabber="user" avatar-w="50" avatar-h="50" avatar-font-size="18"></user-avatar>
+						</a>
+						<div class="font-12 color-2 centered">Carlos Venegas</div>
+					</div>
+				</div>
+			</div>
+			<div class="subgroups">
+				<div layout="row" layout-align="center center">
+					<h4>Subgroups</h4>
+				</div>
+				<md-divider></md-divider>
+				<div layout="row" layout-align="center center" style="margin-top: 10px;">
+					<md-button class="md-raised md-accent" ng-click="addSubgroup($event)">New subgroup</md-button>
+				</div>
+				<div flex layout="row" layout-wrap>
+					<md-card class="custom-card-5" md-theme="" flex="20">
+				    	<md-card-header>
+				        	<md-card-header-text>
+					            <a ui-sref="subgroup.general({ idSubgroup: 10 })" class="custom-anchor-1"><span class="md-title">Phagebot a alsdf asf asf as ffadfsad</span></a>
+					            <span class="md-subhead font-11">10 members</span>
+				        	</md-card-header-text>
+				        </md-card-header>
+				    </md-card>
+				    <md-card class="" md-theme="" flex="20">
+				    	<md-card-header>
+				        	<md-card-header-text>
+					            <a href="#/" class="custom-anchor-1"><span class="md-title font-14">Phagebot</span></a>
+					            <span class="md-subhead font-11">10 members</span>
+				        	</md-card-header-text>
+				        </md-card-header>
+				    </md-card>
+				    <md-card class="" md-theme="" flex="20">
+				    	<md-card-header>
+				        	<md-card-header-text>
+					            <a href="#/" class="custom-anchor-1"><span class="md-title font-14">Phagebot</span></a>
+					            <span class="md-subhead font-11">10 members</span>
+				        	</md-card-header-text>
+				        </md-card-header>
+				    </md-card>
+				    <md-card class="" md-theme="" flex="20">
+				    	<md-card-header>
+				        	<md-card-header-text>
+					            <a href="#/" class="custom-anchor-1"><span class="md-title font-14">Phagebot</span></a>
+					            <span class="md-subhead font-11">10 members</span>
+				        	</md-card-header-text>
+				        </md-card-header>
+				    </md-card>
+				    <md-card class="" md-theme="" flex="20">
+				    	<md-card-header>
+				        	<md-card-header-text>
+					            <a href="#/" class="custom-anchor-1"><span class="md-title font-14">Phagebot</span></a>
+					            <span class="md-subhead font-11">10 members</span>
+				        	</md-card-header-text>
+				        </md-card-header>
+				    </md-card>
+				    <md-card class="" md-theme="" flex="20">
+				    	<md-card-header>
+				        	<md-card-header-text>
+					            <a href="#/" class="custom-anchor-1"><span class="md-title font-14">Phagebot</span></a>
+					            <span class="md-subhead font-11">10 members</span>
+				        	</md-card-header-text>
+				        </md-card-header>
+				    </md-card>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

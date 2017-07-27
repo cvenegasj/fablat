@@ -7,17 +7,41 @@ import org.springframework.transaction.annotation.Transactional;
 public class SubGroupMemberDAOImpl extends GenericDAOImpl<SubGroupMember, Integer> implements SubGroupMemberDAO {
 
 	@Transactional
-	@Override
-	public SubGroupMember findBySubGroupAndFabber(Integer idSubGroup, String username) {
+	public Integer countAllByFabberAsCoordinator(String email) {
+		Integer count = null;
+		count = ((Long) getSession()
+				.createQuery(
+						"select count(x) from " + getDomainClassName() + " x "
+								+ "where x.isCoordinator = 1 and x.groupMember.fabber.email = :email")
+				.setString("email", email)
+				.iterate().next()).intValue();
+		
+		return count;
+	}
 
-		SubGroupMember o = null;
-
-		o = (SubGroupMember) getSession()
+	@Transactional
+	public Integer countAllByFabberAsCollaborator(String email) {
+		Integer count = null;
+		count = ((Long) getSession()
+				.createQuery(
+						"select count(x) from " + getDomainClassName() + " x "
+								+ "where x.isCoordinator = 0 and x.groupMember.fabber.email = :email")
+				.setString("email", email)
+				.iterate().next()).intValue();
+		
+		return count;
+	}
+	
+	@Transactional
+	public SubGroupMember findBySubGroupAndFabber(Integer idSubGroup, String email) {
+		SubGroupMember e = null;
+		e = (SubGroupMember) getSession()
 				.createQuery(
 						"from " + getDomainClassName() + " x where x.subGroup.id = :idSubGroup "
-								+ "and x.groupMember.fabber.username = :username").setInteger("idSubGroup", idSubGroup)
-				.setString("username", username).setMaxResults(1).uniqueResult();
+								+ "and x.groupMember.fabber.email = :email")
+				.setInteger("idSubGroup", idSubGroup)
+				.setString("email", email).setMaxResults(1).uniqueResult();
 
-		return o;
+		return e;
 	}
 }

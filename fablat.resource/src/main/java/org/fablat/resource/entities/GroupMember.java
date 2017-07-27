@@ -107,4 +107,5 @@ public class GroupMember implements java.io.Serializable {
 	public void setSubGroupMembers(Set<SubGroupMember> subGroupMembers) {
 		this.subGroupMembers = subGroupMembers;
 	}
+	
 }

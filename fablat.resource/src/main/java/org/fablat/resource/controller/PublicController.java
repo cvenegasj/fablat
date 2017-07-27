@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/public")
+//@RequestMapping("/public")
 public class PublicController {
 
 	@Autowired
@@ -44,12 +44,11 @@ public class PublicController {
 		return model;
 	}
 
-	@RequestMapping(value = "/signup", method = RequestMethod.POST)
+	//@RequestMapping(value = "/signup", method = RequestMethod.POST)
 	public ResponseEntity<Void> signup(@RequestBody Map<String, String> params) {
 
 		// Fabber creation
 		Fabber fabber = new Fabber();
-		fabber.setUsername(params.get("username"));
 		fabber.setEmail(params.get("email"));
 		fabber.setPassword(params.get("password"));
 
@@ -90,7 +89,6 @@ public class PublicController {
 
 		// Fabber creation
 		Fabber fabber = new Fabber();
-		fabber.setUsername(params.get("username"));
 		fabber.setEmail(params.get("email"));
 		fabber.setPassword(params.get("password"));
 

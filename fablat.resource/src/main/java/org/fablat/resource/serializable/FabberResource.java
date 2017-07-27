@@ -2,7 +2,7 @@ package org.fablat.resource.serializable;
 
 public class FabberResource {
 
-	private Long idFabber;
+	private Integer idFabber;
 	private String username;
 	private String email;
 	private String firstName;
@@ -15,11 +15,11 @@ public class FabberResource {
 	private Boolean isNomade;
 	private String avatar;
 
-	public Long getIdFabber() {
+	public Integer getIdFabber() {
 		return idFabber;
 	}
 
-	public void setIdFabber(Long idFabber) {
+	public void setIdFabber(Integer idFabber) {
 		this.idFabber = idFabber;
 	}
 

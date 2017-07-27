@@ -128,17 +128,15 @@ public class AuthserverApplication extends WebMvcConfigurerAdapter {
 
 	private UserDetailsService userDetailsService(final FabberDAO fabberDAO) {
 		return new UserDetailsService() {
-
-			// @Autowired
-			// private FabberDAO fabberDAO;
-
+			
+			// param name should be 'username' 
 			public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-				return new CustomUserDetails(fabberDAO.findByUsername(username));
+				return new CustomUserDetails(fabberDAO.findByEmail(username));
 			}
 		};
 	}
 
-	// Database connection stuff -------------------------
+	// =========== Database connection settings ===========
 	@Bean
 	@ConfigurationProperties(prefix="spring.datasource")
 	public DataSource dataSource() {

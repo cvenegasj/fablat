@@ -21,8 +21,7 @@ import org.hibernate.annotations.FetchMode;
 @Table(name = "Fabber")
 public class Fabber implements java.io.Serializable {
 
-	private Long idFabber;
-	private String username;
+	private Integer idFabber;
 	private String email;
 	private String password;
 	private String firstName;
@@ -44,21 +43,12 @@ public class Fabber implements java.io.Serializable {
 
 	@Id
 	@Column(name = "idFabber", unique = true, nullable = false)
-	public Long getIdFabber() {
+	public Integer getIdFabber() {
 		return idFabber;
 	}
 
-	public void setIdFabber(Long idFabber) {
+	public void setIdFabber(Integer idFabber) {
 		this.idFabber = idFabber;
-	}
-
-	@Column(name = "username", unique = true, nullable = false)
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
 	}
 
 	@Column(name = "email", unique = true, nullable = false)

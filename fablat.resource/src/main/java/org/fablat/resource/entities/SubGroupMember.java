@@ -33,7 +33,7 @@ public class SubGroupMember implements java.io.Serializable {
 	private Date creationDateTime;
 	private SubGroup subGroup;
 	private GroupMember groupMember;
-	private Set<WorkshopEventTutor> workshopEventTutors = new HashSet<WorkshopEventTutor>();
+	private Set<WorkshopTutor> workshopTutors = new HashSet<WorkshopTutor>();
 
 	public SubGroupMember() {
 
@@ -100,11 +100,11 @@ public class SubGroupMember implements java.io.Serializable {
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "subGroupMember")
 	@Fetch(FetchMode.JOIN)
-	public Set<WorkshopEventTutor> getWorkshopEventTutors() {
-		return workshopEventTutors;
+	public Set<WorkshopTutor> getWorkshopTutors() {
+		return workshopTutors;
 	}
 
-	public void setWorkshopEventTutors(Set<WorkshopEventTutor> workshopEventTutors) {
-		this.workshopEventTutors = workshopEventTutors;
+	public void setWorkshopTutors(Set<WorkshopTutor> workshopTutors) {
+		this.workshopTutors = workshopTutors;
 	}
 }

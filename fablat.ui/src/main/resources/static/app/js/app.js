@@ -93,6 +93,19 @@ app.config(function($mdThemingProvider, $mdIconProvider, $urlRouterProvider, $st
         templateUrl: 'settings.password.html'
     });
     
+    $stateProvider.state({
+        name: 'group-out',
+        url: '/group-out/:idGroup',
+        templateUrl: 'group-out.html'
+    });
+    
+    $stateProvider.state({
+        name: 'subgroup-out',
+        url: '/subgroup-out/:idSubgroup',
+        templateUrl: 'subgroup-out.html'
+    });
+    
+    
     /*========== group states ==========*/
     $stateProvider.state({
         name: 'group',
@@ -369,22 +382,17 @@ app.controller('AppCtrl', ['$rootScope', '$http', '$state', '$location', '$windo
 	
 	$rootScope.user = {};
 	
-	$http.get('/resource/fabber/user-diggested').then(function(response) {
+	$http.get('/user').then(function(response) {
 		if (response.data) {
 			$rootScope.authenticated = true;
-			$rootScope.user.id = response.data.id;
-			$rootScope.user.username = response.data.username;
-			$rootScope.user.email = response.data.email;
-			$rootScope.user.firstName = response.data.firstName;
-			$rootScope.user.lastName = response.data.lastName;
-			$rootScope.user.idLab = response.data.idLab;
-			$rootScope.user.roles = response.data.roles;
-			
-			console.log("authenticated");
-			console.log("id: " + $rootScope.user.id);
-			console.log("username: " + $rootScope.user.username);
-			console.log("email: " + $rootScope.user.email);
-			console.log("lab: " + $rootScope.user.idLab); // get value of first lab in list
+			$rootScope.user.id = response.data.principal.id;
+			$rootScope.user.email = response.data.principal.email;
+			$rootScope.user.firstName = response.data.principal.firstName;
+			$rootScope.user.lastName = response.data.principal.lastName;
+			$rootScope.user.idLab = response.data.principal.idLab;
+			// roles
+			$rootScope.user.hasAdminGeneralRole = response.data.principal.authorities.find(x => x.authority === 'ROLE_ADMIN_GENERAL') ? true : false;
+			$rootScope.user.hasAdminLabRole = response.data.principal.authorities.find(x => x.authority === 'ROLE_ADMIN_LAB') ? true : false;
 			
 			// redirect
 			/*$http.get('/resource/first', {
@@ -464,51 +472,56 @@ app.controller('AppCtrl', ['$rootScope', '$http', '$state', '$location', '$windo
 
 /*========== General controllers ==========*/
 
-// Controller for dashboard view: dashboard.html
+// Controller in: dashboard.html
 app.controller('DashboardCtrl', function($rootScope, $scope, $http, $filter) {
 	
-	$http.get('/resource').then(function(response) {
-		$scope.greeting = response.data;
-	});
+	$scope.loadingRequests = true;
+	$scope.groups1 = [];
+	$scope.groups2 = [];
+	$scope.groups3 = [];
 	
-	// $scope.loading1 = true;
-	$scope.loading2 = true;
-	$scope.loading3 = true;
-	$scope.loading4 = true;
+	$http.get('/resource/auth/fabbers/me')
+		.then(function(response) {
+			$scope.fabber = response.data;
+		}).finally(function() {
+		    // called no matter success or failure
+		    $scope.loading3 = false;
+		});
 	
-	$http.get('/resource/fabber/current').then(function(response) {
-		$scope.fabber = response.data;
-	}).finally(function() {
-	    // called no matter success or failure
-	    // $scope.loading1 = false;
-	});
+	$http.get('/resource/auth/groups/findAllMine')
+		.then(function(response) {
+			// for displaying data in 3 columns
+			for (i = 0; i < response.data.length; i++) {
+				if (i % 3 == 0) {
+					$scope.groups1.push(response.data[i]);
+				} else if ((i + 2) % 3 == 0) {
+					$scope.groups2.push(response.data[i]);
+				} else {
+					$scope.groups3.push(response.data[i]);
+				}
+			}
+		}).finally(function() {
+		    // called no matter success or failure
+		    $scope.loading3 = false;
+		});
 	
-	$http.get('/resource/fabber/current-stats').then(function(response) {
-		$scope.stats = response.data;
-	}).finally(function() {
-	    // called no matter success or failure
-	    $scope.loading2 = false;
-	});
-	
-	$http.get('/resource/subgroup/list-exclusive-user').then(function(response) {
-		$scope.subgroups = response.data;
-	}).finally(function() {
-	    // called no matter success or failure
-	    $scope.loading3 = false;
-	});
-	
-	$http.get('/resource/workshop/list-upcoming-user').then(function(response) {
-		$scope.workshops = response.data;
-	}).finally(function() {
-	    // called no matter success or failure
-	    $scope.loading4 = false;
-	});
+	$http.get('/resource/auth/activity')
+		.then(function(response) {
+			$scope.workshops = response.data;
+		}).finally(function() {
+		    // called no matter success or failure
+		    $scope.loading4 = false;
+		});
 	
 });
 
 
-// Controller for groups view: groups.html
+// Controller in: groups.html
 app.controller('GroupsCtrl', function($scope, $http, $mdDialog) {
+	
+	$scope.groups1 = [];
+	$scope.groups2 = [];
+	$scope.groups3 = [];
 	
 	$scope.query = function(searchText) {
 	    return $http
@@ -519,6 +532,22 @@ app.controller('GroupsCtrl', function($scope, $http, $mdDialog) {
 	      });
 	};
 	
+	$http.get('/resource/auth/groups')
+		.then(function(response) {
+			// for displaying data in 3 columns
+			for (i = 0; i < response.data.length; i++) {
+				if (i % 3 == 0) {
+					$scope.groups1.push(response.data[i]);
+				} else if ((i + 2) % 3 == 0) {
+					$scope.groups2.push(response.data[i]);
+				} else {
+					$scope.groups3.push(response.data[i]);
+				}
+			}
+		}).finally(function() {
+		    // called no matter success or failure
+		    $scope.loading3 = false;
+		});
 	
 	// New group dialog
 	$scope.addGroup = function(ev) {
@@ -531,29 +560,49 @@ app.controller('GroupsCtrl', function($scope, $http, $mdDialog) {
 	      fullscreen: true // Only for -xs, -sm breakpoints.
 	    })
 	    .then(function(answer) {
-	      $scope.status = 'You said the information was "' + answer + '".';
+	      // ok
 	    }, function() {
-	      $scope.status = 'You cancelled the dialog.';
+	      // cancel
 	    });
 	};
+	
+});
+
+//Controller in: group-out.html
+app.controller('GroupOutCtrl', function($scope, $http, $stateParams) {
+	
+	// Injects the group object in the parent scope
+	$http.get('/resource/auth/groups/' + $stateParams.idGroup)
+		.then(function(response) {
+			$scope.group = response.data;			
+		}).finally(function() {
+		    // called no matter success or failure
+		});
 	
 });
 
 
 /*========== Group controllers ==========*/
 // Controller in: group.html
-app.controller('GroupCtrl', function($scope, $http, $stateParams) {
+app.controller('GroupCtrl', function($scope, $http, $stateParams, $state) {
 	
-	console.log($stateParams.idGroup);
-	
-	// inherits to children states
-	$scope.group = { name: "Open BioFab" };
+	// Injects the group object in the parent scope
+	$http.get('/resource/auth/groups/' + $stateParams.idGroup)
+		.then(function(response) {
+			// if user is not member redirect to external page
+			if (!response.data.amIMember) {
+				$state.go("group-out", { idGroup: $stateParams.idGroup }, {});
+			}	
+			$scope.group = response.data;	
+		}).finally(function() {
+		    // called no matter success or failure
+		});
 	
 });
 
 // Controller in: group.general.html
 app.controller('GroupGeneralCtrl', function($scope, $http, $stateParams, $mdDialog) {
-	
+
 	// New subgroup dialog
 	$scope.addSubgroup = function(ev) {
 	    $mdDialog.show({
@@ -565,9 +614,9 @@ app.controller('GroupGeneralCtrl', function($scope, $http, $stateParams, $mdDial
 	      fullscreen: true // Only for -xs, -sm breakpoints.
 	    })
 	    .then(function(answer) {
-	      $scope.status = 'You said the information was "' + answer + '".';
+	      // ok
 	    }, function() {
-	      $scope.status = 'You cancelled the dialog.';
+	      // cancel
 	    });
 	};
 	
@@ -579,12 +628,19 @@ app.controller('GroupGeneralCtrl', function($scope, $http, $stateParams, $mdDial
 /*========== Subgroup controllers ==========*/
 
 // Controller in: subgroup.html
-app.controller('SubgroupCtrl', function($scope, $http, $stateParams) {
+app.controller('SubgroupCtrl', function($scope, $http, $stateParams, $state) {
 	
-	// inherits to children states
-	$scope.subgroup = { name: "DIYbio lab kit" };
-	
-	
+	// Injects the subgroup object in the parent scope
+	$http.get('/resource/auth/subgroups/' + $stateParams.idSubgroup)
+		.then(function(response) {
+			// if user is not member redirect to external page
+			if (!response.data.amIMember) {
+				$state.go("subgroup-out", { idSubgroup: $stateParams.idSubgroup }, {});
+			}	
+			$scope.subgroup = response.data;	
+		}).finally(function() {
+		    // called no matter success or failure
+		});
 	
 });
 
@@ -609,59 +665,72 @@ function AddGroupDialogController($scope, $mdDialog, $http) {
 	$scope.hide = function() {
 	    $mdDialog.hide();
 	};
+	
 	$scope.cancel = function() {
 	    $mdDialog.cancel();
 	};
+	
 	$scope.submit = function() {	
 		$scope.actionsDisabled = true;
 		//TODO: validate fields
-		 
-		
+		 	
 		console.log($scope._group);
-		
 		// submit data
-		$http.post('/resource/group/save', {
+		$http.post('/resource/auth/groups/', {
 			name: $scope._group.name,
 			description: $scope._group.description
 		}).then(function(response) {	
 			console.log("saved!");
 			// pass data retrieved to parent controller
 			$mdDialog.hide(response.data);	
-		});
-				  
+		});	  
 	  };
 };
 
 // Controller for: add-subgroup-dialog.tmpl.html
-function AddSubgroupDialogController($scope, $mdDialog, $http) {
+function AddSubgroupDialogController($scope, $mdDialog, $http, $stateParams, $state) {
 	 
 	$scope.actionsDisabled = false;
 	
 	$scope.hide = function() {
 	    $mdDialog.hide();
 	};
+	
 	$scope.cancel = function() {
 	    $mdDialog.cancel();
 	};
+	
 	$scope.submit = function() {	
 		$scope.actionsDisabled = true;
-		//TODO: validate fields
-		 
+		//TODO: validate fields	 
 		
 		console.log($scope._subgroup);
-		
 		// submit data
-		$http.post('/resource/subgroup/save', {
+		$http.post('/resource/auth/subgroups', {
 			name: $scope._subgroup.name,
-			description: $scope._subgroup.description
+			description: $scope._subgroup.description,
+			idGroup: $stateParams.idGroup // one subgroup belongs to a group
 		}).then(function(response) {	
 			console.log("saved!");
 			// pass data retrieved to parent controller
 			$mdDialog.hide(response.data);	
+			// reload current state
+			$state.go($state.current, {}, {reload: true});
 		});
-				  
 	  };
 };
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

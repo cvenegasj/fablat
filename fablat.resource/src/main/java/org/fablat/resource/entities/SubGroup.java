@@ -19,22 +19,16 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.fablat.resource.util.View;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-
-import com.fasterxml.jackson.annotation.JsonView;
 
 @SuppressWarnings("serial")
 @Entity
 @Table(name = "SubGroup")
 public class SubGroup implements java.io.Serializable {
 
-	@JsonView(View.Summary.class)
 	private Integer idSubGroup;
-	@JsonView(View.Summary.class)
 	private String name;
-	@JsonView(View.Summary.class)
 	private String description;
 	private String reunionDay;
 	private Date reunionTime;
@@ -43,10 +37,9 @@ public class SubGroup implements java.io.Serializable {
 	private String photoUrl;
 	private Date creationDateTime;
 	private Boolean enabled;
-	@JsonView(View.Summary.class)
 	private Group group;
 	private Set<SubGroupMember> subGroupMembers = new HashSet<SubGroupMember>();
-	private Set<WorkshopEvent> workshopEvents = new HashSet<WorkshopEvent>();
+	private Set<Workshop> workshops = new HashSet<Workshop>();
 
 	public SubGroup() {
 
@@ -99,7 +92,7 @@ public class SubGroup implements java.io.Serializable {
 	public void setReunionTime(Date reunionTime) {
 		this.reunionTime = reunionTime;
 	}
-	
+
 	@Column(name = "mainUrl")
 	public String getMainUrl() {
 		return mainUrl;
@@ -168,12 +161,12 @@ public class SubGroup implements java.io.Serializable {
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "subGroup")
 	@Fetch(FetchMode.JOIN)
-	public Set<WorkshopEvent> getWorkshopEvents() {
-		return workshopEvents;
+	public Set<Workshop> getWorkshops() {
+		return workshops;
 	}
 
-	public void setWorkshopEvents(Set<WorkshopEvent> workshopEvents) {
-		this.workshopEvents = workshopEvents;
+	public void setWorkshops(Set<Workshop> workshops) {
+		this.workshops = workshops;
 	}
 
 	@Override
