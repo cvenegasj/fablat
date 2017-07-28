@@ -1,7 +1,6 @@
 package org.fablat.resource.controller;
 
 import java.security.Principal;
-import java.util.Map;
 
 import org.fablat.resource.dto.FabberDTO;
 import org.fablat.resource.entities.Fabber;
@@ -12,10 +11,8 @@ import org.fablat.resource.model.dao.RoleDAO;
 import org.fablat.resource.model.dao.SubGroupDAO;
 import org.fablat.resource.model.dao.SubGroupMemberDAO;
 import org.fablat.resource.model.dao.WorkshopTutorDAO;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,8 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/auth/fabbers")
 public class FabberController {
 
-	@Autowired
-    private ModelMapper modelMapper;
 	@Autowired
 	private FabberDAO fabberDAO;
 	@Autowired
@@ -67,10 +62,6 @@ public class FabberController {
     @ResponseStatus(HttpStatus.OK)
     public void updateMe(@RequestBody FabberDTO fabberDTO) {
         Fabber fabber = convertToEntity(fabberDTO);
-        if (!fabberDTO.getIsFabAcademyGrad()) {
-			fabber.setFabAcademyGradYear(null);
-		}
-
 		// dependencies
 		if (fabberDTO.getLabId() != null) {
 			fabber.setLab(labDAO.findById(fabberDTO.getLabId()));
@@ -82,19 +73,6 @@ public class FabberController {
         
         fabberDAO.makePersistent(fabber);
     }
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	// TODO: store scores and calculate ranking position
 	private Integer[] calculateAndUpdateRankings(String email) {
@@ -111,69 +89,42 @@ public class FabberController {
 	
 	// ========== DTO conversion ==========
 	// guide: http://www.baeldung.com/entity-to-and-from-dto-for-a-java-spring-application
-	private FabberDTO convertToDTO(Fabber fabber) {
-		// TypeMap<Fabber, FabberDTO> typeMap = modelMapper.createTypeMap(Fabber.class, FabberDTO.class);
-		modelMapper.typeMap(Fabber.class, FabberDTO.class).addMappings(mapper -> {
-			mapper.map(src -> src.getLab().getIdLab(), FabberDTO::setLabId);
-			mapper.map(src -> src.getLab().getName(), FabberDTO::setLabName);
-		});
-		
-		FabberDTO fabberDTO = modelMapper.map(fabber, FabberDTO.class);
+	
+	private FabberDTO convertToDTO(Fabber fabber) {		
+		FabberDTO fabberDTO = new FabberDTO();
+		fabberDTO.setIdFabber(fabber.getIdFabber());
+		fabberDTO.setEmail(fabber.getEmail());
+		fabberDTO.setFirstName(fabber.getFirstName());
+		fabberDTO.setLastName(fabber.getLastName());
+		fabberDTO.setIsFabAcademyGrad(fabber.getIsFabAcademyGrad());
+		fabberDTO.setFabAcademyGradYear(fabber.getFabAcademyGradYear());
+		fabberDTO.setCellPhoneNumber(fabber.getCellPhoneNumber());
+		fabberDTO.setIsNomade(fabber.getIsNomade());
+		fabberDTO.setMainQuote(fabber.getMainQuote());
+		fabberDTO.setCity(fabber.getCity());
+		fabberDTO.setCountry(fabber.getCountry());
+		fabberDTO.setWeekGoal(fabber.getWeekGoal());
+		fabberDTO.setAvatarUrl(fabber.getAvatarUrl());
+		fabberDTO.setLabId(fabber.getLab() != null ? fabber.getLab().getIdLab() : null);
+		fabberDTO.setLabName(fabber.getLab() != null ? fabber.getLab().getName() : null);
+				
 	    return fabberDTO;
 	}
 	
 	private Fabber convertToEntity(FabberDTO fabberDTO) {
-	    Fabber fabber = modelMapper.map(fabberDTO, Fabber.class);
-	  
-	    if (fabberDTO.getIdFabber() != null) {
-	        Fabber oldFabber = fabberDAO.findById(fabberDTO.getIdFabber());
-	        fabber.setEmail(oldFabber.getEmail());
-	        fabber.setPassword(oldFabber.getPassword());
-	        fabber.setEnabled(oldFabber.getEnabled());
-	    }
+	    Fabber fabber = new Fabber();
+	    fabber.setFirstName(fabberDTO.getFirstName());
+	    fabber.setLastName(fabberDTO.getLastName());
+	    fabber.setIsFabAcademyGrad(fabberDTO.getIsFabAcademyGrad());
+	    fabber.setFabAcademyGradYear(fabberDTO.getIsFabAcademyGrad() ? fabberDTO.getFabAcademyGradYear() : null);
+	    fabber.setCellPhoneNumber(fabberDTO.getCellPhoneNumber());
+	    fabber.setIsNomade(fabberDTO.getIsNomade());
+	    fabber.setMainQuote(fabberDTO.getMainQuote());
+	    fabber.setCity(fabberDTO.getCity());
+	    fabber.setCountry(fabberDTO.getCountry());
+	    fabber.setWeekGoal(fabberDTO.getAvatarUrl());
+	    
 	    return fabber;
-	}
-	
-	
-
-	
-	
-	
-	
-	
-	
-
-	@RequestMapping(value = "/update", method = RequestMethod.POST)
-	public ResponseEntity<Void> update(@RequestBody Map<String, String> params, Principal principal) {
-
-		// Fabber update
-		Fabber fabber = fabberDAO.findByEmail(principal.getName());
-
-		// fabber.setEmail(params.get("email"));
-		fabber.setFirstName(params.get("firstName"));
-		fabber.setLastName(params.get("lastName"));
-
-		fabber.setIsFabAcademyGrad(Boolean.parseBoolean(params.get("isFabAcademyGrad")));
-
-		if (fabber.getIsFabAcademyGrad()) {
-			fabber.setFabAcademyGradYear(Integer.parseInt(params.get("fabAcademyGradYear")));
-		} else {
-			fabber.setFabAcademyGradYear(null);
-		}
-
-		// Lab creation
-		// if (params.get("idLab") == null) {
-		// fabber.setLab(null);
-		// fabber.setIsNomade(true);
-		// } else {
-		// Lab lab = labDAO.findById(Integer.parseInt(params.get("idLab")));
-		// fabber.setLab(lab);
-		// fabber.setIsNomade(false);
-		// }
-
-		fabberDAO.makePersistent(fabber);
-
-		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 
 }

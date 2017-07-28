@@ -26,7 +26,7 @@
 				</div>
 				<div class="font-14 section-content">
 					<span ng-if="workshop.startDate === workshop.endDate">{{ workshop.startDateFormatted + " - " + workshop.endTime }}</span>
-					<span ng-if="!workshop.startDate === workshop.endDate">{{ workshop.startDateFormatted }} - {{ workshop.endDateFormatted }}</span>
+					<span ng-if="workshop.startDate !== workshop.endDate">{{ workshop.startDateFormatted }} - {{ workshop.endDateFormatted }}</span>
 				</div>
 			</div>
 			<md-divider></md-divider>
@@ -50,7 +50,9 @@
 				<h2 class="font-16">Cost</h2>
 			</div>
 			<div class="font-14 section-content">
-				{{ workshop.price + " " + workshop.currency }} <br />
+				<span ng-if="!workshop.isPaid">FREE</span>
+				<span ng-if="workshop.isPaid">{{ workshop.price + " " + workshop.currency }}</span>
+				<br />
 				<span ng-if="workshop.ticketsUrl">
 					Tickets available at <a href="{{ workshop.ticketsUrl }}" target="_blank" class="custom-anchor-1" md-colors="{color: 'accent-900'}">Eventbrite</a>.
 				</span>

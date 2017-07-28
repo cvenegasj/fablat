@@ -6,9 +6,9 @@
 			</div>
 			<div class="md-padding">			
 				<div layout-gt-sm="row" class="form-group">
-					<label class="control-label" for="workshop-name" flex-gt-sm="20">Workshop name</label>
+					<label class="control-label" for="name" flex-gt-sm="20">Workshop name</label>
 					<md-input-container md-no-float class="md-block" flex>
-						<input ng-model="_workshop.name" name="name" id="workshop-name" md-maxlength="200" required md-autofocus>
+						<input ng-model="_workshop.name" name="name" id="name" md-maxlength="200" required md-autofocus>
 					
 						<div ng-messages="addWorkshopForm.name.$error">
 			          		<div ng-message="required">This is required.</div>
@@ -17,9 +17,9 @@
 					</md-input-container>
 				</div>
 				<div layout-gt-sm="row" class="form-group">
-					<label class="control-label" for="workshop-description" flex-gt-sm="20">Description</label>
+					<label class="control-label" for="description" flex-gt-sm="20">Description</label>
 					<md-input-container class="md-block" flex>
-						<textarea ng-model="_workshop.description" name="description" id="workshop-description" md-maxlength="3500" rows="5" required></textarea>
+						<textarea ng-model="_workshop.description" name="description" id="description" md-maxlength="3500" rows="5" required></textarea>
 					
 						<div ng-messages="addWorkshopForm.description.$error">
 			          		<div ng-message="required">This is required.</div>
@@ -38,14 +38,22 @@
 					</md-input-container>
 				</div>
 				<div layout-gt-sm="row" class="form-group">
-					<label class="control-label" for="workshop-start-time-hours" flex-gt-sm="20">Start time</label>
+					<label class="control-label" for="start-time-hours" flex-gt-sm="20">Start time</label>
 					<md-input-container md-no-float class="md-block">
-						<input ng-model="_workshop.startTimeHours" id="workshop-start-time-hours" type="number" step="1" min="0" max="23" style="width: 60px;">
+						<input ng-model="_workshop.startTimeHours" name="startTimeHours" id="start-time-hours" type="number" step="1" min="0" max="12" style="width: 60px;" required>
 						<div class="hint">hours</div>
+						
+						<div ng-messages="addWorkshopForm.startTimeHours.$error">
+			          		<div ng-message="required">This is required.</div>
+			       		</div>
 					</md-input-container>
 					<md-input-container md-no-float class="md-block">
-						<input ng-model="_workshop.startTimeMinutes" type="number" step="1" min="0" max="59" style="width: 60px;">
+						<input ng-model="_workshop.startTimeMinutes" name="startTimeMinutes" id="start-time-minutes" type="number" step="1" min="0" max="59" style="width: 60px;" required>
 						<div class="hint">minutes</div>
+						
+						<div ng-messages="addWorkshopForm.startTimeMinutes.$error">
+			          		<div ng-message="required">This is required.</div>
+			       		</div>
 					</md-input-container>
 					<md-input-container md-no-float class="md-block">
 						<md-select ng-model="_workshop.startTimeMeridian" class="md-no-underline" style="width: 35px !important;">
@@ -67,14 +75,22 @@
 					</md-input-container>
 				</div>
 				<div layout-gt-sm="row" class="form-group">
-					<label class="control-label" for="workshop-end-time-hours" flex-gt-sm="20">End time</label>
+					<label class="control-label" for="end-time-hours" flex-gt-sm="20">End time</label>
 					<md-input-container md-no-float class="md-block">
-						<input ng-model="_workshop.endTimeHours" id="workshop-end-time-hours" type="number" step="1" min="0" max="23" style="width: 60px;">
+						<input ng-model="_workshop.endTimeHours" name="endTimeHours" id="end-time-hours" type="number" step="1" min="0" max="12" style="width: 60px;" required>
 						<div class="hint">hours</div>
+						
+						<div ng-messages="addWorkshopForm.endTimeHours.$error">
+			          		<div ng-message="required">This is required.</div>
+			       		</div>
 					</md-input-container>
 					<md-input-container md-no-float class="md-block">
-						<input ng-model="_workshop.endTimeMinutes" type="number" step="1" min="0" max="59" style="width: 60px;">
+						<input ng-model="_workshop.endTimeMinutes" name="endTimeMinutes" type="number" step="1" min="0" max="59" style="width: 60px;" required>
 						<div class="hint">minutes</div>
+						
+						<div ng-messages="addWorkshopForm.endTimeMinutes.$error">
+			          		<div ng-message="required">This is required.</div>
+			       		</div>
 					</md-input-container>
 					<md-input-container md-no-float class="md-block">
 						<md-select ng-model="_workshop.endTimeMeridian" class="md-no-underline" style="width: 35px !important;">
@@ -92,12 +108,12 @@
 							Is paid?
 						</md-checkbox>
 				    </md-input-container>
-			        <md-input-container md-no-float class="md-block" ng-show="_workshop.isPaid">
-				    	<input ng-model="_workshop.price" name="price" placeholder="Price" required style="width: 80px; margin-left: 15px;">
+			        <md-input-container md-no-float class="md-block" ng-if="_workshop.isPaid">
+				    	<input ng-model="_workshop.price" name="price" placeholder="Price" style="width: 80px; margin-left: 15px;" required>
 				    	
 				    	<div ng-messages="addWorkshopForm.price.$error">
 			          		<div ng-message="required">This is required.</div>
-			       		</div>
+			        	</div>
 			        </md-input-container>
 			        <md-input-container md-no-float class="md-block">
 						<md-select ng-model="_workshop.currency" class="md-no-underline" style="width: 35px !important;" ng-show="_workshop.isPaid">
@@ -107,7 +123,30 @@
 				        </md-select>
 					</md-input-container>
 			        <span class="bold" style="line-height: 27px; margin-left: 15px;" ng-show="!_workshop.isPaid">FREE</span>
-			    </div>	
+			    </div>
+			    <div layout-gt-sm="row" class="form-group">
+					<label class="control-label" for="facebookUrl" flex-gt-sm="20">Facebook URL</label>
+					<md-input-container md-no-float class="md-block" flex>
+						<input ng-model="_workshop.facebookUrl" name="facebookUrl" id="facebookUrl" md-maxlength="300">
+					
+						<div ng-messages="addWorkshopForm.facebookUrl.$error">
+			          		<div ng-message="md-maxlength">The URL has to be less than 300 characters long.</div>
+			        	</div>
+					</md-input-container>
+				</div>
+				<div layout-gt-sm="row" class="form-group">
+					<label class="control-label" for="ticketsUrl" flex-gt-sm="20">Tickets URL</label>
+					<md-input-container md-no-float class="md-block" flex>
+						<input ng-model="_workshop.ticketsUrl" name="ticketsUrl" id="ticketsUrl" md-maxlength="300">
+						<div class="hint">Eventbrite, Joinnus, etc.</div>
+					
+						<div ng-messages="addWorkshopForm.ticketsUrl.$error">
+			          		<div ng-message="md-maxlength">The URL has to be less than 300 characters long.</div>
+			        	</div>
+					</md-input-container>
+				</div>
+			    		    
+			    	
 			</div>
 			<div class="actions" layout="row">
 				<md-button ui-sref="subgroup.general">Cancel</md-button>

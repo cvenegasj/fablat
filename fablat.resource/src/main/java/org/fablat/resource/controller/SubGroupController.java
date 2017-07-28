@@ -38,7 +38,6 @@ import org.fablat.resource.util.Resources;
 import org.fablat.resource.util.View;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -62,8 +61,6 @@ public class SubGroupController {
 	private SimpleDateFormat monthFormatter = new SimpleDateFormat("MMM");
 	private SimpleDateFormat dateFormatter2 = new SimpleDateFormat("MMMMM d(EEE) h:mm a");
 	
-	@Autowired
-	private ModelMapper modelMapper;
 	@Autowired
 	private FabberDAO fabberDAO;
 	@Autowired
@@ -112,7 +109,7 @@ public class SubGroupController {
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
 	public SubGroupDTO create(@RequestBody SubGroupDTO subGroupDTO, Principal principal) {
-		SubGroup subGroup = modelMapper.map(subGroupDTO, SubGroup.class);
+		SubGroup subGroup = convertToEntity(subGroupDTO);
 		subGroup.setEnabled(true);
 		// set creation datetime
 		Instant now = Instant.now();
@@ -154,6 +151,14 @@ public class SubGroupController {
 		sDTO.setMembersCount(subGroup.getSubGroupMembers().size());
 
 		return sDTO;
+	}
+	
+	private SubGroup convertToEntity(SubGroupDTO sgDTO) {
+		SubGroup sg = new SubGroup();
+		sg.setName(sgDTO.getName());
+		sg.setDescription(sgDTO.getDescription());
+		
+		return sg;
 	}
 
 	private WorkshopDTO convertToDTO(Workshop workshop) {

@@ -18,6 +18,7 @@ public class FabberDTO {
 	private String avatarUrl;
 	private Integer labId;
 	private String labName;
+	// additional
 	private Integer generalRanking;
 	private Integer coordinatorRanking;
 	private Integer collaboratorRanking;

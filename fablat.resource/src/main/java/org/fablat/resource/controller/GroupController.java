@@ -22,7 +22,6 @@ import org.fablat.resource.model.dao.FabberDAO;
 import org.fablat.resource.model.dao.GroupDAO;
 import org.fablat.resource.model.dao.GroupMemberDAO;
 import org.fablat.resource.model.dao.SubGroupMemberDAO;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,8 +37,7 @@ public class GroupController {
 
 	private SimpleDateFormat timeFormatter = new SimpleDateFormat("h:mm a");
 	private SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("dd-MM-yyyy h:mm a");
-	@Autowired
-    private ModelMapper modelMapper;
+
 	@Autowired
 	private FabberDAO fabberDAO;
 	@Autowired
@@ -159,7 +157,7 @@ public class GroupController {
 	@RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     public GroupDTO create(@RequestBody GroupDTO groupDTO, Principal principal) {
-        Group group = modelMapper.map(groupDTO, Group.class);
+		Group group = convertToEntity(groupDTO);
         group.setEnabled(true);
         // set creation datetime 
         Instant now = Instant.now();
@@ -215,6 +213,14 @@ public class GroupController {
 		groupDTO.setMembersCount(group.getGroupMembers().size());
 		
 		return groupDTO;
+	}
+	
+	private Group convertToEntity(GroupDTO gDTO) {
+		Group g = new Group();
+		g.setName(gDTO.getName());
+		g.setDescription(gDTO.getDescription());
+		
+		return g;
 	}
 	
 	private SubGroupDTO convertToDTO(SubGroup subGroup) {

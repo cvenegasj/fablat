@@ -161,6 +161,8 @@ public class WorkshopController {
 		wDTO.setLabName(workshop.getLocation().getLab() != null ? workshop.getLocation().getLab().getName() : null);
 		wDTO.setSubGroupId(workshop.getSubGroup().getIdSubGroup());
 		wDTO.setSubGroupName(workshop.getSubGroup().getName());
+		wDTO.setGroupId(workshop.getSubGroup().getGroup().getIdGroup());
+		wDTO.setGroupName(workshop.getSubGroup().getGroup().getName());
 		
 		return wDTO;
 	}
@@ -175,8 +177,8 @@ public class WorkshopController {
 		w.setIsPaid(wDTO.getIsPaid());
 		w.setPrice(wDTO.getPrice());
 		w.setCurrency(wDTO.getCurrency());
-		w.setFacebookUrl(wDTO.getFacebookUrl().trim().equals("") ? null : wDTO.getFacebookUrl().trim());
-		w.setTicketsUrl(wDTO.getTicketsUrl().trim().equals("") ? null : wDTO.getTicketsUrl().trim());
+		w.setFacebookUrl(wDTO.getFacebookUrl());
+		w.setTicketsUrl(wDTO.getTicketsUrl());
 			
 		return w;
 	}

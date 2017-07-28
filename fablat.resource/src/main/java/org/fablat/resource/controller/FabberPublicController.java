@@ -9,7 +9,6 @@ import org.fablat.resource.model.dao.LabDAO;
 import org.fablat.resource.model.dao.RoleDAO;
 import org.fablat.resource.model.dao.RoleFabberDAO;
 import org.fablat.resource.util.Resources;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,8 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/public")
 public class FabberPublicController {
 
-	@Autowired
-	private ModelMapper modelMapper;
 	@Autowired
 	private FabberDAO fabberDAO;
 	@Autowired
@@ -43,10 +40,7 @@ public class FabberPublicController {
 		Fabber fabber = convertToEntity(fabberDTO);
 		fabber.setEnabled(true);
 		// TODO: encode password
-
-		if (!fabberDTO.getIsFabAcademyGrad()) {
-			fabber.setFabAcademyGradYear(null);
-		}
+		
 
 		// set fabber's Lab
 		if (fabberDTO.getLabId() != null) {
@@ -67,21 +61,39 @@ public class FabberPublicController {
 		
 		return convertToDTO(fabberCreated);
 	}
+	
 
 	// ========== DTO conversion ==========
+	
 	private FabberDTO convertToDTO(Fabber fabber) {
-		modelMapper.typeMap(Fabber.class, FabberDTO.class).addMappings(mapper -> {
-			mapper.map(src -> src.getLab().getIdLab(), FabberDTO::setLabId);
-			mapper.map(src -> src.getLab().getName(), FabberDTO::setLabName);
-		});
-
-		FabberDTO fabberDTO = modelMapper.map(fabber, FabberDTO.class);
-		return fabberDTO;
+		FabberDTO fabberDTO = new FabberDTO();
+		fabberDTO.setIdFabber(fabber.getIdFabber());
+		fabberDTO.setEmail(fabber.getEmail());
+		fabberDTO.setFirstName(fabber.getFirstName());
+		fabberDTO.setLastName(fabber.getLastName());
+		fabberDTO.setIsFabAcademyGrad(fabber.getIsFabAcademyGrad());
+		fabberDTO.setFabAcademyGradYear(fabber.getFabAcademyGradYear());
+		fabberDTO.setCellPhoneNumber(fabber.getCellPhoneNumber());
+		fabberDTO.setIsNomade(fabber.getIsNomade());
+		fabberDTO.setMainQuote(fabber.getMainQuote());
+		fabberDTO.setCity(fabber.getCity());
+		fabberDTO.setCountry(fabber.getCountry());
+		fabberDTO.setWeekGoal(fabber.getWeekGoal());
+		fabberDTO.setAvatarUrl(fabber.getAvatarUrl());
+		fabberDTO.setLabId(fabber.getLab() != null ? fabber.getLab().getIdLab() : null);
+		fabberDTO.setLabName(fabber.getLab() != null ? fabber.getLab().getName() : null);
+				
+	    return fabberDTO;
 	}
 
 	private Fabber convertToEntity(FabberDTO fabberDTO) {
-		Fabber fabber = modelMapper.map(fabberDTO, Fabber.class);
+		Fabber fabber = new Fabber();
+	    fabber.setFirstName(fabberDTO.getFirstName());
+	    fabber.setLastName(fabberDTO.getLastName());
+	    fabber.setIsFabAcademyGrad(fabberDTO.getIsFabAcademyGrad());
+	    fabber.setFabAcademyGradYear(fabberDTO.getIsFabAcademyGrad() ? fabberDTO.getFabAcademyGradYear() : null);
 		
 		return fabber;
 	}
+	
 }

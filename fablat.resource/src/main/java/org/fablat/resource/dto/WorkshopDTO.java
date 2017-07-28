@@ -33,6 +33,8 @@ public class WorkshopDTO {
 	private String labName;
 	private Integer subGroupId;
 	private String subGroupName;
+	private Integer groupId;
+	private String groupName;
 	private List<WorkshopTutorDTO> tutors;
 	// additional
 	private Boolean amITutor;
@@ -259,6 +261,22 @@ public class WorkshopDTO {
 
 	public void setSubGroupName(String subGroupName) {
 		this.subGroupName = subGroupName;
+	}
+
+	public Integer getGroupId() {
+		return groupId;
+	}
+
+	public void setGroupId(Integer groupId) {
+		this.groupId = groupId;
+	}
+
+	public String getGroupName() {
+		return groupName;
+	}
+
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
 	}
 
 	public List<WorkshopTutorDTO> getTutors() {

@@ -83,10 +83,11 @@
 			<h4>Workshops</h4>
 		</div>
 		<md-divider></md-divider>
-		<div layout="row" layout-align="center center" style="margin-top: 10px;">
+		<div layout="row" layout-align="center center" style="margin-top: 10px; margin-bottom: 15px;">
 			<md-button class="md-raised md-accent" ui-sref="subgroup.addWorkshop">New workshop</md-button>
 		</div>
-		<div class="workshop-list" flex layout="column">
+		<div ng-if="subgroup.workshops.length === 0" class="centered no-data-2">No workshops created yet.</div>
+		<div class="workshop-list" flex layout="column" ng-if="subgroup.workshops.length > 0">
 			<div layout="row" class="list-item" ng-repeat="item in subgroup.workshops">
 				<div class="date uppercase" flex="15" layout="column" layout-align="center center" md-colors="{background: 'default-accent-400'}">
 					<div class="day">{{ item.startDateDay }}</div>
@@ -101,8 +102,7 @@
 						<span ng-if="item.isPaid">{{ item.price + " " + item.currency }}</span>
 					</div>
 				</div>
-			</div>	
-			<md-divider ng-if="!$last"></md-divider>		
+			</div>		
 		</div>
 	</div>
 </div>

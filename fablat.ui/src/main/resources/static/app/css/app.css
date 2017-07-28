@@ -197,6 +197,13 @@ html {
 	color: #9E9E9E;
 }
 
+.no-data-3 {
+	font-size: 16px;
+	line-height: 20px;
+	opacity: 0.7;
+	color: #9E9E9E;
+}
+
 /*************/
 
 .custom-button-1 {
@@ -514,6 +521,10 @@ md-list.list-type-1 md-list-item.md-2-line::before {
 /*** subgroup.general.html ***/
 div.workshop-list {
 	border: 1px solid #E0E0E0;
+}
+
+div.workshop-list div.list-item:not(:last-child) {
+	border-bottom: 1px solid #E0E0E0;
 }
 
 div.workshop-list .list-item .date {

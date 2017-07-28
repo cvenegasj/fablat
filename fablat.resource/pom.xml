@@ -54,12 +54,6 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-dbcp2</artifactId>
 		</dependency>
-		<!-- ModelMapper for DTOs -->
-		<dependency>
-			<groupId>org.modelmapper</groupId>
-			<artifactId>modelmapper</artifactId>
-			<version>1.1.0</version>
-		</dependency>
 		<!-- Joda -->
 		<dependency>
 			<groupId>joda-time</groupId>

@@ -659,7 +659,7 @@ app.controller('SubgroupGeneralCtrl', function($scope, $http, $stateParams) {
 });
 
 // Controller in: subgroup.add-workshop.html
-app.controller('SubgroupAddWorkshopCtrl', function($scope, $http, $stateParams) {
+app.controller('SubgroupAddWorkshopCtrl', function($scope, $http, $stateParams, $state) {
 	
 	// initialize checkbox attributes
 	$scope._workshop = {};
@@ -669,12 +669,8 @@ app.controller('SubgroupAddWorkshopCtrl', function($scope, $http, $stateParams) 
 	$scope.today = new Date();
 	
 	$scope.submit = function() {	
-		$scope.actionsDisabled = true;
-		//TODO: validate fields
-		
-		
-		 	
-		console.log($scope._group);
+		console.log($scope._workshop);		
+		 
 		// submit data
 		$http.post('/resource/auth/workshops/', {
 			name: $scope._workshop.name,
@@ -686,8 +682,8 @@ app.controller('SubgroupAddWorkshopCtrl', function($scope, $http, $stateParams) 
 			isPaid: $scope._workshop.isPaid,
 			price: $scope._workshop.isPaid ? $scope._workshop.price : null,
 			currency: $scope._workshop.isPaid ? $scope._workshop.currency : null,
-			facebookUrl: "",
-			ticketsUrl: "",
+			facebookUrl: $scope._workshop.facebookUrl,
+			ticketsUrl: $scope._workshop.ticketsUrl,
 			// dependencies
 			subGroupId: $stateParams.idSubgroup, // parent
 			locationId: 62, // id location
@@ -699,6 +695,7 @@ app.controller('SubgroupAddWorkshopCtrl', function($scope, $http, $stateParams) 
 
 		}).then(function(response) {	
 			console.log("saved!");
+			$state.go("workshop.general", {idWorkshop: response.data.idWorkshop}, {});
 		});	  
 	  };
 	
@@ -763,7 +760,9 @@ function AddGroupDialogController($scope, $mdDialog, $http) {
 		}).then(function(response) {	
 			console.log("saved!");
 			// pass data retrieved to parent controller
-			$mdDialog.hide(response.data);	
+			$mdDialog.hide(response.data);
+			// go to group state
+			$state.go("group.general", { idGroup: response.data.idGroup }, {});
 		});	  
 	  };
 };
@@ -772,6 +771,7 @@ function AddGroupDialogController($scope, $mdDialog, $http) {
 function AddSubgroupDialogController($scope, $mdDialog, $http, $stateParams, $state) {
 	 
 	$scope.actionsDisabled = false;
+	console.log($stateParams.idGroup);
 	
 	$scope.hide = function() {
 	    $mdDialog.hide();
@@ -790,7 +790,7 @@ function AddSubgroupDialogController($scope, $mdDialog, $http, $stateParams, $st
 		$http.post('/resource/auth/subgroups', {
 			name: $scope._subgroup.name,
 			description: $scope._subgroup.description,
-			idGroup: $stateParams.idGroup // parent
+			groupId: $stateParams.idGroup // parent
 		}).then(function(response) {	
 			console.log("saved!");
 			// pass data retrieved to parent controller

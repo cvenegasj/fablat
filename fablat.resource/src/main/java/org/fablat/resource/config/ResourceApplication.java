@@ -34,9 +34,7 @@ import org.fablat.resource.model.daoimpl.SubGroupMemberDAOImpl;
 import org.fablat.resource.model.daoimpl.WorkshopDAOImpl;
 import org.fablat.resource.model.daoimpl.WorkshopTutorDAOImpl;
 import org.hibernate.SessionFactory;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -44,7 +42,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
 import org.springframework.core.annotation.Order;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
@@ -132,11 +129,8 @@ public class ResourceApplication extends ResourceServerConfigurerAdapter {
 		return new PersistenceExceptionTranslationPostProcessor();
 	}
 	
-	@Bean
-	@Scope(scopeName = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-	public ModelMapper modelMapper() {
-	    return new ModelMapper();
-	}
+	
+	// ========== DAO Beans ==========
 
 	@Autowired
 	@Bean(name = "fabberDAO")

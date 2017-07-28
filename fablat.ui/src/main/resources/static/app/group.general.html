@@ -8,8 +8,8 @@
 		</div>
 		<div style="margin-bottom: 20px;">{{ group.description }}</div>
 	</div>
-	<div class="info">
-		<div ng-if="group.reunionDay && group.reunionTime"><md-icon md-svg-icon="timetable" class="icon-16"></md-icon> Reunions: {{ group.reunionDay }}, {{ group.reunionTime }}</div>
+	<div class="info" ng-if="group.reunionDay || group.reunionTime || group.mainUrl || group.secondaryUrl">
+		<div ng-if="group.reunionDay || group.reunionTime"><md-icon md-svg-icon="timetable" class="icon-16"></md-icon> Reunions: {{ group.reunionDay }}, {{ group.reunionTime }}</div>
 		<div ng-if="group.mainUrl"><md-icon md-svg-icon="web" class="icon-16"></md-icon> Main URL: <a href="" class="custom-anchor-1">{{ group.mainUrl }}</a></div>
 		<div ng-if="group.secondaryUrl"><md-icon md-svg-icon="web" class="icon-16"></md-icon> Secondary URL: <a href="" class="custom-anchor-1">{{ group.secondaryUrl }}</a></div>
 	</div>
