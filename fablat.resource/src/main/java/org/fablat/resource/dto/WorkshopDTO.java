@@ -1,6 +1,7 @@
 package org.fablat.resource.dto;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public class WorkshopDTO {
 
@@ -12,6 +13,10 @@ public class WorkshopDTO {
 	private String startTime;
 	private String endDate;
 	private String endTime;
+	private Integer startDateDay;
+	private String startDateMonth;
+	private String startDateFormatted;
+	private String endDateFormatted;
 	private Boolean isPaid;
 	private BigDecimal price;
 	private String currency;
@@ -19,13 +24,18 @@ public class WorkshopDTO {
 	private String ticketsUrl;
 	private String creationDateTime;
 	private Boolean enabled;
-	private Integer idLocation;
+	private Integer locationId;
 	private String locationAddress;
-	private String labName;
+	private String locationCity;
+	private String locationCountry;
 	private String locationLatitude;
 	private String locationLongitude;
+	private String labName;
 	private Integer subGroupId;
 	private String subGroupName;
+	private List<WorkshopTutorDTO> tutors;
+	// additional
+	private Boolean amITutor;
 
 	public Integer getIdWorkshop() {
 		return idWorkshop;
@@ -91,6 +101,38 @@ public class WorkshopDTO {
 		this.endTime = endTime;
 	}
 
+	public Integer getStartDateDay() {
+		return startDateDay;
+	}
+
+	public void setStartDateDay(Integer startDateDay) {
+		this.startDateDay = startDateDay;
+	}
+
+	public String getStartDateMonth() {
+		return startDateMonth;
+	}
+
+	public void setStartDateMonth(String startDateMonth) {
+		this.startDateMonth = startDateMonth;
+	}
+
+	public String getStartDateFormatted() {
+		return startDateFormatted;
+	}
+
+	public void setStartDateFormatted(String startDateFormatted) {
+		this.startDateFormatted = startDateFormatted;
+	}
+
+	public String getEndDateFormatted() {
+		return endDateFormatted;
+	}
+
+	public void setEndDateFormatted(String endDateFormatted) {
+		this.endDateFormatted = endDateFormatted;
+	}
+
 	public Boolean getIsPaid() {
 		return isPaid;
 	}
@@ -147,12 +189,12 @@ public class WorkshopDTO {
 		this.enabled = enabled;
 	}
 
-	public Integer getIdLocation() {
-		return idLocation;
+	public Integer getLocationId() {
+		return locationId;
 	}
 
-	public void setIdLocation(Integer idLocation) {
-		this.idLocation = idLocation;
+	public void setLocationId(Integer locationId) {
+		this.locationId = locationId;
 	}
 
 	public String getLocationAddress() {
@@ -163,12 +205,20 @@ public class WorkshopDTO {
 		this.locationAddress = locationAddress;
 	}
 
-	public String getLabName() {
-		return labName;
+	public String getLocationCity() {
+		return locationCity;
 	}
 
-	public void setLabName(String labName) {
-		this.labName = labName;
+	public void setLocationCity(String locationCity) {
+		this.locationCity = locationCity;
+	}
+
+	public String getLocationCountry() {
+		return locationCountry;
+	}
+
+	public void setLocationCountry(String locationCountry) {
+		this.locationCountry = locationCountry;
 	}
 
 	public String getLocationLatitude() {
@@ -187,6 +237,14 @@ public class WorkshopDTO {
 		this.locationLongitude = locationLongitude;
 	}
 
+	public String getLabName() {
+		return labName;
+	}
+
+	public void setLabName(String labName) {
+		this.labName = labName;
+	}
+
 	public Integer getSubGroupId() {
 		return subGroupId;
 	}
@@ -201,6 +259,22 @@ public class WorkshopDTO {
 
 	public void setSubGroupName(String subGroupName) {
 		this.subGroupName = subGroupName;
+	}
+
+	public List<WorkshopTutorDTO> getTutors() {
+		return tutors;
+	}
+
+	public void setTutors(List<WorkshopTutorDTO> tutors) {
+		this.tutors = tutors;
+	}
+
+	public Boolean getAmITutor() {
+		return amITutor;
+	}
+
+	public void setAmITutor(Boolean amITutor) {
+		this.amITutor = amITutor;
 	}
 
 }

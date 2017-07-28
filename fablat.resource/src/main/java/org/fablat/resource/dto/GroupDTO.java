@@ -14,6 +14,7 @@ public class GroupDTO {
 	private String photoUrl;
 	private String creationDateTime;
 	private List<SubGroupDTO> subGroups;
+	private List<GroupMemberDTO> members;
 	// additional
 	private Integer membersCount;
 	private Boolean amIMember;
@@ -97,6 +98,14 @@ public class GroupDTO {
 
 	public void setSubGroups(List<SubGroupDTO> subGroups) {
 		this.subGroups = subGroups;
+	}
+
+	public List<GroupMemberDTO> getMembers() {
+		return members;
+	}
+
+	public void setMembers(List<GroupMemberDTO> members) {
+		this.members = members;
 	}
 
 	public Integer getMembersCount() {

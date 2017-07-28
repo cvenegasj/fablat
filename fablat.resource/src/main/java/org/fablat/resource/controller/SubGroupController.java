@@ -8,13 +8,14 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.fablat.resource.dto.GroupDTO;
 import org.fablat.resource.dto.SubGroupDTO;
+import org.fablat.resource.dto.SubGroupMemberDTO;
 import org.fablat.resource.dto.WorkshopDTO;
 import org.fablat.resource.entities.Fabber;
 import org.fablat.resource.entities.Group;
@@ -55,11 +56,14 @@ import com.fasterxml.jackson.annotation.JsonView;
 @RequestMapping("/auth/subgroups")
 public class SubGroupController {
 
+	private SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
 	private SimpleDateFormat timeFormatter = new SimpleDateFormat("h:mm a");
 	private SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("dd-MM-yyyy h:mm a");
-	private SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
+	private SimpleDateFormat monthFormatter = new SimpleDateFormat("MMM");
+	private SimpleDateFormat dateFormatter2 = new SimpleDateFormat("MMMMM d(EEE) h:mm a");
+	
 	@Autowired
-    private ModelMapper modelMapper;
+	private ModelMapper modelMapper;
 	@Autowired
 	private FabberDAO fabberDAO;
 	@Autowired
@@ -70,99 +74,127 @@ public class SubGroupController {
 	private GroupDAO groupDAO;
 	@Autowired
 	private GroupMemberDAO groupMemberDAO;
-	
+
 	@RequestMapping(value = "/{idSubGroup}", method = RequestMethod.GET)
-    public SubGroupDTO findOne(@PathVariable("idSubGroup") Integer idSubGroup, Principal principal) {
+	public SubGroupDTO findOne(@PathVariable("idSubGroup") Integer idSubGroup, Principal principal) {
 		SubGroup subGroup = subGroupDAO.findById(idSubGroup);
-		SubGroupDTO subGroupDTO = convertToDTO(subGroup);
-		
-		SubGroupMember userAsSubGroupMember = subGroupMemberDAO.findBySubGroupAndFabber(idSubGroup, principal.getName());
+		SubGroupDTO sDTO = convertToDTO(subGroup);
+
+		// additional properties
+		SubGroupMember userAsSubGroupMember = subGroupMemberDAO
+				.findBySubGroupAndFabber(idSubGroup, principal.getName());
 		if (userAsSubGroupMember != null) {
-			subGroupDTO.setAmIMember(true);
-			subGroupDTO.setAmICoordinator(userAsSubGroupMember.getIsCoordinator());
+			sDTO.setAmIMember(true);
+			sDTO.setAmICoordinator(userAsSubGroupMember.getIsCoordinator());
 		} else {
-			subGroupDTO.setAmIMember(false);
+			sDTO.setAmIMember(false);
 		}
-		
+
 		// subgroup's workshops
 		List<WorkshopDTO> workshops = new ArrayList<WorkshopDTO>();
 		for (Workshop w : subGroup.getWorkshops()) {
-			WorkshopDTO wDTO = convertToDTO(w); 
+			WorkshopDTO wDTO = convertToDTO(w);
 			workshops.add(wDTO);
 		}
-		subGroupDTO.setWorkshops(workshops);
-		
+		sDTO.setWorkshops(workshops);
+
 		// subgroup's members
-		
-		
-		
-		return subGroupDTO;
+		List<SubGroupMemberDTO> members = new ArrayList<SubGroupMemberDTO>();
+		for (SubGroupMember sgm : subGroup.getSubGroupMembers()) {
+			SubGroupMemberDTO sgmDTO = convertToDTO(sgm);
+			members.add(sgmDTO);
+		}
+		sDTO.setMembers(members);
+
+		return sDTO;
 	}
-	
+
 	@RequestMapping(method = RequestMethod.POST)
-    @ResponseStatus(HttpStatus.CREATED)
-    public SubGroupDTO create(@RequestBody SubGroupDTO subGroupDTO, Principal principal) {
+	@ResponseStatus(HttpStatus.CREATED)
+	public SubGroupDTO create(@RequestBody SubGroupDTO subGroupDTO, Principal principal) {
 		SubGroup subGroup = modelMapper.map(subGroupDTO, SubGroup.class);
 		subGroup.setEnabled(true);
-		// set creation datetime 
-        Instant now = Instant.now();
-        ZonedDateTime zdtLima = now.atZone(ZoneId.of("GMT-05:00"));
-        subGroup.setCreationDateTime(Date.from(zdtLima.toInstant())); 
-		
-        // parent group
-        subGroup.setGroup(groupDAO.findById(subGroupDTO.getIdGroup()));
-        GroupMember gm = groupMemberDAO.findByGroupAndFabber(subGroupDTO.getIdGroup(), principal.getName());
-       	// creator
-        SubGroupMember sgm = new SubGroupMember();
-        sgm.setIsCoordinator(true);
-        sgm.setNotificationsEnabled(true);
-        sgm.setCreationDateTime(Date.from(zdtLima.toInstant()));
-        sgm.setGroupMember(gm);
-        sgm.setSubGroup(subGroup);
-        
-        subGroup.getSubGroupMembers().add(sgm);
-        SubGroup subGroupCreated = subGroupDAO.makePersistent(subGroup);
-       
+		// set creation datetime
+		Instant now = Instant.now();
+		ZonedDateTime zdtLima = now.atZone(ZoneId.of("GMT-05:00"));
+		subGroup.setCreationDateTime(Date.from(zdtLima.toInstant()));
+
+		// parent group
+		subGroup.setGroup(groupDAO.findById(subGroupDTO.getGroupId()));
+		// creator
+		SubGroupMember sgm = new SubGroupMember();
+		sgm.setIsCoordinator(true);
+		sgm.setNotificationsEnabled(true);
+		sgm.setCreationDateTime(Date.from(zdtLima.toInstant()));
+		GroupMember gm = groupMemberDAO.findByGroupAndFabber(subGroupDTO.getGroupId(), principal.getName());
+		sgm.setGroupMember(gm);
+		sgm.setSubGroup(subGroup);
+
+		subGroup.getSubGroupMembers().add(sgm);
+		SubGroup subGroupCreated = subGroupDAO.makePersistent(subGroup);
+
 		return convertToDTO(subGroupCreated);
 	}
-	
-	//========== DTO conversion==========
+
+	// ========== DTO conversion ==========
 	private SubGroupDTO convertToDTO(SubGroup subGroup) {
-		SubGroupDTO subGroupDTO = new SubGroupDTO();
-		subGroupDTO.setIdSubGroup(subGroup.getIdSubGroup());
-		subGroupDTO.setName(subGroup.getName());
-		subGroupDTO.setDescription(subGroup.getDescription());
-		subGroupDTO.setReunionDay(subGroup.getReunionDay());
-		subGroupDTO.setReunionTime(subGroup.getReunionTime() != null ? timeFormatter.format(subGroup.getReunionTime()) : null);
-		subGroupDTO.setMainUrl(subGroup.getMainUrl());
-		subGroupDTO.setSecondaryUrl(subGroup.getSecondaryUrl());
-		subGroupDTO.setPhotoUrl(subGroup.getPhotoUrl());
-		subGroupDTO.setCreationDateTime(dateTimeFormatter.format(subGroup.getCreationDateTime()));
-		subGroupDTO.setIdGroup(subGroup.getGroup().getIdGroup());
-		subGroupDTO.setGroupName(subGroup.getGroup().getName());
-		
-		subGroupDTO.setMembersCount(subGroup.getSubGroupMembers().size());
-		
-		return subGroupDTO;
+		SubGroupDTO sDTO = new SubGroupDTO();
+		sDTO.setIdSubGroup(subGroup.getIdSubGroup());
+		sDTO.setName(subGroup.getName());
+		sDTO.setDescription(subGroup.getDescription());
+		sDTO.setReunionDay(subGroup.getReunionDay());
+		sDTO.setReunionTime(subGroup.getReunionTime() != null ? timeFormatter.format(subGroup.getReunionTime()) : null);
+		sDTO.setMainUrl(subGroup.getMainUrl());
+		sDTO.setSecondaryUrl(subGroup.getSecondaryUrl());
+		sDTO.setPhotoUrl(subGroup.getPhotoUrl());
+		sDTO.setCreationDateTime(dateTimeFormatter.format(subGroup.getCreationDateTime()));
+		sDTO.setGroupId(subGroup.getGroup().getIdGroup());
+		sDTO.setGroupName(subGroup.getGroup().getName());
+
+		sDTO.setMembersCount(subGroup.getSubGroupMembers().size());
+
+		return sDTO;
 	}
-	
+
 	private WorkshopDTO convertToDTO(Workshop workshop) {
-		WorkshopDTO workshopDTO = new WorkshopDTO();
-		workshopDTO.setIdWorkshop(workshop.getIdWorkshop());
-		workshopDTO.setReplicationNumber(workshop.getReplicationNumber());
-		workshopDTO.setName(workshop.getName());
+		WorkshopDTO wDTO = new WorkshopDTO();
+		wDTO.setIdWorkshop(workshop.getIdWorkshop());
+		wDTO.setReplicationNumber(workshop.getReplicationNumber());
+		wDTO.setName(workshop.getName());
 		// workshopDTO.setDescription(workshop.getDescription());
-		workshopDTO.setStartDate(dateFormatter.format(workshop.getStartDateTime()));
-		workshopDTO.setStartTime(timeFormatter.format(workshop.getStartDateTime()));
-		workshopDTO.setEndDate(dateFormatter.format(workshop.getEndDateTime()));
-		workshopDTO.setEndTime(timeFormatter.format(workshop.getEndDateTime()));
-		workshopDTO.setIsPaid(workshop.getIsPaid());
-		workshopDTO.setPrice(workshop.getPrice());
-		workshopDTO.setCurrency(workshop.getCurrency());
-		workshopDTO.setLabName(workshop.getLocation().getLab() != null ? workshop.getLocation().getLab().getName() : null);
+		wDTO.setStartDate(dateFormatter.format(workshop.getStartDateTime()));
+		wDTO.setStartTime(timeFormatter.format(workshop.getStartDateTime()));
+		wDTO.setEndDate(dateFormatter.format(workshop.getEndDateTime()));
+		wDTO.setEndTime(timeFormatter.format(workshop.getEndDateTime()));
 		
-		return workshopDTO;
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(workshop.getStartDateTime());
+		wDTO.setStartDateDay(cal.get(Calendar.DAY_OF_MONTH));
+		wDTO.setStartDateMonth(monthFormatter.format(workshop.getStartDateTime()));
+		wDTO.setStartDateFormatted(dateFormatter2.format(workshop.getStartDateTime()));
+		wDTO.setEndDateFormatted(dateFormatter2.format(workshop.getEndDateTime()));
+		
+		wDTO.setIsPaid(workshop.getIsPaid());
+		wDTO.setPrice(workshop.getPrice());
+		wDTO.setCurrency(workshop.getCurrency());
+		wDTO.setLabName(workshop.getLocation().getLab() != null ? workshop.getLocation().getLab().getName() : null);
+
+		return wDTO;
 	}
+
+	private SubGroupMemberDTO convertToDTO(SubGroupMember sgm) {
+		SubGroupMemberDTO sgmDTO = new SubGroupMemberDTO();
+		sgmDTO.setIdSubGroupMember(sgm.getIdSubGroupMember());
+		sgmDTO.setFirstName(sgm.getGroupMember().getFabber().getFirstName());
+		sgmDTO.setLastName(sgm.getGroupMember().getFabber().getLastName());
+		sgmDTO.setEmail(sgm.getGroupMember().getFabber().getEmail());
+		sgmDTO.setIsCoordinator(sgm.getIsCoordinator());
+		sgmDTO.setCreationDateTime(dateTimeFormatter.format(sgm.getCreationDateTime()));
+		sgmDTO.setFabberId(sgm.getGroupMember().getFabber().getIdFabber());
+
+		return sgmDTO;
+	}
+
 	
 	
 	
@@ -182,7 +214,13 @@ public class SubGroupController {
 	
 	
 	
-	/*============== old api =============*/
+	
+	
+	
+	
+	
+	
+	/* ============== old api ============= */
 
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	public ResponseEntity<SubGroupResource> save(@RequestBody SubGroupRequestWrapper auxRequestWrapper,
@@ -286,9 +324,9 @@ public class SubGroupController {
 		sdr.setReunionTime(s.getReunionTime() != null ? df.format(s.getReunionTime()) : null);
 		sdr.setGroupName(s.getGroup().getName());
 		sdr.setCurrentUserStatus("NOT_JOINED");
-		
+
 		SubGroupMember sm = subGroupMemberDAO.findBySubGroupAndFabber(idSubGroup, principal.getName());
-		
+
 		if (sm != null) {
 			sdr.setCurrentUserStatus("JOINED");
 			sdr.setNotificationsEnabled(sm.getNotificationsEnabled());
@@ -306,7 +344,8 @@ public class SubGroupController {
 		List<SubGroupResource> srs = new ArrayList<SubGroupResource>();
 		List<SubGroup> subGroupsUser = subGroupDAO.findFabberSubGroups(principal.getName());
 
-		// create the response list adding the user status related to each subgroup
+		// create the response list adding the user status related to each
+		// subgroup
 		for (SubGroup sx : subGroupsUser) {
 			SubGroupResource sr = new SubGroupResource(sx.getIdSubGroup(), sx.getName(), sx.getGroup().getName(),
 					"JOINED", null, sx.getSubGroupMembers().size());
@@ -325,7 +364,8 @@ public class SubGroupController {
 		List<SubGroup> sAll = subGroupDAO.findAllOrderedAsc();
 		List<SubGroup> sUser = subGroupDAO.findFabberSubGroups(principal.getName());
 
-		// create the response list adding the user status related to each subgroup
+		// create the response list adding the user status related to each
+		// subgroup
 		for (SubGroup sx : sAll) {
 			SubGroupResource sr = new SubGroupResource(sx.getIdSubGroup(), sx.getName(), sx.getGroup().getName(),
 					"NOT_JOINED", null, sx.getSubGroupMembers().size());
@@ -344,14 +384,13 @@ public class SubGroupController {
 	public ResponseEntity<List<SubGroupResource>> listManagedUser(Principal principal) {
 
 		List<SubGroupResource> srs = new ArrayList<SubGroupResource>();
-		
+
 		for (SubGroup s : subGroupDAO.findManagedSubGroups(principal.getName())) {
-			
+
 			SubGroupMember sm = subGroupMemberDAO.findBySubGroupAndFabber(s.getIdSubGroup(), principal.getName());
-			
-			SubGroupResource sr = new SubGroupResource(s.getIdSubGroup(),
-					s.getName(), s.getGroup().getName(), "JOINED",
-					sm.getNotificationsEnabled(), s.getSubGroupMembers().size());
+
+			SubGroupResource sr = new SubGroupResource(s.getIdSubGroup(), s.getName(), s.getGroup().getName(),
+					"JOINED", sm.getNotificationsEnabled(), s.getSubGroupMembers().size());
 			srs.add(sr);
 		}
 
@@ -362,14 +401,13 @@ public class SubGroupController {
 	public ResponseEntity<List<SubGroupResource>> listNotManagedUser(Principal principal) {
 
 		List<SubGroupResource> srs = new ArrayList<SubGroupResource>();
-		
+
 		for (SubGroup s : subGroupDAO.findNotManagedSubGroups(principal.getName())) {
-			
+
 			SubGroupMember sm = subGroupMemberDAO.findBySubGroupAndFabber(s.getIdSubGroup(), principal.getName());
-			
-			SubGroupResource sr = new SubGroupResource(s.getIdSubGroup(),
-					s.getName(), s.getGroup().getName(), "JOINED",
-					sm.getNotificationsEnabled(), s.getSubGroupMembers().size());
+
+			SubGroupResource sr = new SubGroupResource(s.getIdSubGroup(), s.getName(), s.getGroup().getName(),
+					"JOINED", sm.getNotificationsEnabled(), s.getSubGroupMembers().size());
 			srs.add(sr);
 		}
 
@@ -382,7 +420,8 @@ public class SubGroupController {
 		List<SubGroupResource> srs = new ArrayList<SubGroupResource>();
 		List<SubGroup> sAll = subGroupDAO.findAllOrderedAsc();
 
-		// create the response list adding the user status related to each subgroup
+		// create the response list adding the user status related to each
+		// subgroup
 		for (SubGroup sx : sAll) {
 			SubGroupResource sr = new SubGroupResource(sx.getIdSubGroup(), sx.getName(), sx.getGroup().getName(),
 					"NOT_JOINED", null, sx.getSubGroupMembers().size());
@@ -445,17 +484,19 @@ public class SubGroupController {
 			// default as coordinator of
 			// the replication, therefore its name should not be selectable for
 			// avoiding redundancy
-			/*if (sm.getFabber().getUsername().equals(principal.getName())) {
-				continue;
-			}
-
-			SubGroupMemberResource smr = new SubGroupMemberResource();
-			smr.setIdSubGroupMember(sm.getIdSubGroupMember());
-			smr.setFullName(sm.getFabber().getFirstName() + " " + sm.getFabber().getLastName());
-			smr.setEmail(sm.getFabber().getEmail());
-			smr.setImageUrl("img/avatar.png"); 
-
-			members.add(smr); */
+			/*
+			 * if (sm.getFabber().getUsername().equals(principal.getName())) {
+			 * continue; }
+			 * 
+			 * SubGroupMemberResource smr = new SubGroupMemberResource();
+			 * smr.setIdSubGroupMember(sm.getIdSubGroupMember());
+			 * smr.setFullName(sm.getFabber().getFirstName() + " " +
+			 * sm.getFabber().getLastName());
+			 * smr.setEmail(sm.getFabber().getEmail());
+			 * smr.setImageUrl("img/avatar.png");
+			 * 
+			 * members.add(smr);
+			 */
 		}
 
 		return new ResponseEntity<List<SubGroupMemberResource>>(members, HttpStatus.OK);
@@ -466,23 +507,25 @@ public class SubGroupController {
 			@RequestParam(value = "idSubGroup") Integer idSubGroup) {
 
 		List<WorkshopResource> workshops = new ArrayList<WorkshopResource>();
-		/*List<WorkshopEvent> upcomingWorkshops = workshopEventDAO.findUpcomingBySubGroup(idSubGroup);
-
-		for (WorkshopEvent workshop : upcomingWorkshops) {
-			WorkshopResource wr = new WorkshopResource();
-			wr.setIdWorkshop(workshop.getIdWorkshopEvent());
-			wr.setReplicationNumber(workshop.getReplicationNumber());
-
-			SimpleDateFormat format3 = new SimpleDateFormat("MMM dd, yyyy - HH:mm");
-			wr.setDateTime(format3.format(workshop.getDateTime()));
-			wr.setIsPaid(workshop.getIsPaid());
-			wr.setPrice(workshop.getPrice());
-			wr.setCurrency(workshop.getCurrency());
-			wr.setMembersCount(workshop.getWorkshopEventTutors().size());
-			wr.setSubGroupName(workshop.getSubGroup().getName());
-
-			workshops.add(wr);
-		}*/
+		/*
+		 * List<WorkshopEvent> upcomingWorkshops =
+		 * workshopEventDAO.findUpcomingBySubGroup(idSubGroup);
+		 * 
+		 * for (WorkshopEvent workshop : upcomingWorkshops) { WorkshopResource
+		 * wr = new WorkshopResource();
+		 * wr.setIdWorkshop(workshop.getIdWorkshopEvent());
+		 * wr.setReplicationNumber(workshop.getReplicationNumber());
+		 * 
+		 * SimpleDateFormat format3 = new
+		 * SimpleDateFormat("MMM dd, yyyy - HH:mm");
+		 * wr.setDateTime(format3.format(workshop.getDateTime()));
+		 * wr.setIsPaid(workshop.getIsPaid()); wr.setPrice(workshop.getPrice());
+		 * wr.setCurrency(workshop.getCurrency());
+		 * wr.setMembersCount(workshop.getWorkshopEventTutors().size());
+		 * wr.setSubGroupName(workshop.getSubGroup().getName());
+		 * 
+		 * workshops.add(wr); }
+		 */
 
 		return new ResponseEntity<List<WorkshopResource>>(workshops, HttpStatus.OK);
 	}
@@ -493,12 +536,12 @@ public class SubGroupController {
 
 		SubGroup s = subGroupDAO.findById(Integer.parseInt(params.get("idSubGroup")));
 
-		/*for (SubGroupMember sm : s.getSubGroupMembers()) {
-			if (sm.getFabber().getIdFabber().equals(Integer.parseInt(params.get("idFabber")))) {
-				subGroupMemberDAO.makeTransient(sm);
-				break;
-			}
-		}*/
+		/*
+		 * for (SubGroupMember sm : s.getSubGroupMembers()) { if
+		 * (sm.getFabber().
+		 * getIdFabber().equals(Integer.parseInt(params.get("idFabber")))) {
+		 * subGroupMemberDAO.makeTransient(sm); break; } }
+		 */
 
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
@@ -510,14 +553,13 @@ public class SubGroupController {
 		SubGroup s = subGroupDAO.findById(Integer.parseInt(params.get("idSubGroup")));
 		Fabber fabber = null;
 
-		/*for (SubGroupMember sm : s.getSubGroupMembers()) {
-			if (sm.getFabber().getIdFabber().equals(Integer.parseInt(params.get("idFabber")))) {
-				fabber = sm.getFabber();
-				sm.setIsCoordinator(true);
-				subGroupMemberDAO.makePersistent(sm);
-				break;
-			}
-		} */
+		/*
+		 * for (SubGroupMember sm : s.getSubGroupMembers()) { if
+		 * (sm.getFabber().
+		 * getIdFabber().equals(Integer.parseInt(params.get("idFabber")))) {
+		 * fabber = sm.getFabber(); sm.setIsCoordinator(true);
+		 * subGroupMemberDAO.makePersistent(sm); break; } }
+		 */
 
 		return new ResponseEntity<Fabber>(fabber, HttpStatus.OK);
 	}
@@ -531,9 +573,9 @@ public class SubGroupController {
 		Map<String, Object> model = new HashMap<String, Object>();
 		Boolean isSubGroupMember = false;
 		Boolean isCoordinator = false;
-		
+
 		SubGroupMember sm = subGroupMemberDAO.findBySubGroupAndFabber(s.getIdSubGroup(), principal.getName());
-		
+
 		if (sm != null) {
 			isSubGroupMember = true;
 			isCoordinator = sm.getIsCoordinator();

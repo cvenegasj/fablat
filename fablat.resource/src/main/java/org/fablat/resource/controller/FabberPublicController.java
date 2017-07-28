@@ -49,8 +49,8 @@ public class FabberPublicController {
 		}
 
 		// set fabber's Lab
-		if (fabberDTO.getIdLab() != null) {
-			fabber.setLab(labDAO.findById(fabberDTO.getIdLab()));
+		if (fabberDTO.getLabId() != null) {
+			fabber.setLab(labDAO.findById(fabberDTO.getLabId()));
 			fabber.setIsNomade(false);
 		} else {
 			fabber.setLab(null);
@@ -71,7 +71,7 @@ public class FabberPublicController {
 	// ========== DTO conversion ==========
 	private FabberDTO convertToDTO(Fabber fabber) {
 		modelMapper.typeMap(Fabber.class, FabberDTO.class).addMappings(mapper -> {
-			mapper.map(src -> src.getLab().getIdLab(), FabberDTO::setIdLab);
+			mapper.map(src -> src.getLab().getIdLab(), FabberDTO::setLabId);
 			mapper.map(src -> src.getLab().getName(), FabberDTO::setLabName);
 		});
 

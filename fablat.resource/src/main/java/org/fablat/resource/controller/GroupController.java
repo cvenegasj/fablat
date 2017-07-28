@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.fablat.resource.dto.GroupDTO;
+import org.fablat.resource.dto.GroupMemberDTO;
 import org.fablat.resource.dto.SubGroupDTO;
 import org.fablat.resource.entities.Fabber;
 import org.fablat.resource.entities.Group;
@@ -75,7 +76,6 @@ public class GroupController {
 				} else {
 					sDTO.setAmIMember(false);
 				}
-				
 				subGroups.add(sDTO);
 			}
 			gDTO.setSubGroups(subGroups);
@@ -116,14 +116,15 @@ public class GroupController {
 	@RequestMapping(value = "/{idGroup}", method = RequestMethod.GET)
     public GroupDTO findOne(@PathVariable("idGroup") Integer idGroup, Principal principal) {
 		Group group = groupDAO.findById(idGroup);
-		GroupDTO groupDTO = convertToDTO(group);
+		GroupDTO gDTO = convertToDTO(group);
 		
+		// additional properties
 		GroupMember userAsGroupMember = groupMemberDAO.findByGroupAndFabber(idGroup, principal.getName());
 		if (userAsGroupMember != null) {
-			groupDTO.setAmIMember(true);
-			groupDTO.setAmICoordinator(userAsGroupMember.getIsCoordinator());
+			gDTO.setAmIMember(true);
+			gDTO.setAmICoordinator(userAsGroupMember.getIsCoordinator());
 		} else {
-			groupDTO.setAmIMember(false);
+			gDTO.setAmIMember(false);
 		}
 		
 		// group's subgroups
@@ -141,13 +142,18 @@ public class GroupController {
 			
 			subGroups.add(sDTO);
 		}
-		groupDTO.setSubGroups(subGroups);
+		gDTO.setSubGroups(subGroups);
 		
 		// group's members
+		List<GroupMemberDTO> members = new ArrayList<GroupMemberDTO>();
+		for (GroupMember gm : group.getGroupMembers()) {
+			GroupMemberDTO gmDTO = convertToDTO(gm);
+			
+			members.add(gmDTO);
+		}
+		gDTO.setMembers(members);
 		
-		
-		
-        return groupDTO;
+        return gDTO;
     }
 	
 	@RequestMapping(method = RequestMethod.POST)
@@ -192,7 +198,8 @@ public class GroupController {
 		groupDAO.makePersistent(group);
     }
 	
-	//========== DTO conversion==========
+	
+	// ========== DTO conversion ==========
 	private GroupDTO convertToDTO(Group group) {
 		GroupDTO groupDTO = new GroupDTO();
 		groupDTO.setIdGroup(group.getIdGroup());
@@ -218,6 +225,19 @@ public class GroupController {
 		subGroupDTO.setMembersCount(subGroup.getSubGroupMembers().size());
 		
 		return subGroupDTO;
+	}
+	
+	private GroupMemberDTO convertToDTO(GroupMember gm) {
+		GroupMemberDTO gmDTO = new GroupMemberDTO();
+		gmDTO.setIdGroupMember(gm.getIdGroupMember());
+		gmDTO.setFirstName(gm.getFabber().getFirstName());
+		gmDTO.setLastName(gm.getFabber().getLastName());
+		gmDTO.setEmail(gm.getFabber().getEmail());
+		gmDTO.setIsCoordinator(gm.getIsCoordinator());
+		gmDTO.setCreationDateTime(dateTimeFormatter.format(gm.getCreationDateTime()));
+		gmDTO.setFabberId(gm.getFabber().getIdFabber());
+		
+		return gmDTO;
 	}
 	
 }

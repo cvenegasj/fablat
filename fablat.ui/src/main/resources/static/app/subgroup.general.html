@@ -87,43 +87,22 @@
 			<md-button class="md-raised md-accent" ui-sref="subgroup.addWorkshop">New workshop</md-button>
 		</div>
 		<div class="workshop-list" flex layout="column">
-			<div layout="row" class="list-item" >
+			<div layout="row" class="list-item" ng-repeat="item in subgroup.workshops">
 				<div class="date uppercase" flex="15" layout="column" layout-align="center center" md-colors="{background: 'default-accent-400'}">
-					<div class="day">31</div>
-					<div class="month">jul</div>
-					<div class="hour">7:00 pm</div>
+					<div class="day">{{ item.startDateDay }}</div>
+					<div class="month uppercase">{{ item.startDateMonth }}</div>
+					<div class="hour">{{ item.startTime }}</div>
 				</div>
 				<div class="description" flex="85" layout="column" layout-align="center auto">
-					<a ui-sref="workshop.general({ idWorkshop: 10 })" class="custom-anchor-1 font-16 bold workshop-name">#1: Construye tu propio lab!</a>
-					<div class="font-13"><span>Fab Xperience Cafe</span> · <span>Free</span></div>
+					<a ui-sref="workshop.general({ idWorkshop: item.idWorkshop })" class="custom-anchor-1 font-16 bold workshop-name">{{ "#" + item.replicationNumber + ": " + item.name }}</a>
+					<div class="font-13">
+						<span ng-if="item.labName">{{ item.labName }} · </span>
+						<span ng-if="!item.isPaid">Free</span>
+						<span ng-if="item.isPaid">{{ item.price + " " + item.currency }}</span>
+					</div>
 				</div>
-			</div>
-			<md-divider></md-divider>
-			<div layout="row" class="list-item" >
-				<div class="date uppercase" flex="15" layout="column" layout-align="center center" md-colors="{background: 'default-accent-400'}">
-					<div class="day">31</div>
-					<div class="month">jul</div>
-					<div class="hour">7:00 pm</div>
-				</div>
-				<div class="description" flex="85" layout="column" layout-align="center auto">
-					<a ui-sref="subgroup.general({ idSubGroup: 10 })" class="custom-anchor-1 font-16 bold workshop-name">#2: Construye tu propio lab!</a>
-					<div class="font-13"><span>Fab Xperience Cafe</span> · <span>Free</span></div>
-				</div>
-			</div>
-			<md-divider></md-divider>
-			<div layout="row" class="list-item" >
-				<div class="date uppercase" flex="15" layout="column" layout-align="center center" md-colors="{background: 'default-accent-400'}">
-					<div class="day">31</div>
-					<div class="month">jul</div>
-					<div class="hour">7:00 pm</div>
-				</div>
-				<div class="description" flex="85" layout="column" layout-align="center auto">
-					<a ui-sref="subgroup.general({ idSubGroup: 10 })" class="custom-anchor-1 font-16 bold workshop-name">Construye tu propio lab!</a>
-					<div class="font-13"><span>Fab Xperience Cafe</span> · <span>Free</span></div>
-				</div>
-			</div>
-		
-			
+			</div>	
+			<md-divider ng-if="!$last"></md-divider>		
 		</div>
 	</div>
 </div>

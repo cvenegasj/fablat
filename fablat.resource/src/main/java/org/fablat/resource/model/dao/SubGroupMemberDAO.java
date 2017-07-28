@@ -8,6 +8,6 @@ public interface SubGroupMemberDAO extends GenericDAO<SubGroupMember, Integer> {
 
 	Integer countAllByFabberAsCollaborator(String email);
 
-	SubGroupMember findBySubGroupAndFabber(Integer idSubGroup, String username);
+	SubGroupMember findBySubGroupAndFabber(Integer idSubGroup, String email);
 	
 }

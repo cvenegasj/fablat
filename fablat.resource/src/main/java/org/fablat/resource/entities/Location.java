@@ -2,8 +2,6 @@ package org.fablat.resource.entities;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
-import java.math.BigDecimal;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -26,8 +24,8 @@ public class Location implements java.io.Serializable {
 	private String address2;
 	private String city;
 	private String country;
-	private BigDecimal latitude;
-	private BigDecimal longitude;
+	private String latitude;
+	private String longitude;
 	private Lab lab;
 
 	public Location() {
@@ -81,21 +79,21 @@ public class Location implements java.io.Serializable {
 		this.country = country;
 	}
 
-	@Column(name = "latitude", precision = 16, scale = 13)
-	public BigDecimal getLatitude() {
+	@Column(name = "latitude")
+	public String getLatitude() {
 		return latitude;
 	}
 
-	public void setLatitude(BigDecimal latitude) {
+	public void setLatitude(String latitude) {
 		this.latitude = latitude;
 	}
 
-	@Column(name = "longitude", precision = 16, scale = 13)
-	public BigDecimal getLongitude() {
+	@Column(name = "longitude")
+	public String getLongitude() {
 		return longitude;
 	}
 
-	public void setLongitude(BigDecimal longitude) {
+	public void setLongitude(String longitude) {
 		this.longitude = longitude;
 	}
 
@@ -108,4 +106,5 @@ public class Location implements java.io.Serializable {
 	public void setLab(Lab lab) {
 		this.lab = lab;
 	}
+
 }

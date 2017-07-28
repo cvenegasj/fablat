@@ -16,7 +16,7 @@ public class FabberDTO {
 	private String country;
 	private String weekGoal;
 	private String avatarUrl;
-	private Integer idLab;
+	private Integer labId;
 	private String labName;
 	private Integer generalRanking;
 	private Integer coordinatorRanking;
@@ -135,12 +135,12 @@ public class FabberDTO {
 		this.avatarUrl = avatarUrl;
 	}
 
-	public Integer getIdLab() {
-		return idLab;
+	public Integer getLabId() {
+		return labId;
 	}
 
-	public void setIdLab(Integer idLab) {
-		this.idLab = idLab;
+	public void setLabId(Integer labId) {
+		this.labId = labId;
 	}
 
 	public String getLabName() {

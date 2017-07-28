@@ -1,14 +1,14 @@
-<div layout="column">
+<div layout="column" ng-controller="WorkshopCtrl">
 	<md-toolbar md-whiteframe="1" md-theme="neutral" class="md-hue-1">
     	<div class="md-toolbar-tools">
 	    	<h2 md-truncate>
 	    		<a ui-sref="groups" class="custom-anchor-1"><span>Groups</span></a>
 	    		<span><md-icon md-font-set="material-icons">keyboard_arrow_right</md-icon></span>
-	    		<a ui-sref="group.general({ idGroup: 21 })" class="custom-anchor-1"><span>Open BioFab</span></a>
+	    		<a ui-sref="group.general({ idGroup: workshop.groupId })" class="custom-anchor-1"><span>{{ workshop.groupName }}</span></a>
 	    		<span><md-icon md-font-set="material-icons">keyboard_arrow_right</md-icon></span>
-	    		<a ui-sref="subgroup.general({ idSubGroup: 10 })" class="custom-anchor-1"><span>DIY kit lab</span></a>
+	    		<a ui-sref="subgroup.general({ idSubgroup: workshop.subGroupId })" class="custom-anchor-1"><span>{{ workshop.subGroupName }}</span></a>
 	    		<span><md-icon md-font-set="material-icons">keyboard_arrow_right</md-icon></span>
-	    		<span class="uppercase">Crea tu propio laboratorio de biología!</span>
+	    		<span class="uppercase">{{ workshop.name }}</span>
 	    	</h2>
 		</div>
 	</md-toolbar>

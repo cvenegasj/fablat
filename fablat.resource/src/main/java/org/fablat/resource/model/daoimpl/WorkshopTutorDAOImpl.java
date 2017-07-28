@@ -17,4 +17,17 @@ public class WorkshopTutorDAOImpl extends GenericDAOImpl<WorkshopTutor, Integer>
 		return count;
 	}
 
+	@Transactional
+	public WorkshopTutor findByWorkshopAndFabber(Integer idWorkshop, String email) {
+		WorkshopTutor e = null;
+		e = (WorkshopTutor) getSession()
+				.createQuery(
+						"from " + getDomainClassName() + " x where x.workshop.id = :idWorkshop "
+								+ "and x.subGroupMember.groupMember.fabber.email = :email")
+				.setInteger("idWorkshop", idWorkshop)
+				.setString("email", email).setMaxResults(1).uniqueResult();
+
+		return e;
+	}
+
 }

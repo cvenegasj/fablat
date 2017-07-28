@@ -651,6 +651,87 @@ app.controller('SubgroupGeneralCtrl', function($scope, $http, $stateParams) {
 	
 });
 
+//Controller in: subgroup.general.html
+app.controller('SubgroupGeneralCtrl', function($scope, $http, $stateParams) {
+	
+	
+	
+});
+
+// Controller in: subgroup.add-workshop.html
+app.controller('SubgroupAddWorkshopCtrl', function($scope, $http, $stateParams) {
+	
+	// initialize checkbox attributes
+	$scope._workshop = {};
+	$scope._workshop.isPaid = false;
+	
+	// restrict min-date for date pickers
+	$scope.today = new Date();
+	
+	$scope.submit = function() {	
+		$scope.actionsDisabled = true;
+		//TODO: validate fields
+		
+		
+		 	
+		console.log($scope._group);
+		// submit data
+		$http.post('/resource/auth/workshops/', {
+			name: $scope._workshop.name,
+			description: $scope._workshop.description,
+			startDate: $scope._workshop.startDate.getDate() + "-" + $scope._workshop.startDate.getMonth() + "-" + $scope._workshop.startDate.getFullYear(),
+			startTime: $scope._workshop.startTimeHours + ":" + $scope._workshop.startTimeMinutes + " " + $scope._workshop.startTimeMeridian,  // time format for api
+			endDate: $scope._workshop.endDate.getDate() + "-" + $scope._workshop.endDate.getMonth() + "-" + $scope._workshop.endDate.getFullYear(),
+			endTime: $scope._workshop.endTimeHours + ":" + $scope._workshop.endTimeMinutes + " " + $scope._workshop.endTimeMeridian, 
+			isPaid: $scope._workshop.isPaid,
+			price: $scope._workshop.isPaid ? $scope._workshop.price : null,
+			currency: $scope._workshop.isPaid ? $scope._workshop.currency : null,
+			facebookUrl: "",
+			ticketsUrl: "",
+			// dependencies
+			subGroupId: $stateParams.idSubgroup, // parent
+			locationId: 62, // id location
+			locationAddress: null,
+			locationCity: null,
+			locationCountry: null,
+			locationLatitude: null,
+			locationLongitude: null
+
+		}).then(function(response) {	
+			console.log("saved!");
+		});	  
+	  };
+	
+});
+
+
+
+
+/*========== Workshop controllers ==========*/
+
+// Controller in: workshop.html
+app.controller('WorkshopCtrl', function($scope, $http, $stateParams, $state) {
+	
+	// Injects the workshop object in the parent scope
+	$http.get('/resource/auth/workshops/' + $stateParams.idWorkshop)
+		.then(function(response) {
+			// if user is not member redirect to external page
+			if (!response.data.amITutor) {
+				$state.go("workshop-out", { idWorkshop: $stateParams.idWorkshop }, {});
+			}	
+			$scope.workshop = response.data;
+		}).finally(function() {
+		    // called no matter success or failure
+		});
+	
+});
+
+// Controller in: workshop.general.html
+app.controller('WorkshopGeneralCtrl', function($scope, $http, $stateParams) {
+	
+	
+	
+});
 
 
 
@@ -709,7 +790,7 @@ function AddSubgroupDialogController($scope, $mdDialog, $http, $stateParams, $st
 		$http.post('/resource/auth/subgroups', {
 			name: $scope._subgroup.name,
 			description: $scope._subgroup.description,
-			idGroup: $stateParams.idGroup // one subgroup belongs to a group
+			idGroup: $stateParams.idGroup // parent
 		}).then(function(response) {	
 			console.log("saved!");
 			// pass data retrieved to parent controller

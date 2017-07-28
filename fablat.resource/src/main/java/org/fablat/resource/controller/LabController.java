@@ -47,8 +47,8 @@ public class LabController {
 			location.setAddress2(item.getAddress_2());
 			location.setCity(item.getCity());
 			location.setCountry(item.getCountry_code());
-			location.setLatitude(item.getLatitude());
-			location.setLongitude(item.getLongitude());
+			//location.setLatitude(item.getLatitude());
+			//location.setLongitude(item.getLongitude());
 
 			locationDAO.makePersistent(location);
 			lab.setLocation(location);

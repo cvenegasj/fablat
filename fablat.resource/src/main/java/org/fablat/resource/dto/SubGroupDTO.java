@@ -13,9 +13,10 @@ public class SubGroupDTO {
 	private String secondaryUrl;
 	private String photoUrl;
 	private String creationDateTime;
-	private Integer idGroup;
+	private Integer groupId;
 	private String groupName;
 	private List<WorkshopDTO> workshops;
+	private List<SubGroupMemberDTO> members;
 	// additional
 	private Integer membersCount;
 	private Boolean amIMember;
@@ -93,12 +94,12 @@ public class SubGroupDTO {
 		this.creationDateTime = creationDateTime;
 	}
 
-	public Integer getIdGroup() {
-		return idGroup;
+	public Integer getGroupId() {
+		return groupId;
 	}
 
-	public void setIdGroup(Integer idGroup) {
-		this.idGroup = idGroup;
+	public void setGroupId(Integer groupId) {
+		this.groupId = groupId;
 	}
 
 	public String getGroupName() {
@@ -115,6 +116,14 @@ public class SubGroupDTO {
 
 	public void setWorkshops(List<WorkshopDTO> workshops) {
 		this.workshops = workshops;
+	}
+
+	public List<SubGroupMemberDTO> getMembers() {
+		return members;
+	}
+
+	public void setMembers(List<SubGroupMemberDTO> members) {
+		this.members = members;
 	}
 
 	public Integer getMembersCount() {
