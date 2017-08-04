@@ -1,4 +1,4 @@
-package org.fablat.resource.serializable;
+package org.fablat.resource.dto;
 
 import java.math.BigDecimal;
 import java.util.List;

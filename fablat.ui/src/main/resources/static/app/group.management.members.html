@@ -1,43 +1,14 @@
 <div class="md-padding" layout="column" flex>
 	<div class="generic-container-1">
 		<div class="header md-subhead" layout="row" layout-align="none center">
-			<div><span class="bold">Open BioFab</span> members:</div>
+			<div><span class="bold">{{ group.name }}</span> members:</div>
 		</div>
 		<div>
 			<md-list class="list-type-1" dense flex>
-				<md-list-item class="md-2-line">
+				<md-list-item class="md-2-line" ng-repeat="item in group.members">
 		          <div class="md-list-item-text compact">
-		            <h3> <a href="" class="custom-anchor-1 bold">Carlos Venegas</a> <span class="badge-1" md-colors="{background: 'default-accent-300'}">coordinator</span></h3>
-		            <p> Joined 2 days ago </p>
-		          </div>
-		          <md-button class="md-secondary md-icon-button" ng-click="doSecondaryAction($event)" aria-label="more">
-		          	<md-icon md-font-set="material-icons" aria-label="More">more_vert</md-icon>
-		          </md-button>
-		        </md-list-item>
-		        <md-divider></md-divider>
-		        <md-list-item class="md-2-line">
-		          <div class="md-list-item-text compact">
-		            <h3> Carlos Venegas <span class="badge-1">Coordinator</span></h3>
-		            <p> Joined 2 days ago </p>
-		          </div>
-		          <md-button class="md-secondary md-icon-button" ng-click="doSecondaryAction($event)" aria-label="more">
-		          	<md-icon md-font-set="material-icons" aria-label="More">more_vert</md-icon>
-		          </md-button>
-		        </md-list-item>
-		        <md-divider></md-divider>
-		        <md-list-item class="md-2-line">
-		          <div class="md-list-item-text compact">
-		            <h3> Carlos Venegas </h3>
-		            <p> Joined 2 days ago </p>
-		          </div>
-		          <md-button class="md-secondary md-icon-button" ng-click="doSecondaryAction($event)" aria-label="more">
-		          	<md-icon md-font-set="material-icons" aria-label="More">more_vert</md-icon>
-		          </md-button>
-		        </md-list-item>
-		        <md-divider></md-divider>
-		        <md-list-item class="md-2-line">
-		          <div class="md-list-item-text compact">
-		            <h3> Carlos Venegas </h3>
+		            <h3> <a href="" class="custom-anchor-1 bold">{{ item.firstName + " " + item.lastName }}</a>
+		            <span class="badge-1" md-colors="{background: 'default-accent-300'}" ng-if="item.isCoordinator">coordinator</span></h3>
 		            <p> Joined 2 days ago </p>
 		          </div>
 		          <md-button class="md-secondary md-icon-button" ng-click="doSecondaryAction($event)" aria-label="more">

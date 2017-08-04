@@ -1,1 +1,75 @@
-out sg
+<div layout="column" ng-controller="SubgroupOutCtrl">
+	<md-toolbar md-whiteframe="1" md-theme="neutral" class="md-hue-1">
+    	<div class="md-toolbar-tools">
+	    	<h2 md-truncate>
+	    		<a ui-sref="groups" class="custom-anchor-1"><span>Groups</span></a>
+	    		<span><md-icon md-font-set="material-icons">keyboard_arrow_right</md-icon></span>
+	    		<a ui-sref="group.general({ idGroup: subgroup.groupId })" class="custom-anchor-1"><span>{{ subgroup.groupName }}</span></a>
+	    		<span><md-icon md-font-set="material-icons">keyboard_arrow_right</md-icon></span>
+	    		<span class="uppercase">{{ subgroup.name }}</span>
+	    	</h2>
+	    	<span flex></span>
+	    	<md-button class="md-icon-button" aria-label="More">
+		    	<md-icon md-font-set="material-icons">more_vert</md-icon>
+		    </md-button>
+		</div>
+	</md-toolbar>
+	<div>
+		<div class="group-general-page md-padding" layout="column" flex>
+			<div class="header" layout="column" layout-align="center center">
+				<div style="margin-bottom: 10px;">
+					<group-avatar group="subgroup" avatar-w="65" avatar-h="65" avatar-font-size="26"></group-avatar>
+				</div>
+				<div>
+					<h3>{{ subgroup.name }}</h3>
+				</div>
+				<div style="margin-bottom: 20px;">{{ subgroup.description }}</div>
+				<md-button class="md-raised md-accent" ng-click="joinSubgroup(subgroup.idSubGroup)">Join the subgroup</md-button>
+			</div>
+			<div class="info">
+				<div><md-icon md-svg-icon="timetable" class="icon-16"></md-icon> Reunions: Fridays, 3pm</div>
+				<div><md-icon md-svg-icon="web" class="icon-16"></md-icon> Main URL: <a href="" class="custom-anchor-1">www.bio.com</a></div>
+				<div><md-icon md-svg-icon="web" class="icon-16"></md-icon> Secondary URL: <a href="" class="custom-anchor-1">www.something.com</a></div>
+			</div>
+			<div class="members">
+				<div layout="row" layout-align="center center">
+					<h4>Members</h4>
+				</div>
+				<md-divider></md-divider>
+				<div flex layout="row" layout-wrap style="margin-top: 30px;">
+					<div flex-gt-sm="15" flex="25" style="margin-bottom: 10px;" ng-repeat="item in subgroup.members">
+						<a ui-sref="fabber({ idFabber: item.fabberId })">
+							<user-avatar fabber="user" avatar-w="50" avatar-h="50" avatar-font-size="18"></user-avatar>
+						</a>
+						<div class="font-12 color-2 centered" flex md-truncate style="margin-top: 5px;">{{ item.firstName + " " + item.lastName }}</div>
+						<div class="badge-2 centered" md-colors="{background: 'default-primary-A400'}" ng-if="item.isCoordinator">coordinator</div>
+					</div>
+				</div>
+			</div>
+			<div class="subgroups">
+				<div layout="row" layout-align="center center">
+					<h4>Workshops</h4>
+				</div>
+				<md-divider></md-divider>
+				<div ng-if="subgroup.workshops.length === 0" class="centered no-data-2" style="margin-top: 10px;">No workshops created yet.</div>
+				<div class="workshop-list" flex layout="column" ng-if="subgroup.workshops.length > 0">
+					<div layout="row" class="list-item" ng-repeat="item in subgroup.workshops">
+						<div class="date uppercase" flex="15" layout="column" layout-align="center center" md-colors="{background: 'default-accent-400'}">
+							<div class="day">{{ item.startDateDay }}</div>
+							<div class="month uppercase">{{ item.startDateMonth }}</div>
+							<div class="hour">{{ item.startTime }}</div>
+						</div>
+						<div class="description" flex="85" layout="column" layout-align="center auto">
+							<a ui-sref="workshop.general({ idWorkshop: item.idWorkshop })" class="custom-anchor-1 font-16 bold workshop-name">{{ "#" + item.replicationNumber + ": " + item.name }}</a>
+							<div class="font-13">
+								<span ng-if="item.labName">{{ item.labName }} · </span>
+								<span ng-if="!item.isPaid">Free</span>
+								<span ng-if="item.isPaid">{{ item.price + " " + item.currency }}</span>
+							</div>
+						</div>
+					</div>		
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

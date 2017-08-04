@@ -11,13 +11,12 @@ public class LabDAOImpl extends GenericDAOImpl<Lab, Integer> implements LabDAO {
 	@SuppressWarnings("unchecked")
 	@Transactional
 	public List<Lab> findByTerm(String term) {
-
-		List<Lab> labs = null;
-
-		labs = (List<Lab>) getSession()
+		List<Lab> list = null;
+		list = (List<Lab>) getSession()
 				.createQuery("select x from " + getDomainClassName() + " x " + "where lower(x.name) like :term")
 				.setString("term", "%" + term.toLowerCase() + "%").list();
 
-		return labs;
+		return list;
 	}
+	
 }

@@ -1,5 +1,4 @@
 <div layout="column" ng-controller="SubgroupCtrl">
-
 	<md-toolbar md-whiteframe="1" md-theme="neutral" class="md-hue-1">
     	<div class="md-toolbar-tools">
 	    	<h2 md-truncate>
@@ -25,7 +24,7 @@
 					<li><a ui-sref="subgroup.discussion" ui-sref-active="active" class="custom-anchor-1">Discussion</a></li>
 					<li><a ui-sref="subgroup.ideas" ui-sref-active="active" class="custom-anchor-1">Ideas</a></li>
 					<li><a ui-sref="subgroup.activity" ui-sref-active="active" class="custom-anchor-1">Activity</a></li>
-					<li><a ui-sref="subgroup.management.general" ui-sref-active="active" class="custom-anchor-1">Management</a></li>
+					<li><a ui-sref="subgroup.management.general" ui-sref-active="active" class="custom-anchor-1" ng-if="subgroup.amICoordinator">Management</a></li>
 				</ul>
 			</nav>
 		</div>

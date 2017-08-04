@@ -1,6 +1,6 @@
-<div class="md-padding" layout="column" flex>
+<div class="md-padding" layout="column" flex ng-controller="SettingsProfileCtrl as ctrl">
 	<div class="generic-container-1">
-		<form class="custom-form">
+		<form class="custom-form" name="editProfileForm" ng-submit="submit()">
 			<div class="header md-subhead">
 				Profile settings
 			</div>
@@ -8,55 +8,87 @@
 				<div layout-gt-sm="row" class="form-group">
 					<label class="control-label" for="user-first-name" flex-gt-sm="20">First name</label>
 					<md-input-container md-no-float class="md-block" flex>
-						<input ng-model="_user.firstName" id="user-first-name">
+						<input ng-model="fabber.firstName" id="user-first-name" required aria-label="First name">
 					</md-input-container>
 				</div>
 				<div layout-gt-sm="row" class="form-group">
 					<label class="control-label" for="user-last-name" flex-gt-sm="20">Last name</label>
 					<md-input-container md-no-float class="md-block" flex>
-						<input ng-model="_user.lastName" id="user-last-name">
+						<input ng-model="fabber.lastName" id="user-last-name" required aria-label="Last name">
 					</md-input-container>
 				</div>
 				<div layout-gt-sm="row" class="form-group">
 					<label class="control-label" flex-gt-sm="20">Fab Academy</label>
 			    	<md-input-container class="md-block">
-						<md-checkbox ng-model="_user.isFabAcademyGrad" aria-label="Is Fab Academy graduated?">
+						<md-checkbox ng-model="fabber.isFabAcademyGrad" aria-label="Is Fab Academy graduated?">
 							Fab Academy graduated?
 						</md-checkbox>
 				    </md-input-container>
-			        <md-input-container md-no-float class="md-block" ng-show="_user.isFabAcademyGrad">
-				    	<input ng-model="_user.fabAcademyGradYear" placeholder="Year">
+			        <md-input-container md-no-float class="md-block" ng-if="fabber.isFabAcademyGrad">
+				    	<input ng-model="fabber.fabAcademyGradYear" placeholder="Year" required style="margin-left: 15px;" aria-label="Fab Academy graduation year">
 			        </md-input-container>
 			    </div>
 			    <div layout-gt-sm="row" class="form-group">
 					<label class="control-label" for="user-city" flex-gt-sm="20">City</label>
 					<md-input-container md-no-float class="md-block" flex>
-						<input ng-model="_user.city" id="user-city">
+						<input ng-model="fabber.city" id="user-city" aria-label="City">
 					</md-input-container>
 				</div>
 				<div layout-gt-sm="row" class="form-group">
 					<label class="control-label" for="user-country" flex-gt-sm="20">Country</label>
 					<md-input-container md-no-float class="md-block" flex>
-						<input ng-model="_user.country" id="user-country">
+						<input ng-model="fabber.country" id="user-country" aria-label="Country">
 					</md-input-container>
 				</div>
 				<div layout-gt-sm="row" class="form-group">
 					<label class="control-label" for="user-main-quote" flex-gt-sm="20">Main quote</label>
 					<md-input-container class="md-block" flex>
-						<textarea ng-model="_user.mainQuote" id="user-main-quote" md-maxlength="500" rows="2" md-select-on-focus></textarea>
+						<textarea ng-model="fabber.mainQuote" id="user-main-quote" md-maxlength="500" rows="2" md-select-on-focus aria-label="Main quote"></textarea>
 					</md-input-container>
 				</div>
 				<div layout-gt-sm="row" class="form-group">
 					<label class="control-label" for="user-week-goal" flex-gt-sm="20">Goal of the week</label>
 					<md-input-container class="md-block" flex>
-						<textarea ng-model="_user.weekGoal" id="user-week-goal" md-maxlength="500" rows="2" md-select-on-focus></textarea>
+						<textarea ng-model="fabber.weekGoal" id="user-week-goal" md-maxlength="500" rows="2" md-select-on-focus aria-label="Goal of the week"></textarea>
 					</md-input-container>
-				</div>		
+				</div>
+				<div layout-gt-sm="row" class="form-group">
+					<label class="control-label" flex-gt-sm="20">Lab</label>
+					
+					<div layout="column">
+						<div layout="row">
+							<div style="line-height: 27px; padding: 10px 0;" ng-if="fabber.labName">{{ fabber.labName }}</div>
+							<div style="line-height: 27px; padding: 10px 0;" ng-if="fabber.isNomade">fab nomade</div>
+							<md-button class="md-accent" style="margin-left: 40px;" ng-click="newLab = !newLab;">Select new lab</md-button>
+						</div>
+						
+						<md-input-container md-no-float class="md-block" flex ng-if="newLab">
+							<md-autocomplete id="autocomplete-labs" required 
+								md-input-name="autocompleteField" md-selected-item="ctrl.selectedLab" 
+								md-search-text="searchText" md-items="item in getMatches(searchText)" 
+								md-item-text="item.name" md-clear-button="true" md-min-length="2"
+								placeholder="Search a fab lab">
+								<md-item-template>
+							    	<span>
+							    		{{ item.name }}
+							    	</span>
+							  	</md-item-template>
+							  	<md-not-found>
+							  		No matches found.
+							  	</md-not-found>
+							</md-autocomplete>
+							
+							<div ng-messages="editProfileForm.autocompleteField.$error">
+					        	<div ng-message="required">You must select a location.</div>
+					        </div>
+						</md-input-container>
+					</div>
+				</div>
 			</div>
 			<div class="actions" layout="row">
-				<md-button class="md-warn">Deactivate my account</md-button>
+				<!-- <md-button class="md-warn">Deactivate my account</md-button> -->
 				<span flex></span>
-				<md-button class="md-primary md-raised">Update settings</md-button>
+				<md-button class="md-primary md-raised" type="submit">Update settings</md-button>
 			</div>
 		</form>
 	</div>

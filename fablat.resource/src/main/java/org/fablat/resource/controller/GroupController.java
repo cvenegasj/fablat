@@ -111,6 +111,19 @@ public class GroupController {
 		return returnList;
 	}
 	
+	@RequestMapping(value = "/search/{searchText}", method = RequestMethod.GET)
+	public List<GroupDTO> findByTerm(@PathVariable("searchText") String searchText) { 
+		List<GroupDTO> returnList = new ArrayList<GroupDTO>();	
+		for (Group g : groupDAO.findByTerm(searchText)) {
+			GroupDTO gDTO = new GroupDTO();
+			gDTO.setIdGroup(g.getIdGroup());
+			gDTO.setName(g.getName());
+			returnList.add(gDTO);
+		}
+		
+		return returnList;
+	}
+	
 	@RequestMapping(value = "/{idGroup}", method = RequestMethod.GET)
     public GroupDTO findOne(@PathVariable("idGroup") Integer idGroup, Principal principal) {
 		Group group = groupDAO.findById(idGroup);
@@ -185,10 +198,7 @@ public class GroupController {
 		group.setName(groupDTO.getName());
 		group.setDescription(groupDTO.getDescription());
 		group.setReunionDay(groupDTO.getReunionDay());
-	
-		Date reunionTime = timeFormatter.parse(groupDTO.getReunionTime());
-		group.setReunionTime(reunionTime);
-		
+		group.setReunionTime(groupDTO.getReunionTime() != null ? timeFormatter.parse(groupDTO.getReunionTime()) : null);
 		group.setMainUrl(groupDTO.getMainUrl());
 		group.setSecondaryUrl(groupDTO.getSecondaryUrl());
 		group.setPhotoUrl(groupDTO.getPhotoUrl());
@@ -196,8 +206,33 @@ public class GroupController {
 		groupDAO.makePersistent(group);
     }
 	
+	@RequestMapping(value = "/{idGroup}", method = RequestMethod.DELETE)
+	@ResponseStatus(HttpStatus.OK)
+	public void delete(@PathVariable("idGroup") Integer idGroup) {
+		groupDAO.makeTransient(groupDAO.findById(idGroup)); 
+	}
+	
+	@RequestMapping(value = "/{idGroup}/join", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.CREATED)
+	public void join(@PathVariable("idGroup") Integer idGroup, Principal principal) {
+		Group group = groupDAO.findById(idGroup);
+		
+		GroupMember member = new GroupMember();
+		member.setIsCoordinator(group.getGroupMembers().size() == 0 ? true : false);
+		member.setNotificationsEnabled(true);
+		// set creation datetime 
+        Instant now = Instant.now();
+        ZonedDateTime zdtLima = now.atZone(ZoneId.of("GMT-05:00"));
+        member.setCreationDateTime(Date.from(zdtLima.toInstant()));  
+        
+        member.setFabber(fabberDAO.findByEmail(principal.getName()));
+        member.setGroup(group);
+		groupMemberDAO.makePersistent(member);
+	}
+	
 	
 	// ========== DTO conversion ==========
+	
 	private GroupDTO convertToDTO(Group group) {
 		GroupDTO groupDTO = new GroupDTO();
 		groupDTO.setIdGroup(group.getIdGroup());

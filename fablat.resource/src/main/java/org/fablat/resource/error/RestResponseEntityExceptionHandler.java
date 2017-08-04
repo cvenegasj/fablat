@@ -3,6 +3,7 @@ package org.fablat.resource.error;
 import javax.persistence.EntityNotFoundException;
 
 import org.fablat.resource.exception.DuplicateEmailException;
+import org.fablat.resource.exception.InvalidPasswordException;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-/* Got from: https://github.com/eugenp/tutorials/blob/master/spring-security-rest-full/src/main/java/org/baeldung/web/error/RestResponseEntityExceptionHandler.java*/
+/* from: https://github.com/eugenp/tutorials/blob/master/spring-security-rest-full/src/main/java/org/baeldung/web/error/RestResponseEntityExceptionHandler.java*/
 @ControllerAdvice
 public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
@@ -76,7 +77,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 	// 409
 
 	@ExceptionHandler({ InvalidDataAccessApiUsageException.class, DataAccessException.class,
-			DuplicateEmailException.class })
+			DuplicateEmailException.class, InvalidPasswordException.class })
 	protected ResponseEntity<Object> handleConflict(final RuntimeException ex, final WebRequest request) {
 		final String bodyOfResponse = "Data conflict ocurred.";
 		return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.CONFLICT, request);

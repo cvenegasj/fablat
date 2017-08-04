@@ -31,8 +31,6 @@ public class Lab implements java.io.Serializable {
 	private Location location;
 	private Set<Fabber> fabbers = new HashSet<Fabber>();
 
-	// rest of attributes are inherited from fablabs.io API
-
 	public Lab() {
 
 	}

@@ -12,7 +12,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-public class CustomUserDetails implements UserDetails {
+public class AppUserDetails implements UserDetails {
 
 	private static final long serialVersionUID = 1L;
 	private String username;
@@ -24,12 +24,11 @@ public class CustomUserDetails implements UserDetails {
 	private Integer idLab;
 	private Collection<? extends GrantedAuthority> authorities;
 
-	public CustomUserDetails(Fabber user) {
+	public AppUserDetails(Fabber user) {
 		// mandatory
 		this.username = user.getEmail();
-		this.password = user.getPassword(); // TODO: change by real password
+		this.password = user.getPassword();
 		this.authorities = translate(user.getRoleFabbers());
-		
 		// extra
 		this.id = user.getIdFabber();
 		this.email = user.getEmail();
@@ -37,17 +36,14 @@ public class CustomUserDetails implements UserDetails {
 		this.lastName = user.getLastName();
 		this.idLab = user.getLab() != null ? user.getLab().getIdLab() : null;
 	}
-
-	private Collection<? extends GrantedAuthority> translate(Set<RoleFabber> rolesFabber) {
-
+	
+	private Collection<? extends GrantedAuthority> translate(Set<RoleFabber> rolesUser) {
 		List<Role> roles = new ArrayList<Role>();
-
-		for (RoleFabber roleFabber : rolesFabber) {
+		for (RoleFabber roleFabber : rolesUser) {
 			roles.add(roleFabber.getRole());
 		}
 
 		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-
 		for (Role role : roles) {
 			String name = role.getName().toUpperCase();
 			if (!name.startsWith("ROLE_")) {

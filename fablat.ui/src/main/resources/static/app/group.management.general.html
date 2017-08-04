@@ -1,26 +1,36 @@
-<div class="md-padding" layout="column" flex>
+<div class="md-padding" layout="column" flex ng-controller="GroupManagementGeneralCtrl">
 	<div class="generic-container-1">
-		<form class="custom-form">
+		<form class="custom-form" name="editGroupForm" ng-submit="submit()">
 			<div class="header md-subhead">
 				Group settings
 			</div>
 			<div class="md-padding">
 				<div layout-gt-sm="row" class="form-group">
-					<label class="control-label" for="group-name" flex-gt-sm="20">Group name</label>
+					<label class="control-label" for="name" flex-gt-sm="20">Group name</label>
 					<md-input-container md-no-float class="md-block" flex>
-						<input ng-model="group.name" id="group-name">
+						<input ng-model="_group.name" name="name" id="name" md-maxlength="200" required md-autofocus aria-label="Group name">
+						
+						<div ng-messages="editGroupForm.name.$error">
+			          		<div ng-message="required">This is required.</div>
+			          		<div ng-message="md-maxlength">The name has to be less than 200 characters long.</div>
+			        	</div>
 					</md-input-container>
 				</div>
 				<div layout-gt-sm="row" class="form-group">
-					<label class="control-label" for="group-description" flex-gt-sm="20">Description</label>
+					<label class="control-label" for="description" flex-gt-sm="20">Description</label>
 					<md-input-container class="md-block" flex>
-						<textarea ng-model="group.description" id="group-description" md-maxlength="1500" rows="3" md-select-on-focus></textarea>
+						<textarea ng-model="_group.description" name="description" id="description" md-maxlength="1500" rows="3" required aria-label="Group description"></textarea>
+						
+						<div ng-messages="editGroupForm.description.$error">
+			          		<div ng-message="required">This is required.</div>
+			          		<div ng-message="md-maxlength">The description has to be less than 1500 characters long.</div>
+			       		</div>
 					</md-input-container>
 				</div>
 				<div layout-gt-sm="row" class="form-group">
 					<label class="control-label" for="group-rd" flex-gt-sm="20">Reunion Day</label>
 					<md-input-container class="md-block" flex>
-						<md-select ng-model="group.reunionDay" class="md-no-underline" id="group-rd" style="width: 110px !important;">
+						<md-select ng-model="_group.reunionDay" class="md-no-underline" id="group-rd" style="width: 110px !important;" aria-label="Reunion day">
 				          <md-option ng-value="item" ng-repeat="item in ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY']">
 				          	{{ item }}
 				          </md-option>
@@ -29,41 +39,52 @@
 				</div>
 				<div layout-gt-sm="row" class="form-group">
 					<label class="control-label" for="group-rt-hora" flex-gt-sm="20">Reunion Time</label>
-					<md-input-container md-no-float class="md-block">
-						<input ng-model="group.reunionTimeHora" id="group-rt-hora" type="number" step="1" min="0" max="23" style="width: 60px;">
-						<div class="hint">hours</div>
-					</md-input-container>
-					<md-input-container md-no-float class="md-block">
-						<input ng-model="group.reunionTimeMinutes" type="number" step="1" min="0" max="59" style="width: 60px;">
-						<div class="hint">minutes</div>
-					</md-input-container>
-					<md-input-container class="md-block">
-						<md-select ng-model="group.reunionTimeMeridian" class="md-no-underline" style="width: 35px !important;">
-				          <md-option ng-value="item" ng-repeat="item in ['AM', 'PM']">
-				          	{{ item }}
-				          </md-option>
-				        </md-select>
-				        <div class="hint">Lima/Bogota/Quito, GMT-05:00</div>
-					</md-input-container>
+					
+					<div layout="row">
+						<md-input-container md-no-float class="md-block">
+							<input ng-model="_group.reunionTimeHour" id="group-rt-hora" type="number" step="1" min="1" max="12" style="width: 60px;" aria-label="Reunion time hour">
+							<div class="hint">hours</div>
+						</md-input-container>
+						<md-input-container md-no-float class="md-block">
+							<input ng-model="_group.reunionTimeMinutes" type="number" step="1" min="0" max="59" style="width: 60px;" aria-label="Reunion time minutes">
+							<div class="hint">minutes</div>
+						</md-input-container>
+						<md-input-container class="md-block">
+							<md-select ng-model="_group.reunionTimeMeridian" class="md-no-underline" style="width: 35px !important;" aria-label="Reunion time meridian">
+					          <md-option ng-value="item" ng-repeat="item in ['AM', 'PM']">
+					          	{{ item }}
+					          </md-option>
+					        </md-select>
+					        <div class="hint">Lima/Bogota/Quito, GMT-05:00</div>
+						</md-input-container>
+					</div>
 				</div>
 				<div layout-gt-sm="row" class="form-group">
-					<label class="control-label" for="group-main-url" flex-gt-sm="20">Main URL</label>
+					<label class="control-label" for="mainUrl" flex-gt-sm="20">Main URL</label>
 					<md-input-container md-no-float class="md-block" flex>
-						<input ng-model="group.mainUrl" id="group-main-url" type="url">
+						<input ng-model="_group.mainUrl" name="mainUrl" id="mainUrl" type="url" md-maxlength="300" aria-label="Group main URL">
 						<div class="hint">Facebook, Trello, Github, etc</div>
+						
+						<div ng-messages="editGroupForm.mainUrl.$error">
+			          		<div ng-message="md-maxlength">The URL has to be less than 300 characters long.</div>
+			       		</div>
 					</md-input-container>
 				</div>
 				<div layout-gt-sm="row" class="form-group">
-					<label class="control-label" for="group-secondary-url" flex-gt-sm="20">Secondary URL</label>
+					<label class="control-label" for="secondaryUrl" flex-gt-sm="20">Secondary URL</label>
 					<md-input-container md-no-float class="md-block" flex>
-						<input ng-model="group.secondaryUrl" id="group-secondary-url" type="url">
+						<input ng-model="_group.secondaryUrl" name="secondaryUrl" id="secondaryUrl" type="url" md-maxlength="300" aria-label="Group secondary URL">
+						
+						<div ng-messages="editGroupForm.secondaryUrl.$error">
+			          		<div ng-message="md-maxlength">The URL has to be less than 300 characters long.</div>
+			       		</div>
 					</md-input-container>
 				</div>		
 			</div>
 			<div class="actions" layout="row">
-				<md-button class="md-warn">Delete group</md-button>
+				<md-button class="md-warn" ng-click="delete()">Delete group</md-button>
 				<span flex></span>
-				<md-button class="md-primary md-raised">Save group</md-button>
+				<md-button class="md-primary md-raised" type="submit">Save group</md-button>
 			</div>
 		</form>
 	</div>

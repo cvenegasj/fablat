@@ -19,12 +19,13 @@ import org.springframework.core.annotation.Order;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBuilder;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
@@ -43,9 +44,16 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @EnableResourceServer
 public class AuthserverApplication extends WebMvcConfigurerAdapter {
 
+	@Autowired
+	private UserDetailsService userDetailsService;
+	
 	@RequestMapping("/user")
 	public Principal user(Principal user) {
 		return user;
+	}
+	
+	public static void main(String[] args) {
+		SpringApplication.run(AuthserverApplication.class, args);
 	}
 	
 	@Override
@@ -54,9 +62,27 @@ public class AuthserverApplication extends WebMvcConfigurerAdapter {
 		registry.addViewController("/oauth/confirm_access").setViewName("authorize");
 	}
 	
-	public static void main(String[] args) {
-		SpringApplication.run(AuthserverApplication.class, args);
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.authenticationProvider(authProvider());
+    }
+	
+	@Bean
+	public DaoAuthenticationProvider authProvider() {
+	    DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+	    authProvider.setUserDetailsService(userDetailsService);
+	    authProvider.setPasswordEncoder(passwordEncoder());
+	    return authProvider;
 	}
+	
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+	    return new BCryptPasswordEncoder();
+	}
+	
+	@Bean
+    public UserDetailsService userDetailsService() {
+        return new AppUserDetailsService();
+    }
 	
 	@Configuration
 	@Order(-20)
@@ -120,21 +146,7 @@ public class AuthserverApplication extends WebMvcConfigurerAdapter {
 			// @formatter:on
 		}
 	}
-
-	@Autowired
-	public void authenticationManager(AuthenticationManagerBuilder builder, FabberDAO fabberDAO) throws Exception {
-		builder.userDetailsService(userDetailsService(fabberDAO));
-	}
-
-	private UserDetailsService userDetailsService(final FabberDAO fabberDAO) {
-		return new UserDetailsService() {
-			
-			// param name should be 'username' 
-			public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-				return new CustomUserDetails(fabberDAO.findByEmail(username));
-			}
-		};
-	}
+	
 
 	// =========== Database connection settings ===========
 	@Bean
@@ -173,4 +185,5 @@ public class AuthserverApplication extends WebMvcConfigurerAdapter {
 	public FabberDAO getFabberDAO() {
 		return new FabberDAOImpl();
 	}
+	
 }

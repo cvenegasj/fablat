@@ -29,7 +29,6 @@ public class UiApplication extends WebSecurityConfigurerAdapter {
 
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
-		// @formatter:off
 		http
 		.authorizeRequests()
 			.antMatchers("/signup-successful.html", "/signup.html", "/signup-fabs.html", "/public.html", "/index.html", "/resource/public/**", "/login", "/").permitAll() // Allow anyone
@@ -40,16 +39,6 @@ public class UiApplication extends WebSecurityConfigurerAdapter {
 			.logout().logoutSuccessUrl("/").permitAll()
 			.and()
 		.csrf()
-			.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()); 
-		// @formatter:on
-		
-		/* http
-			.antMatcher("/**").authorizeRequests()
-				.antMatchers("/app/**").authenticated()
-				.anyRequest().permitAll()
-			.and()
-				.logout().logoutSuccessUrl("/").permitAll()
-			.and()
-				.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()); */
+			.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
 	}
 }

@@ -1,25 +1,16 @@
-<div class="md-padding" layout="column" flex>
+<div class="md-padding" layout="column" flex ng-controller="GroupManagementSubgroupsCtrl">
 	<div class="generic-container-1">
 		<div class="header md-subhead" layout="row" layout-align="none center" style="position: relative;">
-			<div><span class="bold">Open BioFab</span> subgroups:</div>
-			<md-button class="md-raised md-accent" style="margin: 0; position: absolute; right: 15px;" ng-click="">New subgroup</md-button>
+			<div><span class="bold">{{ group.name }}</span> subgroups:</div>
+			<md-button class="md-raised md-accent" style="margin: 0; position: absolute; right: 15px;" ng-click="addSubgroup()">New subgroup</md-button>
 		</div>
 		<div>
+			<div ng-if="group.subGroups.length === 0" class="centered no-data-2" style="margin-top: 15px;">No subgroups created yet.</div>
 			<md-list class="list-type-1" dense flex>
-				<md-list-item class="md-2-line">
+				<md-list-item class="md-2-line" ng-repeat="item in group.subGroups">
 		          <div class="md-list-item-text compact">
-		            <h3><a href="" class="custom-anchor-1 bold">Phagebot</a></h3>
-		            <p> 6 members </p>
-		          </div>
-		          <md-button class="md-secondary md-icon-button" ng-click="doSecondaryAction($event)" aria-label="more">
-		          	<md-icon md-font-set="material-icons" aria-label="More">more_vert</md-icon>
-		          </md-button>
-		        </md-list-item>
-		        <md-divider></md-divider>
-		        <md-list-item class="md-2-line">
-		          <div class="md-list-item-text compact">
-		            <h3> DIYbio lab kit </h3>
-		            <p> 3 members </p>
+		            <h3><a ui-sref="subgroup.general({ idSubgroup: item.idSubGroup })" class="custom-anchor-1 bold">{{ item.name }}</a></h3>
+		            <p>{{ item.membersCount === 1 ? "1 member" : item.membersCount + " members" }}</p>
 		          </div>
 		          <md-button class="md-secondary md-icon-button" ng-click="doSecondaryAction($event)" aria-label="more">
 		          	<md-icon md-font-set="material-icons" aria-label="More">more_vert</md-icon>

@@ -1,4 +1,18 @@
-<div class="md-padding" layout="column" flex ng-controller="WorkshopGeneralCtrl" ng-cloak>
+<div layout="column" ng-controller="WorkshopOutCtrl">
+	<md-toolbar md-whiteframe="1" md-theme="neutral" class="md-hue-1">
+    	<div class="md-toolbar-tools">
+	    	<h2 md-truncate>
+	    		<a ui-sref="groups" class="custom-anchor-1"><span>Groups</span></a>
+	    		<span><md-icon md-font-set="material-icons">keyboard_arrow_right</md-icon></span>
+	    		<a ui-sref="group.general({ idGroup: workshop.groupId })" class="custom-anchor-1"><span>{{ workshop.groupName }}</span></a>
+	    		<span><md-icon md-font-set="material-icons">keyboard_arrow_right</md-icon></span>
+	    		<a ui-sref="subgroup.general({ idSubgroup: workshop.subGroupId })" class="custom-anchor-1"><span>{{ workshop.subGroupName }}</span></a>
+	    		<span><md-icon md-font-set="material-icons">keyboard_arrow_right</md-icon></span>
+	    		<span class="uppercase">{{ workshop.name }}</span>
+	    	</h2>
+		</div>
+	</md-toolbar>
+	
 	<div class="workshop-container-1" >
 		<div class="header" layout="row" layout-align="none center">
 			<h1 class="font-20 bold">{{ "#" + workshop.replicationNumber + ": " + workshop.name }}</h1>
@@ -37,9 +51,9 @@
 				</div>
 				<div class="font-14 section-content">
 					<span ng-if="workshop.labName">{{ workshop.labName }}</span><br ng-if="workshop.labName" />
-					<span ng-if="workshop.locationAddress">{{ workshop.locationAddress + " - " }}</span>
+					<span ng-if="workshop.locationAddress">{{ workshop.locationAddress + " · " }}</span>
 					<span ng-if="workshop.locationCity && workshop.locationCountry">{{ workshop.locationCity + ", " + workshop.locationCountry }}</span><br ng-if="workshop.locationCity && workshop.locationCountry" />
-					<span ng-if="workshop.locationLatitude && workshop.locationLongitude"><a href="http://www.google.com/maps/place/{{workshop.locationLatitude}},{{workshop.locationLongitude}}" target="_blank" class="custom-anchor-1" md-colors="{color: 'accent-900'}">ver mapa</a></span>
+					<span ng-if="workshop.locationLatitude && workshop.locationLongitude">(<a href="" class="custom-anchor-1" md-colors="{color: 'accent-900'}">ver mapa</a>)</span>
 				</div>
 			</div>
 		</div>

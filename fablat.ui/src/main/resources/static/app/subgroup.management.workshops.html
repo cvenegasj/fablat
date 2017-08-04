@@ -1,25 +1,16 @@
 <div class="md-padding" layout="column" flex>
 	<div class="generic-container-1">
 		<div class="header md-subhead" layout="row" layout-align="none center" style="position: relative;">
-			<div><span class="bold">DIYbio lab kit</span> upcoming workshops:</div>
+			<div><span class="bold">{{ subgroup.name }}</span> upcoming workshops:</div>
 			<md-button ui-sref="subgroup.addWorkshop" class="md-raised md-accent" style="margin: 0; position: absolute; right: 15px;">New workshop</md-button>
 		</div>
 		<div>
+			<div ng-if="subgroup.workshops.length === 0" class="centered no-data-2" style="margin-top: 15px;">No workshops created yet.</div>
 			<md-list class="list-type-1" dense flex>
-				<md-list-item class="md-2-line">
+				<md-list-item class="md-2-line" ng-repeat="item in subgroup.workshops">
 		          <div class="md-list-item-text compact">
-		            <h3><a href="" class="custom-anchor-1 bold">Phagebot</a></h3>
-		            <p> 31 de julio · 6pm · Fab Lab Lima · FREE</p>
-		          </div>
-		          <md-button class="md-secondary md-icon-button" ng-click="doSecondaryAction($event)" aria-label="more">
-		          	<md-icon md-font-set="material-icons" aria-label="More">more_vert</md-icon>
-		          </md-button>
-		        </md-list-item>
-		        <md-divider></md-divider>
-		        <md-list-item class="md-2-line">
-		          <div class="md-list-item-text compact">
-		            <h3> Crea tu propio laboratorio </h3>
-		            <p> 5 de agosto · 6pm - 8pm </p>
+		            <h3><a ui-sref="workshop.general({ idWorkshop: item.idWorkshop })" class="custom-anchor-1 bold">{{ item.name }}</a></h3>
+		            <p> {{ item.startDateMonth + " " + item.startDateDay }} · {{ item.labName ? item.labName + " · " : "" }} {{ item.isPaid ? item.price + item.currency : "FREE" }}</p>
 		          </div>
 		          <md-button class="md-secondary md-icon-button" ng-click="doSecondaryAction($event)" aria-label="more">
 		          	<md-icon md-font-set="material-icons" aria-label="More">more_vert</md-icon>

@@ -9,9 +9,12 @@
 		<div style="margin-bottom: 20px;">{{ group.description }}</div>
 	</div>
 	<div class="info" ng-if="group.reunionDay || group.reunionTime || group.mainUrl || group.secondaryUrl">
-		<div ng-if="group.reunionDay || group.reunionTime"><md-icon md-svg-icon="timetable" class="icon-16"></md-icon> Reunions: {{ group.reunionDay }}, {{ group.reunionTime }}</div>
-		<div ng-if="group.mainUrl"><md-icon md-svg-icon="web" class="icon-16"></md-icon> Main URL: <a href="" class="custom-anchor-1">{{ group.mainUrl }}</a></div>
-		<div ng-if="group.secondaryUrl"><md-icon md-svg-icon="web" class="icon-16"></md-icon> Secondary URL: <a href="" class="custom-anchor-1">{{ group.secondaryUrl }}</a></div>
+		<div ng-if="group.reunionDay || group.reunionTime"><md-icon md-svg-icon="timetable" class="icon-16"></md-icon>Reunions: 
+			<span ng-if="group.reunionDay">{{ group.reunionDay + "S - "}}</span>
+			<span ng-if="group.reunionTime">{{ group.reunionTime }}</span>
+		</div>
+		<div ng-if="group.mainUrl"><md-icon md-svg-icon="web" class="icon-16"></md-icon>Main URL: <a href="" class="custom-anchor-1">{{ group.mainUrl }}</a></div>
+		<div ng-if="group.secondaryUrl"><md-icon md-svg-icon="web" class="icon-16"></md-icon>Secondary URL: <a href="" class="custom-anchor-1">{{ group.secondaryUrl }}</a></div>
 	</div>
 	<div class="members">
 		<div layout="row" layout-align="center center">
@@ -19,61 +22,12 @@
 		</div>
 		<md-divider></md-divider>
 		<div flex layout="row" layout-wrap style="margin-top: 30px;">
-			<div flex-gt-sm="15" flex="25" style="margin-bottom: 10px;">
-				<a ui-sref="fabberDetail({ idFabber: item.idFabber })">
+			<div flex-gt-sm="15" flex="25" style="margin-bottom: 10px;" ng-repeat="item in group.members">
+				<a ui-sref="fabber({ idFabber: item.fabberId })">
 					<user-avatar fabber="user" avatar-w="50" avatar-h="50" avatar-font-size="18"></user-avatar>
 				</a>
-				<div class="font-12 color-2 centered" flex md-truncate style="margin-top: 5px;">Carlos Venegas</div>
-				<div class="font-12 color-2 centered">(coordinator)</div>
-			</div>
-			<div flex-gt-sm="15" flex="25">
-				<a href="" ui-sref="fabberDetail({idFabber: item.idFabber})">
-					<user-avatar fabber="user" avatar-w="50" avatar-h="50" avatar-font-size="18"></user-avatar>
-				</a>
-				<div class="font-12 color-2 centered" flex md-truncate>Carlos Venegas</div>
-				<div class="font-12 color-2 centered">(coordinator)</div>
-			</div>
-			<div flex-gt-sm="15" flex="25">
-				<a href="" ui-sref="fabberDetail({idFabber: item.idFabber})">
-					<user-avatar fabber="user" avatar-w="50" avatar-h="50" avatar-font-size="18"></user-avatar>
-				</a>
-				<div class="font-12 color-2 centered" flex md-truncate>Carlos Venegas</div>
-			</div>
-			<div flex-gt-sm="15" flex="25">
-				<a href="" ui-sref="fabberDetail({idFabber: item.idFabber})">
-					<user-avatar fabber="user" avatar-w="50" avatar-h="50" avatar-font-size="18"></user-avatar>
-				</a>
-				<div class="font-12 color-2 centered" flex md-truncate>Carlos Venegas</div>
-			</div>
-			<div flex-gt-sm="15" flex="25">
-				<a href="" ui-sref="fabberDetail({idFabber: item.idFabber})">
-					<user-avatar fabber="user" avatar-w="50" avatar-h="50" avatar-font-size="18"></user-avatar>
-				</a>
-				<div class="font-12 color-2 centered">Carlos Venegas</div>
-			</div>
-			<div flex-gt-sm="15" flex="25">
-				<a href="" ui-sref="fabberDetail({idFabber: item.idFabber})">
-					<user-avatar fabber="user" avatar-w="50" avatar-h="50" avatar-font-size="18"></user-avatar>
-				</a>
-				<div class="font-12 color-2 centered">Carlos Venegas</div>
-			</div>
-			<div flex-gt-sm="15" flex="25">
-				<a href="" ui-sref="fabberDetail({idFabber: item.idFabber})">
-					<user-avatar fabber="user" avatar-w="50" avatar-h="50" avatar-font-size="18"></user-avatar>
-				</a>
-				<div class="font-12 color-2 centered">Carlos Venegas</div>
-			</div>
-			<div flex-gt-sm="15" flex="25">
-				<a href="" ui-sref="fabberDetail({idFabber: item.idFabber})">
-					<user-avatar fabber="user" avatar-w="50" avatar-h="50" avatar-font-size="18"></user-avatar>
-				</a>
-				<div class="font-12 color-2 centered">Carlos Venegas</div>
-			</div>
-			<div flex-gt-sm="15" flex="25">
-				<a href="" ui-sref="fabberDetail({idFabber: item.idFabber})">
-					<user-avatar fabber="user" avatar-w="50" avatar-h="50" avatar-font-size="18"></user-avatar>
-				</a>
-				<div class="font-12 color-2 centered">Carlos Venegas</div>
+				<div class="font-12 color-2 centered" flex md-truncate style="margin-top: 5px;">{{ item.firstName + " " + item.lastName }}</div>
+				<div class="badge-2 centered" md-colors="{background: 'default-primary-A400'}" ng-if="item.isCoordinator">coordinator</div>
 			</div>
 		</div>
 	</div>
@@ -83,8 +37,9 @@
 		</div>
 		<md-divider></md-divider>
 		<div layout="row" layout-align="center center" style="margin-top: 10px;">
-			<md-button class="md-raised md-accent" ng-click="addSubgroup($event)">New subgroup</md-button>
+			<md-button class="md-raised md-primary md-hue-1" ng-click="addSubgroup($event)">New subgroup</md-button>
 		</div>
+		<div ng-if="group.subGroups.length === 0" class="centered no-data-2" style="margin-top: 10px;">No subgroups created yet.</div>
 		<div flex layout="row" layout-wrap>
 			<md-card class="custom-card-5" md-theme="" flex="20" ng-repeat="item in group.subGroups">
 		    	<md-card-header>

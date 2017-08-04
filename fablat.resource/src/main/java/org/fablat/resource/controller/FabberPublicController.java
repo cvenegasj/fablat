@@ -11,6 +11,7 @@ import org.fablat.resource.model.dao.RoleFabberDAO;
 import org.fablat.resource.util.Resources;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,6 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/public")
 public class FabberPublicController {
 
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 	@Autowired
 	private FabberDAO fabberDAO;
 	@Autowired
@@ -38,11 +41,10 @@ public class FabberPublicController {
 		}
 
 		Fabber fabber = convertToEntity(fabberDTO);
+		fabber.setPassword(passwordEncoder.encode(fabberDTO.getPassword()));
 		fabber.setEnabled(true);
-		// TODO: encode password
-		
 
-		// set fabber's Lab
+		// fabber's Lab
 		if (fabberDTO.getLabId() != null) {
 			fabber.setLab(labDAO.findById(fabberDTO.getLabId()));
 			fabber.setIsNomade(false);
@@ -88,6 +90,7 @@ public class FabberPublicController {
 
 	private Fabber convertToEntity(FabberDTO fabberDTO) {
 		Fabber fabber = new Fabber();
+		fabber.setEmail(fabberDTO.getEmail());
 	    fabber.setFirstName(fabberDTO.getFirstName());
 	    fabber.setLastName(fabberDTO.getLastName());
 	    fabber.setIsFabAcademyGrad(fabberDTO.getIsFabAcademyGrad());

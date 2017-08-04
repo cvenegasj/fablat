@@ -47,6 +47,8 @@ import org.springframework.dao.annotation.PersistenceExceptionTranslationPostPro
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -80,20 +82,20 @@ public class ResourceApplication extends ResourceServerConfigurerAdapter {
 	@Order(-20)
     public void configure(HttpSecurity http) throws Exception {
 		http
-		.authorizeRequests()
+			.authorizeRequests()
 			.antMatchers("/public/**").permitAll() // Allow public
-		.and()
-		.authorizeRequests()
 			.anyRequest().authenticated(); // Secure the rest
-		//.and()
-			//.csrf()
-				//.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-				//.ignoringAntMatchers("/public/**"); // No csrf for public API
     }
+	
+	// for encoding password on user sign up
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+	    return new BCryptPasswordEncoder();
+	}
 
 	// =========== Database connection settings ===========
 	@Bean
-	@ConfigurationProperties(prefix="spring.datasource")
+	@ConfigurationProperties(prefix = "spring.datasource")
 	public DataSource dataSource() {
 		// commons-dbcp2 pool
 		return new BasicDataSource();
@@ -132,19 +134,16 @@ public class ResourceApplication extends ResourceServerConfigurerAdapter {
 	
 	// ========== DAO Beans ==========
 
-	@Autowired
 	@Bean(name = "fabberDAO")
 	public FabberDAO getFabberDAO() {
 		return new FabberDAOImpl();
 	}
 	
-	@Autowired
 	@Bean(name = "groupDAO")
 	public GroupDAO getGroupDAO() {
 		return new GroupDAOImpl();
 	}
 	
-	@Autowired
 	@Bean(name = "groupMemberDAO")
 	public GroupMemberDAO getGroupMemberDAO() {
 		return new GroupMemberDAOImpl();
@@ -162,49 +161,41 @@ public class ResourceApplication extends ResourceServerConfigurerAdapter {
 		return new SubGroupActivityDAOImpl();
 	}
 	
-	@Autowired
 	@Bean(name = "labDAO")
 	public LabDAO getLabDAO() {
 		return new LabDAOImpl();
 	}
 	
-	@Autowired
 	@Bean(name = "locationDAO")
 	public LocationDAO getLocationDAO() {
 		return new LocationDAOImpl();
 	}
 
-	@Autowired
 	@Bean(name = "roleDAO")
 	public RoleDAO getRoleDAO() {
 		return new RoleDAOImpl();
 	}
 
-	@Autowired
 	@Bean(name = "roleFabberDAO")
 	public RoleFabberDAO getRoleFabberDAO() {
 		return new RoleFabberDAOImpl();
 	}
 	
-	@Autowired
 	@Bean(name = "subGroupDAO")
 	public SubGroupDAO getSubGroupDAO() {
 		return new SubGroupDAOImpl();
 	}
 
-	@Autowired
 	@Bean(name = "subGroupMemberDAO")
 	public SubGroupMemberDAO getSubGroupMemberDAO() {
 		return new SubGroupMemberDAOImpl();
 	}
 
-	@Autowired
 	@Bean(name = "workshopDAO")
 	public WorkshopDAO getWorkshopDAO() {
 		return new WorkshopDAOImpl();
 	}
-	
-	@Autowired
+
 	@Bean(name = "workshopTutorDAO")
 	public WorkshopTutorDAO getWorkshopTutorDAO() {
 		return new WorkshopTutorDAOImpl();

@@ -1,4 +1,4 @@
-<div class="md-padding" layout="column" flex ng-controller="SubgroupAddWorkshopCtrl">
+<div class="md-padding" layout="column" flex ng-controller="SubgroupAddWorkshopCtrl as ctrl">
 	<div class="generic-container-1">
 		<form class="custom-form" name="addWorkshopForm" ng-submit="submit()">
 			<div class="header md-subhead">
@@ -8,7 +8,7 @@
 				<div layout-gt-sm="row" class="form-group">
 					<label class="control-label" for="name" flex-gt-sm="20">Workshop name</label>
 					<md-input-container md-no-float class="md-block" flex>
-						<input ng-model="_workshop.name" name="name" id="name" md-maxlength="200" required md-autofocus>
+						<input ng-model="_workshop.name" name="name" id="name" md-maxlength="200" required md-autofocus aria-label="Workshop name">
 					
 						<div ng-messages="addWorkshopForm.name.$error">
 			          		<div ng-message="required">This is required.</div>
@@ -19,7 +19,7 @@
 				<div layout-gt-sm="row" class="form-group">
 					<label class="control-label" for="description" flex-gt-sm="20">Description</label>
 					<md-input-container class="md-block" flex>
-						<textarea ng-model="_workshop.description" name="description" id="description" md-maxlength="3500" rows="5" required></textarea>
+						<textarea ng-model="_workshop.description" name="description" id="description" md-maxlength="3500" rows="5" required aria-label="Workshop description"></textarea>
 					
 						<div ng-messages="addWorkshopForm.description.$error">
 			          		<div ng-message="required">This is required.</div>
@@ -30,7 +30,7 @@
 				<div layout-gt-sm="row" class="form-group">
 					<label class="control-label" flex-gt-sm="20">Start date</label>
 					<md-input-container class="md-block" flex>
-						<md-datepicker ng-model="_workshop.startDate" name="startDate" required md-open-on-focus md-min-date="today"></md-datepicker>
+						<md-datepicker ng-model="_workshop.startDate" name="startDate" required md-open-on-focus md-min-date="today" aria-label="Start date"></md-datepicker>
 						
 						<div ng-messages="addWorkshopForm.startDate.$error">
 			          		<div ng-message="required">This is required.</div>
@@ -38,36 +38,39 @@
 					</md-input-container>
 				</div>
 				<div layout-gt-sm="row" class="form-group">
-					<label class="control-label" for="start-time-hours" flex-gt-sm="20">Start time</label>
-					<md-input-container md-no-float class="md-block">
-						<input ng-model="_workshop.startTimeHours" name="startTimeHours" id="start-time-hours" type="number" step="1" min="0" max="12" style="width: 60px;" required>
-						<div class="hint">hours</div>
-						
-						<div ng-messages="addWorkshopForm.startTimeHours.$error">
-			          		<div ng-message="required">This is required.</div>
-			       		</div>
-					</md-input-container>
-					<md-input-container md-no-float class="md-block">
-						<input ng-model="_workshop.startTimeMinutes" name="startTimeMinutes" id="start-time-minutes" type="number" step="1" min="0" max="59" style="width: 60px;" required>
-						<div class="hint">minutes</div>
-						
-						<div ng-messages="addWorkshopForm.startTimeMinutes.$error">
-			          		<div ng-message="required">This is required.</div>
-			       		</div>
-					</md-input-container>
-					<md-input-container md-no-float class="md-block">
-						<md-select ng-model="_workshop.startTimeMeridian" class="md-no-underline" style="width: 35px !important;">
-				          <md-option ng-value="item" ng-repeat="item in ['AM', 'PM']" ng-selected="$first">
-				          	{{ item }}
-				          </md-option>
-				        </md-select>
-				        <div class="hint">Lima/Bogota/Quito, GMT-05:00</div>
-					</md-input-container>
+					<label class="control-label" for="startTimeHours" flex-gt-sm="20">Start time</label>
+					
+					<div layout="row">
+						<md-input-container md-no-float class="md-block">
+							<input ng-model="_workshop.startTimeHours" name="startTimeHours" id="startTimeHours" type="number" step="1" min="1" max="12" style="width: 60px;" required aria-label="Start time hour">
+							<div class="hint">hours</div>
+							
+							<div ng-messages="addWorkshopForm.startTimeHours.$error">
+				          		<div ng-message="required">This is required.</div>
+				       		</div>
+						</md-input-container>
+						<md-input-container md-no-float class="md-block">
+							<input ng-model="_workshop.startTimeMinutes" name="startTimeMinutes" id="startTimeMinutes" type="number" step="1" min="0" max="59" style="width: 60px;" required aria-label="Start time minutes">
+							<div class="hint">minutes</div>
+							
+							<div ng-messages="addWorkshopForm.startTimeMinutes.$error">
+				          		<div ng-message="required">This is required.</div>
+				       		</div>
+						</md-input-container>
+						<md-input-container md-no-float class="md-block">
+							<md-select ng-model="_workshop.startTimeMeridian" class="md-no-underline" style="width: 35px !important;" required aria-label="Start time meridian">
+					          <md-option ng-value="item" ng-repeat="item in ['AM', 'PM']" ng-selected="$first">
+					          	{{ item }}
+					          </md-option>
+					        </md-select>
+					        <div class="hint">Lima/Bogota/Quito, GMT-05:00</div>
+						</md-input-container>
+					</div>
 				</div>
 				<div layout-gt-sm="row" class="form-group">
 					<label class="control-label" flex-gt-sm="20">End date</label>
 					<md-input-container class="md-block" flex>
-						<md-datepicker ng-model="_workshop.endDate" name="endDate" required md-open-on-focus md-min-date="today"></md-datepicker>
+						<md-datepicker ng-model="_workshop.endDate" name="endDate" required md-open-on-focus md-min-date="today" aria-label="End date"></md-datepicker>
 						
 						<div ng-messages="addWorkshopForm.endDate.$error">
 			          		<div ng-message="required">This is required.</div>
@@ -76,30 +79,33 @@
 				</div>
 				<div layout-gt-sm="row" class="form-group">
 					<label class="control-label" for="end-time-hours" flex-gt-sm="20">End time</label>
-					<md-input-container md-no-float class="md-block">
-						<input ng-model="_workshop.endTimeHours" name="endTimeHours" id="end-time-hours" type="number" step="1" min="0" max="12" style="width: 60px;" required>
-						<div class="hint">hours</div>
-						
-						<div ng-messages="addWorkshopForm.endTimeHours.$error">
-			          		<div ng-message="required">This is required.</div>
-			       		</div>
-					</md-input-container>
-					<md-input-container md-no-float class="md-block">
-						<input ng-model="_workshop.endTimeMinutes" name="endTimeMinutes" type="number" step="1" min="0" max="59" style="width: 60px;" required>
-						<div class="hint">minutes</div>
-						
-						<div ng-messages="addWorkshopForm.endTimeMinutes.$error">
-			          		<div ng-message="required">This is required.</div>
-			       		</div>
-					</md-input-container>
-					<md-input-container md-no-float class="md-block">
-						<md-select ng-model="_workshop.endTimeMeridian" class="md-no-underline" style="width: 35px !important;">
-				          <md-option ng-value="item" ng-repeat="item in ['AM', 'PM']" ng-selected="$first">
-				          	{{ item }}
-				          </md-option>
-				        </md-select>
-				        <div class="hint">Lima/Bogota/Quito, GMT-05:00</div>
-					</md-input-container>
+					
+					<div layout="row">
+						<md-input-container md-no-float class="md-block">
+							<input ng-model="_workshop.endTimeHours" name="endTimeHours" id="end-time-hours" type="number" step="1" min="1" max="12" style="width: 60px;" required aria-label="End time hour">
+							<div class="hint">hours</div>
+							
+							<div ng-messages="addWorkshopForm.endTimeHours.$error">
+				          		<div ng-message="required">This is required.</div>
+				       		</div>
+						</md-input-container>
+						<md-input-container md-no-float class="md-block">
+							<input ng-model="_workshop.endTimeMinutes" name="endTimeMinutes" type="number" step="1" min="0" max="59" style="width: 60px;" required aria-label="End time minutes">
+							<div class="hint">minutes</div>
+							
+							<div ng-messages="addWorkshopForm.endTimeMinutes.$error">
+				          		<div ng-message="required">This is required.</div>
+				       		</div>
+						</md-input-container>
+						<md-input-container md-no-float class="md-block">
+							<md-select ng-model="_workshop.endTimeMeridian" class="md-no-underline" style="width: 35px !important;" required aria-label="End time meridian">
+					          <md-option ng-value="item" ng-repeat="item in ['AM', 'PM']" ng-selected="$first">
+					          	{{ item }}
+					          </md-option>
+					        </md-select>
+					        <div class="hint">Lima/Bogota/Quito, GMT-05:00</div>
+						</md-input-container>
+					</div>
 				</div>
 				<div layout-gt-sm="row" class="form-group">
 					<label class="control-label" flex-gt-sm="20">Price</label>
@@ -108,26 +114,29 @@
 							Is paid?
 						</md-checkbox>
 				    </md-input-container>
-			        <md-input-container md-no-float class="md-block" ng-if="_workshop.isPaid">
-				    	<input ng-model="_workshop.price" name="price" placeholder="Price" style="width: 80px; margin-left: 15px;" required>
-				    	
-				    	<div ng-messages="addWorkshopForm.price.$error">
-			          		<div ng-message="required">This is required.</div>
-			        	</div>
-			        </md-input-container>
-			        <md-input-container md-no-float class="md-block">
-						<md-select ng-model="_workshop.currency" class="md-no-underline" style="width: 35px !important;" ng-show="_workshop.isPaid">
-				          <md-option ng-value="item" ng-repeat="item in ['PEN', 'USD', 'EUR']" ng-selected="$first">
-				          	{{ item }}
-				          </md-option>
-				        </md-select>
-					</md-input-container>
+				    
+					<div layout="row">
+				        <md-input-container md-no-float class="md-block" ng-if="_workshop.isPaid">
+					    	<input ng-model="_workshop.price" name="price" placeholder="Price" style="width: 80px; margin-left: 15px;" required aria-label="price">
+					    	
+					    	<div ng-messages="addWorkshopForm.price.$error">
+				          		<div ng-message="required">This is required.</div>
+				        	</div>
+				        </md-input-container>
+				        <md-input-container md-no-float class="md-block">
+							<md-select ng-model="_workshop.currency" class="md-no-underline" style="width: 35px !important;" ng-if="_workshop.isPaid" required aria-label="Currency">
+					          <md-option ng-value="item" ng-repeat="item in ['PEN', 'USD', 'EUR']" ng-selected="$first">
+					          	{{ item }}
+					          </md-option>
+					        </md-select>
+						</md-input-container>
+					</div>
 			        <span class="bold" style="line-height: 27px; margin-left: 15px;" ng-show="!_workshop.isPaid">FREE</span>
 			    </div>
 			    <div layout-gt-sm="row" class="form-group">
 					<label class="control-label" for="facebookUrl" flex-gt-sm="20">Facebook URL</label>
 					<md-input-container md-no-float class="md-block" flex>
-						<input ng-model="_workshop.facebookUrl" name="facebookUrl" id="facebookUrl" md-maxlength="300">
+						<input ng-model="_workshop.facebookUrl" name="facebookUrl" id="facebookUrl" md-maxlength="300" aria-label="Facebook URL">
 					
 						<div ng-messages="addWorkshopForm.facebookUrl.$error">
 			          		<div ng-message="md-maxlength">The URL has to be less than 300 characters long.</div>
@@ -137,7 +146,7 @@
 				<div layout-gt-sm="row" class="form-group">
 					<label class="control-label" for="ticketsUrl" flex-gt-sm="20">Tickets URL</label>
 					<md-input-container md-no-float class="md-block" flex>
-						<input ng-model="_workshop.ticketsUrl" name="ticketsUrl" id="ticketsUrl" md-maxlength="300">
+						<input ng-model="_workshop.ticketsUrl" name="ticketsUrl" id="ticketsUrl" md-maxlength="300" aria-label="Tickets URL">
 						<div class="hint">Eventbrite, Joinnus, etc.</div>
 					
 						<div ng-messages="addWorkshopForm.ticketsUrl.$error">
@@ -145,11 +154,108 @@
 			        	</div>
 					</md-input-container>
 				</div>
-			    		    
-			    	
+				<div layout-gt-sm="row" class="form-group">
+					<label class="control-label" flex-gt-sm="20">Location</label>
+					
+					<div layout="column" flex>
+						<md-input-container class="md-block">
+							<md-checkbox ng-model="_workshop.isNewLocation" aria-label="Enter a new location?">
+								Enter a new location
+							</md-checkbox>
+						</md-input-container>
+						
+						<!-- Search in app database -->
+						<md-input-container md-no-float ng-if="!_workshop.isNewLocation">
+							<md-autocomplete id="autocomplete-locations" required 
+								md-input-name="autocompleteField" md-selected-item="ctrl.selectedLocation" 
+								md-search-text="searchText" md-items="item in getAppMatches(searchText)" 
+								md-item-text="item.display" md-clear-button="true" md-min-length="2"
+								placeholder="Search a fab lab or a previous location">
+								<md-item-template>
+							    	<span class="bold">
+							    		{{ item.labName ? item.labName + " - " : "" }}
+							    	</span>
+							    	<span>
+							    		{{ item.display }}
+							    	</span>
+							  	</md-item-template>
+							  	<md-not-found>
+							  		No matches found.
+							  	</md-not-found>
+							</md-autocomplete>
+							
+							<div ng-messages="addWorkshopForm.autocompleteField.$error">
+					        	<div ng-message="required">You must select a location.</div>
+					        </div>
+						</md-input-container>
+						
+						<div layout="column" ng-if="_workshop.isNewLocation">
+							<!-- Seach from Google Maps API -->
+							<md-input-container md-no-float>
+								<input vs-google-autocomplete
+					                 ng-model="address.name"
+					                 vs-place="address.place" 
+					                 vs-place-id="address.components.placeId"
+					                 vs-street-number="address.components.streetNumber" 
+					                 vs-street="address.components.street"
+					                 vs-city="address.components.city"
+					                 vs-state="address.components.state"
+					                 vs-country-short="address.components.countryCode"
+					                 vs-country="address.components.country"
+					                 vs-post-code="address.components.postCode"
+					                 vs-district="address.components.district"
+					                 vs-latitude="address.components.location.lat"
+					                 vs-longitude="address.components.location.long"
+					                 
+					                 type="text" 
+					                 name="autocompleteField2"
+					                 id="address"
+					                 class="form-control" 
+					                 placeholder="Search place or address on maps">
+								
+								<div ng-messages="addWorkshopForm.autocompleteField2.$error">
+						        	<div ng-message="required">You must select a location.</div>
+						        </div>
+							</md-input-container>
+
+							<md-input-container>
+								<input ng-model="address.components.street" name="street" placeholder="Street" required aria-label="Location street">				
+								
+								<div ng-messages="addWorkshopForm.street.$error">
+					          		<div ng-message="required">This is required.</div>
+					        	</div>
+							</md-input-container>
+							
+							<md-input-container>
+								<input ng-model="address.components.streetNumber" name="streetNumber" placeholder="Street number" required aria-label="Location street number">				
+								
+								<div ng-messages="addWorkshopForm.streetNumber.$error">
+					          		<div ng-message="required">This is required.</div>
+					        	</div>
+							</md-input-container>
+							
+							<md-input-container>
+								<input ng-model="address.components.city" name="city" placeholder="City" required aria-label="Location city">
+								
+								<div ng-messages="addWorkshopForm.city.$error">
+					          		<div ng-message="required">This is required.</div>
+					        	</div>
+							</md-input-container>
+							
+							<md-input-container>
+								<input ng-model="address.components.country" value="{{address.components.country}}" name="country" placeholder="Country" required aria-label="Location country">
+								
+								<div ng-messages="addWorkshopForm.country.$error">
+					          		<div ng-message="required">This is required.</div>
+					        	</div>
+							</md-input-container>
+						</div>
+					</div>
+				</div>	        	
 			</div>
+			
 			<div class="actions" layout="row">
-				<md-button ui-sref="subgroup.general">Cancel</md-button>
+				<md-button ng-click="goBack()">Cancel</md-button>
 				<span flex></span>
 				<md-button class="md-primary md-raised" type="submit">Save workshop</md-button>
 			</div>

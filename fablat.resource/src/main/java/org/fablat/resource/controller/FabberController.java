@@ -1,9 +1,11 @@
 package org.fablat.resource.controller;
 
 import java.security.Principal;
+import java.util.Map;
 
 import org.fablat.resource.dto.FabberDTO;
 import org.fablat.resource.entities.Fabber;
+import org.fablat.resource.exception.InvalidPasswordException;
 import org.fablat.resource.model.dao.FabberDAO;
 import org.fablat.resource.model.dao.GroupMemberDAO;
 import org.fablat.resource.model.dao.LabDAO;
@@ -13,6 +15,7 @@ import org.fablat.resource.model.dao.SubGroupMemberDAO;
 import org.fablat.resource.model.dao.WorkshopTutorDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +27,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/auth/fabbers")
 public class FabberController {
 
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 	@Autowired
 	private FabberDAO fabberDAO;
 	@Autowired
@@ -39,9 +44,9 @@ public class FabberController {
 	@Autowired
 	private RoleDAO roleDAO;
 	
-	@RequestMapping(value = "/me", method = RequestMethod.GET)
-	public FabberDTO me(Principal principal) {	
-		// user logged with email as username
+	@RequestMapping(value = "/me/general", method = RequestMethod.GET)
+	public FabberDTO getMyGeneralInfo(Principal principal) {	
+		// user logged in with email as username
 		FabberDTO fabberDTO = convertToDTO(fabberDAO.findByEmail(principal.getName()));
 		Integer[] scores = calculateAndUpdateRankings(principal.getName());
 		
@@ -53,6 +58,13 @@ public class FabberController {
 		return fabberDTO;
 	}
 	
+	@RequestMapping(value = "/me/profile", method = RequestMethod.GET)
+	public FabberDTO getMyProfile(Principal principal) {	
+		FabberDTO fabberDTO = convertToDTO(fabberDAO.findByEmail(principal.getName()));
+		
+		return fabberDTO;
+	}
+	
 	@RequestMapping(value = "/{idFabber}", method = RequestMethod.GET)
     public FabberDTO findOne(@PathVariable("idFabber") Integer idFabber) {
         return convertToDTO(fabberDAO.findById(idFabber));
@@ -60,9 +72,18 @@ public class FabberController {
 	
 	@RequestMapping(value = "/me/update", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
-    public void updateMe(@RequestBody FabberDTO fabberDTO) {
-        Fabber fabber = convertToEntity(fabberDTO);
-		// dependencies
+    public void updateMe(@RequestBody FabberDTO fabberDTO, Principal principal) {
+        Fabber fabber = fabberDAO.findByEmail(principal.getName());
+        fabber.setFirstName(fabberDTO.getFirstName());
+        fabber.setLastName(fabberDTO.getLastName());
+        fabber.setIsFabAcademyGrad(fabberDTO.getIsFabAcademyGrad());
+        fabber.setFabAcademyGradYear(fabberDTO.getIsFabAcademyGrad() ? fabberDTO.getFabAcademyGradYear() : null);
+        fabber.setCity(fabberDTO.getCity());
+        fabber.setCountry(fabberDTO.getCountry());
+        fabber.setMainQuote(fabberDTO.getMainQuote());
+        fabber.setWeekGoal(fabberDTO.getWeekGoal());
+        		
+		// lab
 		if (fabberDTO.getLabId() != null) {
 			fabber.setLab(labDAO.findById(fabberDTO.getLabId()));
 			fabber.setIsNomade(false);
@@ -73,6 +94,18 @@ public class FabberController {
         
         fabberDAO.makePersistent(fabber);
     }
+	
+	@RequestMapping(value = "/me/update-password", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.OK)
+    public void updatePassword(@RequestBody Map<String, String> values, Principal principal) {
+		Fabber me = fabberDAO.findByEmail(principal.getName());
+		if (!passwordEncoder.matches(values.get("password"), me.getPassword())) {
+			throw new InvalidPasswordException();
+		}
+		
+		me.setPassword(passwordEncoder.encode(values.get("newPassword")));
+		fabberDAO.makePersistent(me);
+	}
 	
 	// TODO: store scores and calculate ranking position
 	private Integer[] calculateAndUpdateRankings(String email) {
@@ -109,22 +142,6 @@ public class FabberController {
 		fabberDTO.setLabName(fabber.getLab() != null ? fabber.getLab().getName() : null);
 				
 	    return fabberDTO;
-	}
-	
-	private Fabber convertToEntity(FabberDTO fabberDTO) {
-	    Fabber fabber = new Fabber();
-	    fabber.setFirstName(fabberDTO.getFirstName());
-	    fabber.setLastName(fabberDTO.getLastName());
-	    fabber.setIsFabAcademyGrad(fabberDTO.getIsFabAcademyGrad());
-	    fabber.setFabAcademyGradYear(fabberDTO.getIsFabAcademyGrad() ? fabberDTO.getFabAcademyGradYear() : null);
-	    fabber.setCellPhoneNumber(fabberDTO.getCellPhoneNumber());
-	    fabber.setIsNomade(fabberDTO.getIsNomade());
-	    fabber.setMainQuote(fabberDTO.getMainQuote());
-	    fabber.setCity(fabberDTO.getCity());
-	    fabber.setCountry(fabberDTO.getCountry());
-	    fabber.setWeekGoal(fabberDTO.getAvatarUrl());
-	    
-	    return fabber;
 	}
 
 }

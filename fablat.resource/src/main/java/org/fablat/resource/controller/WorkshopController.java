@@ -89,7 +89,6 @@ public class WorkshopController {
         WorkshopTutor wt = new WorkshopTutor();
         wt.setSubGroupMember(subGroupMemberDAO.findBySubGroupAndFabber(workshopDTO.getSubGroupId(), principal.getName()));
         wt.setWorkshop(workshop);
-        
         workshop.getWorkshopTutors().add(wt);
         
         // Location
@@ -101,6 +100,7 @@ public class WorkshopController {
         	location.setCountry(workshopDTO.getLocationCountry());
         	location.setLatitude(workshopDTO.getLocationLatitude());
         	location.setLongitude(workshopDTO.getLocationLongitude());
+        	locationDAO.makePersistent(location);
         	workshop.setLocation(location);
         } else {
         	workshop.setLocation(locationDAO.findById(workshopDTO.getLocationId()));
@@ -112,7 +112,6 @@ public class WorkshopController {
         workshop.setReplicationNumber(beforeCount + 1);
         
         Workshop workshopCreated = workshopDAO.makePersistent(workshop);
-        
         // then updating the replication number of the workshops 'after'
         updateReplicationNumbers(workshopDTO.getSubGroupId(), Date.from(zdtLima.toInstant()));
 		
@@ -126,8 +125,46 @@ public class WorkshopController {
         }
 	}
 	
+	@RequestMapping(value = "/{idWorkshop}", method = RequestMethod.PUT)
+    @ResponseStatus(HttpStatus.OK)
+    public void update(@PathVariable("idWorkshop") Integer idWorkshop, @RequestBody WorkshopDTO workshopDTO) throws ParseException {
+		Workshop workshop = workshopDAO.findById(idWorkshop);
+		workshop.setName(workshopDTO.getName());
+		workshop.setDescription(workshopDTO.getDescription());
+		workshop.setStartDateTime(dateTimeFormatter.parse(workshopDTO.getStartDate() + " " + workshopDTO.getStartTime()));
+		workshop.setEndDateTime(dateTimeFormatter.parse(workshopDTO.getEndDate() + " " + workshopDTO.getEndTime()));
+		workshop.setIsPaid(workshopDTO.getIsPaid());
+		workshop.setPrice(workshopDTO.getPrice());
+		workshop.setCurrency(workshopDTO.getCurrency());
+		workshop.setFacebookUrl(workshopDTO.getFacebookUrl());
+		workshop.setTicketsUrl(workshopDTO.getTicketsUrl());
+		if (workshopDTO.getLocationId() != null) {
+			workshop.setLocation(locationDAO.findById(workshopDTO.getLocationId()));
+		} else if (workshopDTO.getLocationAddress() != null && workshopDTO.getLocationCity() != null 
+				&& workshopDTO.getLocationCountry() != null) {
+			// create new location
+			Location location = new Location();
+			location.setAddress1(workshopDTO.getLocationAddress());
+			location.setCity(workshopDTO.getLocationCity());
+			location.setCountry(workshopDTO.getLocationCountry());
+			location.setLatitude(workshopDTO.getLocationLatitude() != null ? workshopDTO.getLocationLatitude() : null);
+			location.setLongitude(workshopDTO.getLocationLongitude() != null ? workshopDTO.getLocationLongitude() : null);
+			locationDAO.makePersistent(location);
+			workshop.setLocation(location);
+		}
+		
+		workshopDAO.makePersistent(workshop);
+	}
+	
+	@RequestMapping(value = "/{idWorkshop}", method = RequestMethod.DELETE)
+	@ResponseStatus(HttpStatus.OK)
+	public void delete(@PathVariable("idWorkshop") Integer idWorkshop) {
+		workshopDAO.makeTransient(workshopDAO.findById(idWorkshop)); 
+	}
+	
 	
 	// ========== DTO conversion ==========
+	
 	private WorkshopDTO convertToDTO(Workshop workshop) {
 		WorkshopDTO wDTO = new WorkshopDTO();
 		wDTO.setIdWorkshop(workshop.getIdWorkshop());

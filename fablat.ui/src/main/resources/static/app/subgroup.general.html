@@ -7,12 +7,14 @@
 			<h3>{{ subgroup.name }}</h3>
 		</div>
 		<div style="margin-bottom: 20px;">{{ subgroup.description }}</div>
-		<md-button class="md-raised md-accent">Join the subgroup</md-button>
 	</div>
-	<div class="info">
-		<div><md-icon md-svg-icon="timetable" class="icon-16"></md-icon> Reunions: Fridays, 3pm</div>
-		<div><md-icon md-svg-icon="web" class="icon-16"></md-icon> Main URL: <a href="" class="custom-anchor-1">www.bio.com</a></div>
-		<div><md-icon md-svg-icon="web" class="icon-16"></md-icon> Secondary URL: <a href="" class="custom-anchor-1">www.something.com</a></div>
+	<div class="info" ng-if="subgroup.reunionDay || subgroup.reunionTime || subgroup.mainUrl || subgroup.secondaryUrl">
+		<div ng-if="subgroup.reunionDay || subgroup.reunionTime"><md-icon md-svg-icon="timetable" class="icon-16"></md-icon>Reunions: 
+			<span ng-if="subgroup.reunionDay">{{ subgroup.reunionDay + "S - "}}</span>
+			<span ng-if="subgroup.reunionTime">{{ subgroup.reunionTime }}</span>
+		</div>
+		<div ng-if="subgroup.mainUrl"><md-icon md-svg-icon="web" class="icon-16"></md-icon>Main URL: <a href="" class="custom-anchor-1">{{ subgroup.mainUrl }}</a></div>
+		<div ng-if="subgroup.secondaryUrl"><md-icon md-svg-icon="web" class="icon-16"></md-icon>Secondary URL: <a href="" class="custom-anchor-1">{{ subgroup.secondaryUrl }}</a></div>
 	</div>
 	<div class="members">
 		<div layout="row" layout-align="center center">
@@ -20,61 +22,12 @@
 		</div>
 		<md-divider></md-divider>
 		<div flex layout="row" layout-wrap style="margin-top: 30px;">
-			<div flex="15" style="margin-bottom: 10px;">
-				<a ui-sref="fabberDetail({ idFabber: item.idFabber })">
-					<user-avatar fabber="user" avatar-w="50" avatar-h="50"></user-avatar>
+			<div flex-gt-sm="15" flex="25" style="margin-bottom: 10px;" ng-repeat="item in subgroup.members">
+				<a ui-sref="fabber({ idFabber: item.fabberId })">
+					<user-avatar fabber="user" avatar-w="50" avatar-h="50" avatar-font-size="18"></user-avatar>
 				</a>
-				<div class="font-12 color-2 centered" flex md-truncate style="margin-top: 5px;">Carlos Venegas</div>
-				<div class="font-12 color-2 centered">(coordinator)</div>
-			</div>
-			<div flex="15">
-				<a href="" ui-sref="fabberDetail({idFabber: item.idFabber})">
-					<user-avatar fabber="user" avatar-w="50" avatar-h="50"></user-avatar>
-				</a>
-				<div class="font-12 color-2 centered" flex md-truncate>Carlos Venegas</div>
-				<div class="font-12 color-2 centered">(coordinator)</div>
-			</div>
-			<div flex="15">
-				<a href="" ui-sref="fabberDetail({idFabber: item.idFabber})">
-					<user-avatar fabber="user" avatar-w="50" avatar-h="50"></user-avatar>
-				</a>
-				<div class="font-12 color-2 centered" flex md-truncate>Carlos Venegas</div>
-			</div>
-			<div flex="15">
-				<a href="" ui-sref="fabberDetail({idFabber: item.idFabber})">
-					<user-avatar fabber="user" avatar-w="50" avatar-h="50"></user-avatar>
-				</a>
-				<div class="font-12 color-2 centered" flex md-truncate>Carlos Venegas</div>
-			</div>
-			<div flex="15">
-				<a href="" ui-sref="fabberDetail({idFabber: item.idFabber})">
-					<user-avatar fabber="user" avatar-w="50" avatar-h="50"></user-avatar>
-				</a>
-				<div class="font-12 color-2 centered">Carlos Venegas</div>
-			</div>
-			<div flex="15">
-				<a href="" ui-sref="fabberDetail({idFabber: item.idFabber})">
-					<user-avatar fabber="user" avatar-w="50" avatar-h="50"></user-avatar>
-				</a>
-				<div class="font-12 color-2 centered">Carlos Venegas</div>
-			</div>
-			<div flex="15">
-				<a href="" ui-sref="fabberDetail({idFabber: item.idFabber})">
-					<user-avatar fabber="user" avatar-w="50" avatar-h="50"></user-avatar>
-				</a>
-				<div class="font-12 color-2 centered">Carlos Venegas</div>
-			</div>
-			<div flex="15">
-				<a href="" ui-sref="fabberDetail({idFabber: item.idFabber})">
-					<user-avatar fabber="user" avatar-w="50" avatar-h="50"></user-avatar>
-				</a>
-				<div class="font-12 color-2 centered">Carlos Venegas</div>
-			</div>
-			<div flex="15">
-				<a href="" ui-sref="fabberDetail({idFabber: item.idFabber})">
-					<user-avatar fabber="user" avatar-w="50" avatar-h="50"></user-avatar>
-				</a>
-				<div class="font-12 color-2 centered">Carlos Venegas</div>
+				<div class="font-12 color-2 centered" flex md-truncate style="margin-top: 5px;">{{ item.firstName + " " + item.lastName }}</div>
+				<div class="badge-2 centered" md-colors="{background: 'default-primary-A400'}" ng-if="item.isCoordinator">coordinator</div>
 			</div>
 		</div>
 	</div>
@@ -83,10 +36,10 @@
 			<h4>Workshops</h4>
 		</div>
 		<md-divider></md-divider>
-		<div layout="row" layout-align="center center" style="margin-top: 10px; margin-bottom: 15px;">
-			<md-button class="md-raised md-accent" ui-sref="subgroup.addWorkshop">New workshop</md-button>
+		<div layout="row" layout-align="center center" style="margin-top: 10px;">
+			<md-button class="md-raised md-primary md-hue-1" ui-sref="subgroup.addWorkshop">New workshop</md-button>
 		</div>
-		<div ng-if="subgroup.workshops.length === 0" class="centered no-data-2">No workshops created yet.</div>
+		<div ng-if="subgroup.workshops.length === 0" class="centered no-data-2" style="margin-top: 10px;">No workshops created yet.</div>
 		<div class="workshop-list" flex layout="column" ng-if="subgroup.workshops.length > 0">
 			<div layout="row" class="list-item" ng-repeat="item in subgroup.workshops">
 				<div class="date uppercase" flex="15" layout="column" layout-align="center center" md-colors="{background: 'default-accent-400'}">
