@@ -2,6 +2,7 @@ package org.fablat.resource.controller;
 
 import org.fablat.resource.dto.FabberDTO;
 import org.fablat.resource.entities.Fabber;
+import org.fablat.resource.entities.FabberInfo;
 import org.fablat.resource.entities.RoleFabber;
 import org.fablat.resource.exception.DuplicateEmailException;
 import org.fablat.resource.model.dao.FabberDAO;
@@ -41,6 +42,7 @@ public class FabberPublicController {
 		}
 
 		Fabber fabber = convertToEntity(fabberDTO);
+		// encrypt password
 		fabber.setPassword(passwordEncoder.encode(fabberDTO.getPassword()));
 		fabber.setEnabled(true);
 
@@ -57,8 +59,16 @@ public class FabberPublicController {
 		RoleFabber rf = new RoleFabber();
 		rf.setRole(roleDAO.findByName(Resources.ROLE_USER));
 		rf.setFabber(fabber);
-		
 		fabber.getRoleFabbers().add(rf);
+		// fabber's fabberInfo
+		FabberInfo info = new FabberInfo();
+		info.setFabber(fabber);
+		info.setScoreGeneral(0);
+		info.setScoreCoordinator(0);
+		info.setScoreCollaborator(0);
+		info.setScoreReplicator(0);
+		fabber.setFabberInfo(info);
+		
 		Fabber fabberCreated = fabberDAO.makePersistent(fabber);
 		
 		return convertToDTO(fabberCreated);

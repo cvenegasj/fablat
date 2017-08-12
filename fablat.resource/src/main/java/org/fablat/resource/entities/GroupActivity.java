@@ -2,6 +2,8 @@ package org.fablat.resource.entities;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @SuppressWarnings("serial")
 @Entity
@@ -19,6 +23,7 @@ public class GroupActivity implements java.io.Serializable {
 	private Integer idGroupActivity;
 	private String type;
 	private String visibility;
+	private Date creationDateTime;
 	private Group group;
 	private GroupMember groupMember;
 
@@ -53,6 +58,16 @@ public class GroupActivity implements java.io.Serializable {
 
 	public void setVisibility(String visibility) {
 		this.visibility = visibility;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "creationDateTime", nullable = false)
+	public Date getCreationDateTime() {
+		return creationDateTime;
+	}
+
+	public void setCreationDateTime(Date creationDateTime) {
+		this.creationDateTime = creationDateTime;
 	}
 
 	@ManyToOne(fetch = FetchType.EAGER)

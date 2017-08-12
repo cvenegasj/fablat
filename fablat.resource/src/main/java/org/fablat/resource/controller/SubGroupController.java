@@ -16,13 +16,16 @@ import org.fablat.resource.dto.SubGroupMemberDTO;
 import org.fablat.resource.dto.WorkshopDTO;
 import org.fablat.resource.entities.GroupMember;
 import org.fablat.resource.entities.SubGroup;
+import org.fablat.resource.entities.SubGroupActivity;
 import org.fablat.resource.entities.SubGroupMember;
 import org.fablat.resource.entities.Workshop;
 import org.fablat.resource.model.dao.FabberDAO;
 import org.fablat.resource.model.dao.GroupDAO;
 import org.fablat.resource.model.dao.GroupMemberDAO;
+import org.fablat.resource.model.dao.SubGroupActivityDAO;
 import org.fablat.resource.model.dao.SubGroupDAO;
 import org.fablat.resource.model.dao.SubGroupMemberDAO;
+import org.fablat.resource.util.Resources;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -52,6 +55,8 @@ public class SubGroupController {
 	private GroupDAO groupDAO;
 	@Autowired
 	private GroupMemberDAO groupMemberDAO;
+	@Autowired
+	private SubGroupActivityDAO subGroupActivityDAO;
 
 	@RequestMapping(value = "/{idSubGroup}", method = RequestMethod.GET)
 	public SubGroupDTO findOne(@PathVariable("idSubGroup") Integer idSubGroup, Principal principal) {
@@ -107,9 +112,18 @@ public class SubGroupController {
 		GroupMember gm = groupMemberDAO.findByGroupAndFabber(subGroupDTO.getGroupId(), principal.getName());
 		sgm.setGroupMember(gm);
 		sgm.setSubGroup(subGroup);
-
 		subGroup.getSubGroupMembers().add(sgm);
+		
+		// create activity on subgroup creation
+        SubGroupActivity activity = new  SubGroupActivity();
+        activity.setType(Resources.ACTIVITY_ORIGIN); // it's the origin of the subgroup
+        activity.setVisibility(Resources.VISIBILITY_EXTERNAL); // app-wide visibility
+        activity.setCreationDateTime(Date.from(zdtLima.toInstant()));
+        activity.setSubGroup(subGroup);
+        activity.setSubGroupMember(sgm);
+		
 		SubGroup subGroupCreated = subGroupDAO.makePersistent(subGroup);
+		subGroupActivityDAO.makePersistent(activity);
 
 		return convertToDTO(subGroupCreated);
 	}

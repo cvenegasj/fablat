@@ -19,10 +19,10 @@ public class FabberDTO {
 	private Integer labId;
 	private String labName;
 	// additional
-	private Integer generalRanking;
-	private Integer coordinatorRanking;
-	private Integer collaboratorRanking;
-	private Integer replicatorRanking;
+	private Integer generalScore;
+	private Integer coordinatorScore;
+	private Integer collaboratorScore;
+	private Integer replicatorScore;
 
 	public Integer getIdFabber() {
 		return idFabber;
@@ -153,37 +153,37 @@ public class FabberDTO {
 	}
 
 	/* additional properties */
-
-	public Integer getGeneralRanking() {
-		return generalRanking;
+	
+	public Integer getGeneralScore() {
+		return generalScore;
 	}
 
-	public void setGeneralRanking(Integer generalRanking) {
-		this.generalRanking = generalRanking;
+	public void setGeneralScore(Integer generalScore) {
+		this.generalScore = generalScore;
 	}
 
-	public Integer getCoordinatorRanking() {
-		return coordinatorRanking;
+	public Integer getCoordinatorScore() {
+		return coordinatorScore;
 	}
 
-	public void setCoordinatorRanking(Integer coordinatorRanking) {
-		this.coordinatorRanking = coordinatorRanking;
+	public void setCoordinatorScore(Integer coordinatorScore) {
+		this.coordinatorScore = coordinatorScore;
 	}
 
-	public Integer getCollaboratorRanking() {
-		return collaboratorRanking;
+	public Integer getCollaboratorScore() {
+		return collaboratorScore;
 	}
 
-	public void setCollaboratorRanking(Integer collaboratorRanking) {
-		this.collaboratorRanking = collaboratorRanking;
+	public void setCollaboratorScore(Integer collaboratorScore) {
+		this.collaboratorScore = collaboratorScore;
 	}
 
-	public Integer getReplicatorRanking() {
-		return replicatorRanking;
+	public Integer getReplicatorScore() {
+		return replicatorScore;
 	}
 
-	public void setReplicatorRanking(Integer replicatorRanking) {
-		this.replicatorRanking = replicatorRanking;
+	public void setReplicatorScore(Integer replicatorScore) {
+		this.replicatorScore = replicatorScore;
 	}
 
 }

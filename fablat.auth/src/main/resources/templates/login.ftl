@@ -113,7 +113,7 @@
 		  <button type="submit" class="btn btn-primary">Submit</button>
 		</form>
 		
-		<a href="http://lowcost-env.p2wn4fjmir.us-east-1.elasticbeanstalk.com/public.html">Do not have an account? Register here.</a>
+		<a href="http://fablat.net/public.html">Do not have an account? Register here.</a>
 	</div> -->
 
 </body>

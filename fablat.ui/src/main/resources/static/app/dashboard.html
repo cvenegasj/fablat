@@ -1,35 +1,34 @@
 <div layout="column" layout-align="center none" ng-controller="DashboardCtrl">
-
-	<div layout="column" style="margin-top: 20px; margin-bottom: 40px;">
+	<div layout="column" style="margin-bottom: 10px;">
 		<div layout="column" layout-align="center center" flex="90" flex-offset="5" style="margin-top: 30px; margin-bottom: 25px;">
 			<user-avatar fabber="fabber" avatar-w="100" avatar-h="100" avatar-font-size="40"></user-avatar>
-			<div class="md-headline" style="margin-top: 15px; margin-bottom: 5px;">{{ fabber.firstName }} {{ fabber.lastName }}</div>
+			<div class="md-headline" style="margin-top: 5px;">{{ fabber.firstName }} {{ fabber.lastName }}</div>
 			<div class="font-14"><span>{{ fabber.email }}</span> <span class="color-4" ng-if="user.hasAdminGeneralRole">[ADMIN_GENERAL]</span></div>
 			<div class="font-14"><span>{{ fabber.isNomade ? "Fab Nomade" : fabber.labName }}</span> <span class="color-4" ng-if="user.hasAdminLabRole">[ADMIN_LAB]</span></div>
 		</div>
 		<div layout="row">
 			<md-card flex layout="column" layout-align="start center" md-theme="darkOrange" class="custom-card-1" layout-fill>
-				<div class="font-14">Ranking</div>
+				<div class="font-14">Total score</div>
 				<div>
-					<md-icon md-svg-icon="seal" class="icon-25"></md-icon> <span class="font-18">{{ fabber.generalRanking }}</span>
+					<md-icon md-svg-icon="seal" class="icon-25"></md-icon> <span class="font-18">{{ fabber.generalScore }}</span>
 				</div>
 			</md-card>
 			<md-card flex layout="column" layout-align="start center" md-theme="darkBlueGrey" class="custom-card-1" layout-fill>
 				<div class="font-14">Coordinator</div>
 				<div>
-					<md-icon md-svg-icon="headset" class="icon-25"></md-icon> <span class="font-18">{{ fabber.coordinatorRanking }}</span>
+					<md-icon md-svg-icon="headset" class="icon-25"></md-icon> <span class="font-18">{{ fabber.coordinatorScore }}</span>
 				</div>
 			</md-card>
 			<md-card flex layout="column" layout-align="start center" md-theme="darkBlueGrey" class="custom-card-1" layout-fill>
 				<div class="font-14">Collaborator</div>
 				<div>
-					<md-icon md-svg-icon="puzzle" class="icon-25"></md-icon> <span class="font-18">{{ fabber.collaboratorRanking }}</span>
+					<md-icon md-svg-icon="puzzle" class="icon-25"></md-icon> <span class="font-18">{{ fabber.collaboratorScore }}</span>
 				</div>
 			</md-card>
 			<md-card flex layout="column" layout-align="start center" md-theme="darkBlueGrey" class="custom-card-1" layout-fill>
 				<div class="font-14">Replicator</div>
 				<div>
-					<md-icon md-svg-icon="content-copy" class="icon-25"></md-icon> <span class="font-18">{{ fabber.replicatorRanking }}</span>
+					<md-icon md-svg-icon="content-copy" class="icon-25"></md-icon> <span class="font-18">{{ fabber.replicatorScore }}</span>
 				</div>
 			</md-card>
 			<md-card flex="25" layout="column" layout-align="start center" md-theme="darkLightBlue" class="custom-card-1" layout-fill>
@@ -41,170 +40,16 @@
 		</div>
 	</div>
 	
-	<md-divider></md-divider>
-	
-	<div layout-xs="column" layout="row" style="margin-top: 20px;" layout-margin>
-		<!-- Cards container -->
-		<div layout="column" flex-gt-xs="75" flex>
-		    <div>
-		    	<h2 class="title-section">Groups and Subgroups</h2>
-		    </div>
-		    <!-- Cards container -->
-			<md-content layout-xs="column" layout="row" flex>
-				<div flex layout="column">
-					<md-card class="custom-card-2" md-theme="neutral" ng-repeat="item in groups1">
-				    	<md-card-header>
-				        	<md-card-header-text>
-					            <a ui-sref="group.general({ idGroup: item.idGroup })" class="custom-anchor-1"><span class="md-title font-14">{{ item.name }}</span></a>
-					            <span class="md-subhead font-11">{{ item.amICoordinator ? "coordinator" : "collaborator" }} · {{ item.membersCount === 1 ? "1 member" : item.membersCount + " members" }}</span>
-				        	</md-card-header-text>
-				        	<md-button class="md-icon-button" aria-label="toggle" ng-init="item.showSubgroups = false;" ng-click="item.showSubgroups = !item.showSubgroups;">
-				            	<md-icon md-font-set="material-icons">{{ showSubgroups? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</md-icon>
-				            </md-button>
-				        </md-card-header>
-				        <!-- <md-card-content md-colors="{background: 'neutral-background-700'}" ng-show="item.showSubgroups"> -->
-				        <md-card-content md-colors="" ng-show="item.showSubgroups">
-				        	<div ng-if="item.subGroups.length === 0" class="centered no-data-1">No items to show</div>
-				        	<md-list class="md-dense" flex style="padding: 0;">
-				        		<md-list-item class="md-2-line" ng-repeat="subItem in item.subGroups">					    
-						          <div class="md-list-item-text" style="margin: 0;">
-						            <a ui-sref="subgroup.general({ idSubgroup: subItem.idSubGroup })" class="custom-anchor-1"><h3 class="uppercase font-12">{{ subItem.name }}</h3></a>
-						            <p class="font-11" style="font-weight: 400;">{{ subItem.amICoordinator ? "coordinator" : "collaborator" }} · {{ subItem.membersCount === 1 ? "1 member" : subItem.membersCount + " members" }}</p>
-						          </div>
-						        </md-list-item>
-				        	</md-list>
-				        </md-card-content>
-				     </md-card>
-				</div>
-				<div flex layout="column">
-					<md-card class="custom-card-2" md-theme="neutral" ng-repeat="item in groups2">
-				    	<md-card-header>
-				        	<md-card-header-text>
-					            <a ui-sref="group.general({ idGroup: item.idGroup })" class="custom-anchor-1"><span class="md-title font-14">{{ item.name }}</span></a>
-					            <span class="md-subhead font-11">{{ item.amICoordinator ? "coordinator" : "collaborator" }} · {{ item.membersCount === 1 ? "1 member" : item.membersCount + " members" }}</span>
-				        	</md-card-header-text>
-				        	<md-button class="md-icon-button" aria-label="toggle" ng-init="item.showSubgroups = false;" ng-click="item.showSubgroups = !item.showSubgroups;">
-				            	<md-icon md-font-set="material-icons">{{ showSubgroups? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</md-icon>
-				            </md-button>
-				        </md-card-header>
-				        <!-- <md-card-content md-colors="{background: 'neutral-background-700'}" ng-show="item.showSubgroups"> -->
-				        <md-card-content md-colors="" ng-show="item.showSubgroups">
-				        	<div ng-if="item.subGroups.length === 0" class="centered no-data-1">No items to show</div>
-				        	<md-list class="md-dense" flex style="padding: 0;">
-				        		<md-list-item class="md-2-line" ng-repeat="subItem in item.subGroups">					    
-						          <div class="md-list-item-text" style="margin: 0;">
-						            <a ui-sref="subgroup.general({ idSubgroup: subItem.idSubGroup })" class="custom-anchor-1"><h3 class="uppercase font-12">{{ subItem.name }}</h3></a>
-						            <p class="font-11" style="font-weight: 400;">{{ subItem.amICoordinator ? "coordinator" : "collaborator" }} · {{ subItem.membersCount === 1 ? "1 member" : subItem.membersCount + " members" }}</p>
-						          </div>
-						        </md-list-item>
-				        	</md-list>
-				        </md-card-content>
-				     </md-card>
-				</div>
-				<div flex layout="column">
-					<md-card class="custom-card-2" md-theme="neutral" ng-repeat="item in groups3">
-				    	<md-card-header>
-				        	<md-card-header-text>
-					            <a ui-sref="group.general({ idGroup: item.idGroup })" class="custom-anchor-1"><span class="md-title font-14">{{ item.name }}</span></a>
-					            <span class="md-subhead font-11">{{ item.amICoordinator ? "coordinator" : "collaborator" }} · {{ item.membersCount === 1 ? "1 member" : item.membersCount + " members" }}</span>
-				        	</md-card-header-text>
-				        	<md-button class="md-icon-button" aria-label="toggle" ng-init="item.showSubgroups = false;" ng-click="item.showSubgroups = !item.showSubgroups;">
-				            	<md-icon md-font-set="material-icons">{{ showSubgroups? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</md-icon>
-				            </md-button>
-				        </md-card-header>
-				        <!-- <md-card-content md-colors="{background: 'neutral-background-700'}" ng-show="item.showSubgroups"> -->
-				        <md-card-content md-colors="" ng-show="item.showSubgroups">
-				        	<div ng-if="item.subGroups.length === 0" class="centered no-data-1">No items to show</div>
-				        	<md-list class="md-dense" flex style="padding: 0;">
-				        		<md-list-item class="md-2-line" ng-repeat="subItem in item.subGroups">					    
-						          <div class="md-list-item-text" style="margin: 0;">
-						            <a ui-sref="subgroup.general({ idSubgroup: subItem.idSubGroup })" class="custom-anchor-1"><h3 class="uppercase font-12">{{ subItem.name }}</h3></a>
-						            <p class="font-11" style="font-weight: 400;">{{ subItem.amICoordinator ? "coordinator" : "collaborator" }} · {{ subItem.membersCount === 1 ? "1 member" : subItem.membersCount + " members" }}</p>
-						          </div>
-						        </md-list-item>
-				        	</md-list>
-				        </md-card-content>
-				     </md-card>
-				</div>
-			</md-content>
-		</div>
-		
-		<div layout="column" flex-gt-xs="25" flex>
-			<md-card md-whiteframe="1" class="custom-card-3">
-				<md-card-header>
-					<md-card-header-text>
-			            <span class="title">Recent activity</span>
-			        </md-card-header-text>
-				</md-card-header>				
-				<md-content>
-					<md-list class="md-dense dashboard-activity-list" flex>
-				        <md-list-item>
-				          <!-- <img ng-src="{{todos[0].face}}?20" class="md-avatar" alt="{{todos[0].who}}" /> -->
-				          <div class="md-list-item-text">
-				            <a href="" class="custom-anchor-1 font-12 bold" md-colors="{color: 'accent-900'}">Grumpy Cat</a>
-				            <span class="font-12">created the group</span>
-				            <a href="" class="custom-anchor-1 font-12 bold" md-colors="{color: 'accent-900'}">Cool cats.</a>
-				          </div>
-				        </md-list-item>
-				        <md-list-item>
-				          <!-- <img ng-src="{{todos[0].face}}?20" class="md-avatar" alt="{{todos[0].who}}" /> -->
-				          <div class="md-list-item-text">
-				            <a href="" class="custom-anchor-1"><span class="font-12 bold" md-colors="{color: 'accent-900'}">Grumpy Cat</span></a>
-				            <span class="font-12">created the group</span>
-				            <a href="" class="custom-anchor-1"><span class="font-12 bold" md-colors="{color: 'accent-900'}">Cool cats.</span></a>
-				          </div>
-				        </md-list-item>
-				        <md-list-item>
-				          <!-- <img ng-src="{{todos[0].face}}?20" class="md-avatar" alt="{{todos[0].who}}" /> -->
-				          <div class="md-list-item-text">
-				            <a href="" class="custom-anchor-1"><span class="font-12 bold" md-colors="{color: 'accent-900'}">Grumpy Cat</span></a>
-				            <span class="font-12">created the group</span>
-				            <a href="" class="custom-anchor-1"><span class="font-12 bold" md-colors="{color: 'accent-900'}">Cool cats.</span></a>
-				          </div>
-				        </md-list-item>
-				        <md-list-item>
-				          <!-- <img ng-src="{{todos[0].face}}?20" class="md-avatar" alt="{{todos[0].who}}" /> -->
-				          <div class="md-list-item-text">
-				            <a href="" class="custom-anchor-1"><span class="font-12 bold" md-colors="{color: 'accent-900'}">Grumpy Cat</span></a>
-				            <span class="font-12">created the group</span>
-				            <a href="" class="custom-anchor-1"><span class="font-12 bold" md-colors="{color: 'accent-900'}">Cool cats.</span></a>
-				          </div>
-				        </md-list-item>
-				        <md-list-item>
-				          <!-- <img ng-src="{{todos[0].face}}?20" class="md-avatar" alt="{{todos[0].who}}" /> -->
-				          <div class="md-list-item-text">
-				            <a href="" class="custom-anchor-1"><span class="font-12 bold">Grumpy Cat</span></a>
-				            <span class="font-12">created the group</span>
-				            <a href="" class="custom-anchor-1"><span class="font-12 bold">Cool cats.</span></a>
-				          </div>
-				        </md-list-item>
-				        <md-list-item>
-				          <!-- <img ng-src="{{todos[0].face}}?20" class="md-avatar" alt="{{todos[0].who}}" /> -->
-				          <div class="md-list-item-text">
-				            <a href="" class="custom-anchor-1"><span class="font-12 bold">Grumpy Cat</span></a>
-				            <span class="font-12">created the group</span>
-				            <a href="" class="custom-anchor-1"><span class="font-12 bold">Cool cats.</span></a>
-				          </div>
-				        </md-list-item>
-				        <md-list-item>
-				          <!-- <img ng-src="{{todos[0].face}}?20" class="md-avatar" alt="{{todos[0].who}}" /> -->
-				          <div class="md-list-item-text">
-				            <a href="" class="custom-anchor-1"><span class="font-12 bold">Grumpy Cat</span></a>
-				            <span class="font-12">created the group</span>
-				            <a href="" class="custom-anchor-1"><span class="font-12 bold">Cool cats.</span></a>
-				          </div>
-				        </md-list-item>
-				        <md-list-item>
-				          <!-- <img ng-src="{{todos[0].face}}?20" class="md-avatar" alt="{{todos[0].who}}" /> -->
-				          <div class="md-list-item-text">
-				            <a href="" class="custom-anchor-1"><span class="font-12 bold">Grumpy Cat</span></a>
-				            <span class="font-12">created the group</span>
-				            <a href="" class="custom-anchor-1"><span class="font-12 bold">Cool cats.</span></a>
-				          </div>
-				        </md-list-item>
-	      			</md-list>
-				</md-content>
-			</md-card>
-		</div>
+	<div class="md-padding">
+		<md-nav-bar md-selected-nav-item="currentNavItem" nav-bar-aria-label="navigation links">
+	      	<md-nav-item md-nav-sref="dashboard.groups" name="groups">
+	        	Your Groups & Subgroups
+	      	</md-nav-item>
+	      	<md-nav-item md-nav-sref="dashboard.general-activity" name="general-activity">
+	        	General Activity
+	      	</md-nav-item>
+	    </md-nav-bar>
+	    
+	    <div ui-view layout-fill></div>
 	</div>
 </div>

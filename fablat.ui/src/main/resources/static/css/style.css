@@ -1,0 +1,101 @@
+.fablat-blue{
+  background: #6e98b1 !important;
+}
+
+.fablat-blue-text{
+  color: #6e98b1 !important;
+}
+
+.fablat-blue.darken-1{
+  background: #2C5E7B !important;
+}
+
+.fablat-blue-text.darken-1{
+  color: #2C5E7B !important;
+}
+
+.fablat-blue.lighten-1{
+  background: #D2E3ED !important;
+}
+
+.fablat-blue-text.lighten-1{
+  color: #D2E3ED !important;
+}
+
+.fablat-red{
+  background: #ed5d68 !important;
+}
+
+.fablat-red-text{
+  color: #ed5d68 !important;
+}
+
+.fablat-red.darken-1{
+  background: #AD1B26 !important;
+}
+
+body{
+  font-family: 'Raleway', sans-serif;
+  font-weight: 400;
+}
+
+img{
+  max-width:100%;
+}
+
+h1{
+  font-size:2.2em;
+  font-family:'Poppins', sans-serif;
+  padding:0.5em 1.2em;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+h2{
+  font-size:1.8em;
+  font-family:'Raleway', sans-serif;
+  font-weight:400;
+  padding:.3em .5em;
+  text-transform: uppercase;
+}
+
+#banner h2{
+  font-size:3.8em;
+  font-family:'Raleway', sans-serif;
+  font-weight:400;
+  padding:.3em .5em;
+  text-transform: uppercase;
+}
+
+footer h3{
+  font-size:1.4em;
+  font-family:'Poppins', sans-serif;
+  padding:.8em 0;
+  text-transform: uppercase;
+}
+
+.parallax-container{
+  height:300px;
+}
+
+.parallax-container .parallax img {
+    @media #{$small-and-down} { max-width: 200%; }
+    @media #{$medium-and-up} { width: 100%; }
+}
+
+#banner{
+  padding:20px 0;
+}
+
+#logo-container {
+  padding:.3em 0;
+}
+
+#paises{
+
+}
+
+p{
+  text-align:justify;
+  padding:.5em 0;
+}

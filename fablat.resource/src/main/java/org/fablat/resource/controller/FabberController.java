@@ -45,19 +45,32 @@ public class FabberController {
 	private RoleDAO roleDAO;
 	
 	@RequestMapping(value = "/me/general", method = RequestMethod.GET)
-	public FabberDTO getMyGeneralInfo(Principal principal) {	
+	public FabberDTO getMyGeneralInfo(Principal principal) {
+		// update the scores info 
+		calculateAndUpdateScores(principal.getName());
 		// user logged in with email as username
 		FabberDTO fabberDTO = convertToDTO(fabberDAO.findByEmail(principal.getName()));
-		Integer[] scores = calculateAndUpdateRankings(principal.getName());
-		
-		fabberDTO.setGeneralRanking(scores[3]);
-		fabberDTO.setCoordinatorRanking(scores[2]);
-		fabberDTO.setCollaboratorRanking(scores[1]);
-		fabberDTO.setReplicatorRanking(scores[0]);
 		
 		return fabberDTO;
 	}
 	
+	private void calculateAndUpdateScores(String email) {
+		Integer replicatorScore = workshopTutorDAO.countAllByFabber(email);
+		Integer collaboratorScore = groupMemberDAO.countAllByFabberAsCollaborator(email) 
+										+ subGroupMemberDAO.countAllByFabberAsCollaborator(email);
+		Integer coordinatorScore = groupMemberDAO.countAllByFabberAsCoordinator(email)
+										+ subGroupMemberDAO.countAllByFabberAsCoordinator(email);
+		Integer generalScore = replicatorScore + collaboratorScore + coordinatorScore;
+		
+		Fabber fabber = fabberDAO.findByEmail(email);
+		fabber.getFabberInfo().setScoreGeneral(generalScore);
+		fabber.getFabberInfo().setScoreCoordinator(coordinatorScore);
+		fabber.getFabberInfo().setScoreCollaborator(collaboratorScore);
+		fabber.getFabberInfo().setScoreReplicator(replicatorScore);
+		
+		fabberDAO.makePersistent(fabber);
+	}
+		
 	@RequestMapping(value = "/me/profile", method = RequestMethod.GET)
 	public FabberDTO getMyProfile(Principal principal) {	
 		FabberDTO fabberDTO = convertToDTO(fabberDAO.findByEmail(principal.getName()));
@@ -107,18 +120,6 @@ public class FabberController {
 		fabberDAO.makePersistent(me);
 	}
 	
-	// TODO: store scores and calculate ranking position
-	private Integer[] calculateAndUpdateRankings(String email) {
-		Integer replicatorScore = workshopTutorDAO.countAllByFabber(email);
-		Integer collaboratorScore = groupMemberDAO.countAllByFabberAsCollaborator(email) 
-				+ subGroupMemberDAO.countAllByFabberAsCollaborator(email);
-		Integer coordinatorScore = groupMemberDAO.countAllByFabberAsCoordinator(email)
-				+ subGroupMemberDAO.countAllByFabberAsCoordinator(email);
-		Integer generalScore = replicatorScore + collaboratorScore + coordinatorScore;
-		
-		return new Integer[]{replicatorScore, collaboratorScore, coordinatorScore, generalScore};
-	}
-	
 	
 	// ========== DTO conversion ==========
 	// guide: http://www.baeldung.com/entity-to-and-from-dto-for-a-java-spring-application
@@ -140,6 +141,10 @@ public class FabberController {
 		fabberDTO.setAvatarUrl(fabber.getAvatarUrl());
 		fabberDTO.setLabId(fabber.getLab() != null ? fabber.getLab().getIdLab() : null);
 		fabberDTO.setLabName(fabber.getLab() != null ? fabber.getLab().getName() : null);
+		fabberDTO.setGeneralScore(fabber.getFabberInfo().getScoreGeneral());
+		fabberDTO.setCoordinatorScore(fabber.getFabberInfo().getScoreCoordinator());
+		fabberDTO.setCollaboratorScore(fabber.getFabberInfo().getScoreCollaborator());
+		fabberDTO.setReplicatorScore(fabber.getFabberInfo().getScoreReplicator());
 				
 	    return fabberDTO;
 	}

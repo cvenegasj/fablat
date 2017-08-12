@@ -1,4 +1,4 @@
-var app = angular.module('FabLatApp', [ 'ui.router', 'ngMaterial', 'ng.group', 'ngMessages', 'vsGoogleAutocomplete' ]);
+var app = angular.module('FabLatApp', [ 'ui.router', 'ngMaterial', 'ngMessages', 'angularMoment', 'vsGoogleAutocomplete' ]);
 
 app.config(function($mdThemingProvider, $mdIconProvider, $urlRouterProvider, $stateProvider) {
 
@@ -51,9 +51,6 @@ app.config(function($mdThemingProvider, $mdIconProvider, $urlRouterProvider, $st
 	// Normal palettes
 	$mdThemingProvider.theme('lime').backgroundPalette('lime');
 	
-	
-	
-    
 	// Iconset
 	$mdIconProvider.defaultIconSet('images/mdi.svg');
     
@@ -64,8 +61,21 @@ app.config(function($mdThemingProvider, $mdIconProvider, $urlRouterProvider, $st
 
     $stateProvider.state({
         name: 'dashboard',
+        abstract: true,
         url: '/',
         templateUrl: 'dashboard.html'
+    });
+    
+    $stateProvider.state({
+        name: 'dashboard.groups',
+        url: '',
+        templateUrl: 'dashboard.groups.html'
+    });
+    
+    $stateProvider.state({
+        name: 'dashboard.general-activity',
+        url: '/general-activity',
+        templateUrl: 'dashboard.general-activity.html'
     });
     
     $stateProvider.state({
@@ -84,7 +94,10 @@ app.config(function($mdThemingProvider, $mdIconProvider, $urlRouterProvider, $st
         name: 'settings',
         abstract: true,
         url: '/settings',
-        templateUrl: 'settings.html'
+        templateUrl: 'settings.html',
+        controller: function($scope){
+            $scope.currentNavItem = 'profile';
+        }
     });
     
     $stateProvider.state({
@@ -97,6 +110,28 @@ app.config(function($mdThemingProvider, $mdIconProvider, $urlRouterProvider, $st
         name: 'settings.password',
         url: '/password',
         templateUrl: 'settings.password.html'
+    });
+    
+    $stateProvider.state({
+        name: 'fabber',
+        abstract: true,
+        url: '/fabber/:idFabber',
+        templateUrl: 'fabber.html',
+        controller: function($scope){
+            $scope.currentNavItem = 'profile';
+        }
+    });
+    
+    $stateProvider.state({
+        name: 'fabber.groups',
+        url: '/groups',
+        templateUrl: 'fabber.groups.html'
+    });
+    
+    $stateProvider.state({
+        name: 'fabber.activity',
+        url: '/activity',
+        templateUrl: 'fabber.activity.html'
     });
     
     $stateProvider.state({
@@ -166,7 +201,10 @@ app.config(function($mdThemingProvider, $mdIconProvider, $urlRouterProvider, $st
         name: 'group.management',
         abstract: true,
         url: '/management',
-        templateUrl: 'group.management.html'
+        templateUrl: 'group.management.html',
+        controller: function($scope){
+            $scope.currentNavItem = 'general';
+        }
     });
     
     $stateProvider.state({
@@ -242,7 +280,10 @@ app.config(function($mdThemingProvider, $mdIconProvider, $urlRouterProvider, $st
         name: 'subgroup.management',
         abstract: true,
         url: '/management',
-        templateUrl: 'subgroup.management.html'
+        templateUrl: 'subgroup.management.html',
+        controller: function($scope){
+            $scope.currentNavItem = 'general';
+        }
     });
     
     $stateProvider.state({
@@ -307,7 +348,10 @@ app.config(function($mdThemingProvider, $mdIconProvider, $urlRouterProvider, $st
         name: 'workshop.management',
         abstract: true,
         url: '/management',
-        templateUrl: 'workshop.management.html'
+        templateUrl: 'workshop.management.html',
+        controller: function($scope){
+            $scope.currentNavItem = 'general';
+        }
     });
     
     $stateProvider.state({
@@ -328,6 +372,7 @@ app.config(function($mdThemingProvider, $mdIconProvider, $urlRouterProvider, $st
 app.controller('AppCtrl', ['$rootScope', '$http', '$state', '$location', '$window', '$scope', '$mdSidenav', '$mdDialog', function($rootScope, $http, $state, $location, $window, $scope, $mdSidenav, $mdDialog) { 
 	
 	$rootScope.user = {};
+	$rootScope.isLoading = false;
 	
 	$http.get('/user').then(function(response) {
 		if (response.data) {
@@ -398,52 +443,88 @@ app.controller('AppCtrl', ['$rootScope', '$http', '$state', '$location', '$windo
 /*========== General controllers ==========*/
 
 // Controller in: dashboard.html
-app.controller('DashboardCtrl', function($rootScope, $scope, $http, $filter) {
+app.controller('DashboardCtrl', function($rootScope, $scope, $http) {
 	
-	$scope.loadingRequests = true;
-	$scope.groups1 = [];
-	$scope.groups2 = [];
-	$scope.groups3 = [];
+	$rootScope.isLoading = true;
+	$scope.loading1 = true;
+	
+	$scope.currentNavItem = 'groups';
 	
 	$http.get('/resource/auth/fabbers/me/general')
 		.then(function(response) {
 			$scope.fabber = response.data;
 		}).finally(function() {
 		    // called no matter success or failure
-		    $scope.loading3 = false;
-		});
-	
-	$http.get('/resource/auth/groups/findAllMine')
-		.then(function(response) {
-			// for displaying data in 3 columns
-			for (i = 0; i < response.data.length; i++) {
-				if (i % 3 == 0) {
-					$scope.groups1.push(response.data[i]);
-				} else if ((i + 2) % 3 == 0) {
-					$scope.groups2.push(response.data[i]);
-				} else {
-					$scope.groups3.push(response.data[i]);
-				}
-			}
-		}).finally(function() {
-		    // called no matter success or failure
-		    $scope.loading3 = false;
-		});
-	
-	$http.get('/resource/auth/activity')
-		.then(function(response) {
-			$scope.workshops = response.data;
-		}).finally(function() {
-		    // called no matter success or failure
-		    $scope.loading4 = false;
+		    $scope.loading1 = false;
+		    $rootScope.isLoading = $scope.loading1;
 		});
 	
 });
 
+// Controller in: dashboard.groups.html
+app.controller('DashboardGroupsCtrl', function($rootScope, $scope, $http, $mdDialog) {
+	
+	$scope.noGroups = false;
+	$scope.groups1 = [];
+	$scope.groups2 = [];
+	$scope.groups3 = [];
+	
+	$http.get('/resource/auth/groups/findAllMine')
+	.then(function(response) {
+		if (response.data.length === 0) {
+			$scope.noGroups = true;
+		}
+		// for displaying data in 3 columns
+		for (i = 0; i < response.data.length; i++) {
+			if (i % 3 == 0) {
+				$scope.groups1.push(response.data[i]);
+			} else if ((i + 2) % 3 == 0) {
+				$scope.groups2.push(response.data[i]);
+			} else {
+				$scope.groups3.push(response.data[i]);
+			}
+		}
+	}).finally(function() {
+	    // called no matter success or failure
+	    $scope.loading = false;
+	});
+	
+	// New group dialog
+	$scope.addGroup = function(ev) {
+	    $mdDialog.show({
+	      controller: AddGroupDialogController,
+	      templateUrl: 'add-group-dialog.tmpl.html',
+	      parent: angular.element(document.body),
+	      targetEvent: ev,
+	      clickOutsideToClose: true,
+	      fullscreen: true // Only for -xs, -sm breakpoints.
+	    })
+	    .then(function(answer) {
+	      // ok
+	    }, function() {
+	      // cancel
+	    });
+	};
+	
+});
+
+// Controller in: dashboard.general-activity.html
+app.controller('DashboardGeneralActivityCtrl', function($rootScope, $scope, $http, moment) {
+	
+	$http.get('/resource/auth/activities/find-all-external')
+		.then(function(response) {
+			$scope.activities = response.data;
+		}).finally(function() {
+			
+		});
+	
+});
 
 // Controller in: groups.html
-app.controller('GroupsCtrl', function($scope, $http, $state, $mdDialog) {
+app.controller('GroupsCtrl', function($rootScope, $scope, $http, $state, $mdDialog) {
 	
+	$rootScope.isLoading = true;
+	$scope.loading1 = true;
 	$scope.groups1 = [];
 	$scope.groups2 = [];
 	$scope.groups3 = [];
@@ -471,7 +552,8 @@ app.controller('GroupsCtrl', function($scope, $http, $state, $mdDialog) {
 			}
 		}).finally(function() {
 		    // called no matter success or failure
-		    $scope.loading3 = false;
+		    $scope.loading1 = false;
+		    $rootScope.isLoading = $scope.loading1;
 		});
 	
 	$scope.joinGroup = function(idGroup) {
@@ -505,11 +587,11 @@ app.controller('GroupOutCtrl', function($scope, $http, $state, $stateParams) {
 	
 	// Injects the group object in the parent scope
 	$http.get('/resource/auth/groups/' + $stateParams.idGroup)
-	.then(function(response) {
-		$scope.group = response.data;			
-	}).finally(function() {
-	    // called no matter success or failure
-	});
+		.then(function(response) {
+			$scope.group = response.data;			
+		}).finally(function() {
+		    // called no matter success or failure
+		});
 	
 	$scope.joinGroup = function(idGroup) {
 		$http.post('/resource/auth/groups/' + idGroup + "/join")
@@ -525,11 +607,11 @@ app.controller('SubgroupOutCtrl', function($scope, $http, $state, $stateParams) 
 	
 	// Injects the subgroup object in the parent scope
 	$http.get('/resource/auth/subgroups/' + $stateParams.idSubgroup)
-	.then(function(response) {
-		$scope.subgroup = response.data;			
-	}).finally(function() {
-	    // called no matter success or failure
-	});
+		.then(function(response) {
+			$scope.subgroup = response.data;			
+		}).finally(function() {
+		    // called no matter success or failure
+		});
 	
 	$scope.joinSubgroup = function(idSubGroup) {
 		$http.post('/resource/auth/subgroups/' + idSubGroup + "/join")
@@ -544,11 +626,11 @@ app.controller('SubgroupOutCtrl', function($scope, $http, $state, $stateParams) 
 app.controller('WorkshopOutCtrl', function($scope, $http, $stateParams) {
 	
 	$http.get('/resource/auth/workshops/' + $stateParams.idWorkshop)
-	.then(function(response) {
-		$scope.workshop = response.data;			
-	}).finally(function() {
-	    // called no matter success or failure
-	});
+		.then(function(response) {
+			$scope.workshop = response.data;			
+		}).finally(function() {
+		    // called no matter success or failure
+		});
 	
 });
 
@@ -562,11 +644,11 @@ app.controller('SettingsProfileCtrl', function($scope, $http, $stateParams, $sta
 	$scope.newLab = false;
 	
 	$http.get('/resource/auth/fabbers/me/profile')
-	.then(function(response) {
-		$scope.fabber = response.data;	
-	}).finally(function() {
-	    // called no matter success or failure
-	});
+		.then(function(response) {
+			$scope.fabber = response.data;	
+		}).finally(function() {
+		    // called no matter success or failure
+		});
 	
 	
 	// autocomplete for labs

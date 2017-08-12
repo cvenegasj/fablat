@@ -15,13 +15,16 @@ import org.fablat.resource.dto.GroupMemberDTO;
 import org.fablat.resource.dto.SubGroupDTO;
 import org.fablat.resource.entities.Fabber;
 import org.fablat.resource.entities.Group;
+import org.fablat.resource.entities.GroupActivity;
 import org.fablat.resource.entities.GroupMember;
 import org.fablat.resource.entities.SubGroup;
 import org.fablat.resource.entities.SubGroupMember;
 import org.fablat.resource.model.dao.FabberDAO;
+import org.fablat.resource.model.dao.GroupActivityDAO;
 import org.fablat.resource.model.dao.GroupDAO;
 import org.fablat.resource.model.dao.GroupMemberDAO;
 import org.fablat.resource.model.dao.SubGroupMemberDAO;
+import org.fablat.resource.util.Resources;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,6 +49,8 @@ public class GroupController {
 	private GroupMemberDAO groupMemberDAO;
 	@Autowired
 	private SubGroupMemberDAO subGroupMemberDAO;
+	@Autowired
+	private GroupActivityDAO groupActivityDAO;
 
 	@RequestMapping(method = RequestMethod.GET)
 	public List<GroupDTO> findAll(Principal principal) {
@@ -175,7 +180,7 @@ public class GroupController {
         // set creation datetime 
         Instant now = Instant.now();
         ZonedDateTime zdtLima = now.atZone(ZoneId.of("GMT-05:00"));
-        group.setCreationDateTime(Date.from(zdtLima.toInstant()));     
+        group.setCreationDateTime(Date.from(zdtLima.toInstant()));
         
         // creator
         GroupMember gm = new GroupMember();
@@ -184,9 +189,18 @@ public class GroupController {
         gm.setCreationDateTime(Date.from(zdtLima.toInstant()));
         gm.setFabber(fabberDAO.findByEmail(principal.getName()));
         gm.setGroup(group);
-        
         group.getGroupMembers().add(gm);
+        
+        // create activity on group creation
+        GroupActivity activity = new  GroupActivity();
+        activity.setType(Resources.ACTIVITY_ORIGIN); // it's the origin of the group
+        activity.setVisibility(Resources.VISIBILITY_EXTERNAL); // app-wide visibility
+        activity.setCreationDateTime(Date.from(zdtLima.toInstant()));
+        activity.setGroup(group);
+        activity.setGroupMember(gm);
+        
         Group groupCreated = groupDAO.makePersistent(group);
+        groupActivityDAO.makePersistent(activity);
         
         return convertToDTO(groupCreated);
     }
@@ -209,7 +223,7 @@ public class GroupController {
 	@RequestMapping(value = "/{idGroup}", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
 	public void delete(@PathVariable("idGroup") Integer idGroup) {
-		groupDAO.makeTransient(groupDAO.findById(idGroup)); 
+		groupDAO.makeTransient(groupDAO.findById(idGroup));
 	}
 	
 	@RequestMapping(value = "/{idGroup}/join", method = RequestMethod.POST)
@@ -228,6 +242,15 @@ public class GroupController {
         member.setFabber(fabberDAO.findByEmail(principal.getName()));
         member.setGroup(group);
 		groupMemberDAO.makePersistent(member);
+		
+		// generate activity on member join
+        GroupActivity activity = new  GroupActivity();
+        activity.setType(Resources.ACTIVITY_USER_JOINED);
+        activity.setVisibility(Resources.VISIBILITY_INTERNAL); // internal visibility
+        activity.setCreationDateTime(Date.from(zdtLima.toInstant()));
+        activity.setGroup(group);
+        activity.setGroupMember(member);
+        groupActivityDAO.makePersistent(activity);
 	}
 	
 	

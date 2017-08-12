@@ -1,0 +1,95 @@
+<!-- Cards container -->
+<div layout="column" flex ng-controller="DashboardGroupsCtrl">
+	<div ng-if="noGroups" class="md-padding" layout="column" layout-align="center center" flex>
+		<div layout="column" layout-align="center center">
+			<h2 class="md-title centered" style="margin-bottom: 5px;">Create a group</h2>
+			<p class="md-subhead" style="margin-top: 0; margin-bottom: 0;">Groups are the best way to manage smaller work groups (subgroups) and members.</p>
+			<md-button class="md-primary md-raised md-hue-1" ng-click="addGroup()">New group</md-button>
+		</div>
+		
+		<div layout="column" layout-align="center center" style="margin-top: 55px;">
+			<h2 class="md-title centered" style="margin-bottom: 5px;">Explore groups</h2>
+			<p class="md-subhead" style="margin-top: 0; margin-bottom: 0;">There are many groups registered. Join them!</p>
+			<md-button ui-sref="groups" class="md-primary md-raised md-hue-1">Explore groups</md-button>
+		</div>
+	</div>
+
+    <!-- Cards container -->
+	<md-content layout-xs="column" layout="row" layout-margin class="md-padding">
+		<div flex layout="column">
+			<md-card class="custom-card-2" md-theme="neutral" ng-repeat="item in groups1">
+		    	<md-card-header>
+		        	<md-card-header-text>
+			            <a ui-sref="group.general({ idGroup: item.idGroup })" class="custom-anchor-1 group-name"><span class="md-title font-15">{{ item.name }}</span></a>
+			            <span class="md-subhead font-12">{{ item.amICoordinator ? "coordinator" : "collaborator" }} · {{ item.membersCount === 1 ? "1 member" : item.membersCount + " members" }}</span>
+		        	</md-card-header-text>
+		        	<md-button class="md-icon-button" aria-label="toggle" ng-init="item.showSubgroups = false;" ng-click="item.showSubgroups = !item.showSubgroups;">
+		            	<md-icon md-font-set="material-icons">{{ item.showSubgroups ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</md-icon>
+		            </md-button>
+		        </md-card-header>
+		        <!-- <md-card-content md-colors="{background: 'neutral-background-700'}" ng-show="item.showSubgroups"> -->
+		        <md-card-content md-colors="" ng-show="item.showSubgroups">
+		        	<div ng-if="item.subGroups.length === 0" class="centered no-data-1">No items to show</div>
+		        	<md-list class="md-dense" flex style="padding: 0;">
+		        		<md-list-item class="md-2-line" ng-repeat="subItem in item.subGroups">					    
+				          <div class="md-list-item-text" style="margin: 0;">
+				            <a ui-sref="subgroup.general({ idSubgroup: subItem.idSubGroup })" class="custom-anchor-1"><h3 class="font-12">{{ subItem.name }}</h3></a>
+				            <p class="font-11" style="font-weight: 400;">{{ subItem.amICoordinator ? "coordinator" : "collaborator" }} · {{ subItem.membersCount === 1 ? "1 member" : subItem.membersCount + " members" }}</p>
+				          </div>
+				        </md-list-item>
+		        	</md-list>
+		        </md-card-content>
+		     </md-card>
+		</div>
+		<div flex layout="column">
+			<md-card class="custom-card-2" md-theme="neutral" ng-repeat="item in groups2">
+		    	<md-card-header>
+		        	<md-card-header-text>
+			            <a ui-sref="group.general({ idGroup: item.idGroup })" class="custom-anchor-1 group-name"><span class="md-title font-15">{{ item.name }}</span></a>
+			            <span class="md-subhead font-12">{{ item.amICoordinator ? "coordinator" : "collaborator" }} · {{ item.membersCount === 1 ? "1 member" : item.membersCount + " members" }}</span>
+		        	</md-card-header-text>
+		        	<md-button class="md-icon-button" aria-label="toggle" ng-init="item.showSubgroups = false;" ng-click="item.showSubgroups = !item.showSubgroups;">
+		            	<md-icon md-font-set="material-icons">{{ item.showSubgroups ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</md-icon>
+		            </md-button>
+		        </md-card-header>
+		        <!-- <md-card-content md-colors="{background: 'neutral-background-700'}" ng-show="item.showSubgroups"> -->
+		        <md-card-content md-colors="" ng-show="item.showSubgroups">
+		        	<div ng-if="item.subGroups.length === 0" class="centered no-data-1">No items to show</div>
+		        	<md-list class="md-dense" flex style="padding: 0;">
+		        		<md-list-item class="md-2-line" ng-repeat="subItem in item.subGroups">					    
+				          <div class="md-list-item-text" style="margin: 0;">
+				            <a ui-sref="subgroup.general({ idSubgroup: subItem.idSubGroup })" class="custom-anchor-1"><h3 class="font-12">{{ subItem.name }}</h3></a>
+				            <p class="font-11" style="font-weight: 400;">{{ subItem.amICoordinator ? "coordinator" : "collaborator" }} · {{ subItem.membersCount === 1 ? "1 member" : subItem.membersCount + " members" }}</p>
+				          </div>
+				        </md-list-item>
+		        	</md-list>
+		        </md-card-content>
+		     </md-card>
+		</div>
+		<div flex layout="column">
+			<md-card class="custom-card-2" md-theme="neutral" ng-repeat="item in groups3">
+		    	<md-card-header>
+		        	<md-card-header-text>
+			            <a ui-sref="group.general({ idGroup: item.idGroup })" class="custom-anchor-1 group-name"><span class="md-title font-15">{{ item.name }}</span></a>
+			            <span class="md-subhead font-12">{{ item.amICoordinator ? "coordinator" : "collaborator" }} · {{ item.membersCount === 1 ? "1 member" : item.membersCount + " members" }}</span>
+		        	</md-card-header-text>
+		        	<md-button class="md-icon-button" aria-label="toggle" ng-init="item.showSubgroups = false;" ng-click="item.showSubgroups = !item.showSubgroups;">
+		            	<md-icon md-font-set="material-icons">{{ item.showSubgroups? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</md-icon>
+		            </md-button>
+		        </md-card-header>
+		        <!-- <md-card-content md-colors="{background: 'neutral-background-700'}" ng-show="item.showSubgroups"> -->
+		        <md-card-content md-colors="" ng-show="item.showSubgroups">
+		        	<div ng-if="item.subGroups.length === 0" class="centered no-data-1">No items to show</div>
+		        	<md-list class="md-dense" flex style="padding: 0;">
+		        		<md-list-item class="md-2-line" ng-repeat="subItem in item.subGroups">					    
+				          <div class="md-list-item-text" style="margin: 0;">
+				            <a ui-sref="subgroup.general({ idSubgroup: subItem.idSubGroup })" class="custom-anchor-1"><h3 class="font-12">{{ subItem.name }}</h3></a>
+				            <p class="font-11" style="font-weight: 400;">{{ subItem.amICoordinator ? "coordinator" : "collaborator" }} · {{ subItem.membersCount === 1 ? "1 member" : subItem.membersCount + " members" }}</p>
+				          </div>
+				        </md-list-item>
+		        	</md-list>
+		        </md-card-content>
+		     </md-card>
+		</div>
+	</md-content>
+</div>

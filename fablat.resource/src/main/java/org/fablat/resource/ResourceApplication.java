@@ -1,4 +1,4 @@
-package org.fablat.resource.config;
+package org.fablat.resource;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,6 +8,7 @@ import javax.sql.DataSource;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.fablat.resource.model.dao.FabberDAO;
+import org.fablat.resource.model.dao.FabberInfoDAO;
 import org.fablat.resource.model.dao.GroupActivityDAO;
 import org.fablat.resource.model.dao.GroupDAO;
 import org.fablat.resource.model.dao.GroupMemberDAO;
@@ -21,6 +22,7 @@ import org.fablat.resource.model.dao.SubGroupMemberDAO;
 import org.fablat.resource.model.dao.WorkshopDAO;
 import org.fablat.resource.model.dao.WorkshopTutorDAO;
 import org.fablat.resource.model.daoimpl.FabberDAOImpl;
+import org.fablat.resource.model.daoimpl.FabberInfoDAOImpl;
 import org.fablat.resource.model.daoimpl.GroupActivityDAOImpl;
 import org.fablat.resource.model.daoimpl.GroupDAOImpl;
 import org.fablat.resource.model.daoimpl.GroupMemberDAOImpl;
@@ -36,56 +38,42 @@ import org.fablat.resource.model.daoimpl.WorkshopTutorDAOImpl;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.ComponentScan.Filter;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBuilder;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
-import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-@Configuration
-@EnableAutoConfiguration
-@ComponentScan(basePackages = "org.fablat.resource.config, org.fablat.resource.controller, org.fablat.resource.model.daoimpl", excludeFilters = { @Filter(Configuration.class) })
+@SpringBootApplication
 @EnableTransactionManagement
 @RestController
-@EnableResourceServer
-public class ResourceApplication extends ResourceServerConfigurerAdapter {
+public class ResourceApplication {
+	
+	// For Tomcat deployment
+	/*@Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+        return application.sources(ResourceApplication.class);
+    } */
+	
+	public static void main(String[] args) {
+		SpringApplication.run(ResourceApplication.class, args);
+	}
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public Map<String, Object> home() {
-
 		Map<String, Object> model = new HashMap<String, Object>();
 		model.put("id", UUID.randomUUID().toString());
 		model.put("content", "Hello World");
 
 		return model;
 	}
-	
-	public static void main(String[] args) {
-		SpringApplication.run(ResourceApplication.class, args);
-	}
-	
-	@Override
-	@Order(-20)
-    public void configure(HttpSecurity http) throws Exception {
-		http
-			.authorizeRequests()
-			.antMatchers("/public/**").permitAll() // Allow public
-			.anyRequest().authenticated(); // Secure the rest
-    }
 	
 	// for encoding password on user sign up
 	@Bean
@@ -137,6 +125,11 @@ public class ResourceApplication extends ResourceServerConfigurerAdapter {
 	@Bean(name = "fabberDAO")
 	public FabberDAO getFabberDAO() {
 		return new FabberDAOImpl();
+	}
+	
+	@Bean(name = "fabberInfoDAO")
+	public FabberInfoDAO getFabberInfoDAO() {
+		return new FabberInfoDAOImpl();
 	}
 	
 	@Bean(name = "groupDAO")

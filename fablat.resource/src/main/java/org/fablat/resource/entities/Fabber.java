@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Fetch;
@@ -40,6 +41,7 @@ public class Fabber implements java.io.Serializable {
 	private String avatarUrl;
 	private Boolean enabled;
 	private Lab lab;
+	private FabberInfo fabberInfo;
 	private Set<GroupMember> groupMembers = new HashSet<GroupMember>();
 	private Set<RoleFabber> roleFabbers = new HashSet<RoleFabber>();
 
@@ -196,6 +198,16 @@ public class Fabber implements java.io.Serializable {
 		this.lab = lab;
 	}
 
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "fabber")
+	@Fetch(FetchMode.JOIN)
+	public FabberInfo getFabberInfo() {
+		return fabberInfo;
+	}
+
+	public void setFabberInfo(FabberInfo fabberInfo) {
+		this.fabberInfo = fabberInfo;
+	}
+
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "fabber")
 	@Fetch(FetchMode.JOIN)
 	public Set<GroupMember> getGroupMembers() {
@@ -240,4 +252,5 @@ public class Fabber implements java.io.Serializable {
 			return false;
 		return true;
 	}
+
 }

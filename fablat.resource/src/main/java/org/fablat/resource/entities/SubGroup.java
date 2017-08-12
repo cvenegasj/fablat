@@ -40,6 +40,7 @@ public class SubGroup implements java.io.Serializable {
 	private Group group;
 	private Set<SubGroupMember> subGroupMembers = new HashSet<SubGroupMember>();
 	private Set<Workshop> workshops = new HashSet<Workshop>();
+	private Set<SubGroupActivity> activities = new HashSet<SubGroupActivity>();
 
 	public SubGroup() {
 
@@ -167,6 +168,16 @@ public class SubGroup implements java.io.Serializable {
 
 	public void setWorkshops(Set<Workshop> workshops) {
 		this.workshops = workshops;
+	}
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "subGroup")
+	@Fetch(FetchMode.JOIN)
+	public Set<SubGroupActivity> getActivities() {
+		return activities;
+	}
+
+	public void setActivities(Set<SubGroupActivity> activities) {
+		this.activities = activities;
 	}
 
 	@Override
