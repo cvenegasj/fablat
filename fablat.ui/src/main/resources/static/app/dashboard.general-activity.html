@@ -1,10 +1,10 @@
 <div flex class="md-padding" ng-controller="DashboardGeneralActivityCtrl">
-	<div layout="column" flex>
+	<div layout="column" flex ng-if="activities">
 		<div class="generic-container-1">
 			<div>
 				<md-list class="list-activities" dense flex>
 					<md-list-item class="md-2-line" ng-repeat="item in activities">
-			          <div layout="row" class="md-list-item-text compact" ng-if="item.instanceType === 'GroupActivity' && item.type === 'ORIGIN'">
+			          <div layout="row" class="md-list-item-text compact" ng-if="item.level === 'GROUP' && item.type === 'ORIGIN'">
 			            <user-avatar ng-init="fabber = { idFabber: item.fabberId, firstName: item.fabberFirstName, lastName: item.fabberLastName }" fabber="fabber" avatar-w="38" avatar-h="38" avatar-font-size="18"></user-avatar>
 			            <div>
 			            	<h3>
@@ -19,7 +19,7 @@
 			            	<p><span am-time-ago="item.creationDateTime | amParse:'DD-MM-YYYY HH:mm:ss'"></span></p>
 			            </div>
 			          </div>
-			          <div layout="row" class="md-list-item-text compact" ng-if="item.instanceType === 'SubGroupActivity' && item.type === 'ORIGIN'">
+			          <div layout="row" class="md-list-item-text compact" ng-if="item.level === 'SUBGROUP' && item.type === 'ORIGIN'">
 			            <user-avatar ng-init="fabber = { idFabber: item.fabberId, firstName: item.fabberFirstName, lastName: item.fabberLastName }" fabber="fabber" avatar-w="38" avatar-h="38" avatar-font-size="18"></user-avatar>
 			            <div>
 				            <h3>

@@ -15,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Fetch;
@@ -210,6 +211,7 @@ public class Fabber implements java.io.Serializable {
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "fabber")
 	@Fetch(FetchMode.JOIN)
+	@OrderBy("id")
 	public Set<GroupMember> getGroupMembers() {
 		return groupMembers;
 	}

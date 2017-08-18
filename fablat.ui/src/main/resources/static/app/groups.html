@@ -21,12 +21,12 @@
 	</md-toolbar>
 	
 	<!-- Cards container -->
-	<div class="md-padding" layout-xs="column" layout="row" flex>
+	<div style="padding-left: 10%; padding-right: 10%;" layout-xs="column" layout="row" flex>
 		<div flex layout="column" class="md-padding">
 			<md-card class="custom-card-4" md-theme="" ng-repeat="item in groups1">
 		    	<md-card-header md-colors="{background: 'lime-background-600'}" ng-if="!item.amIMember">
 		        	<md-card-header-text>
-			            <a ui-sref="group.general({ idGroup: item.idGroup })" class="custom-anchor-1"><span class="md-title font-15">{{ item.name }}</span></a>
+			            <a ui-sref="group.general({ idGroup: item.idGroup })" class="custom-anchor-1"><span class="md-title font-16">{{ item.name }}</span></a>
 			            <span class="md-subhead font-12">{{ item.membersCount === 1 ? "1 member" : item.membersCount + " members" }}</span>
 		        	</md-card-header-text>
 		        	<md-button class="md-icon-button" aria-label="toggle" ng-init="item.showSubgroups = false;" ng-click="item.showSubgroups = !item.showSubgroups;">
@@ -36,7 +36,7 @@
 		        </md-card-header>
 		        <md-card-header md-colors="{background: 'lime-background-800'}" ng-if="item.amIMember">
 		        	<md-card-header-text>
-			            <a ui-sref="group.general({ idGroup: item.idGroup })" class="custom-anchor-1"><span class="md-title font-15">{{ item.name }}</span></a>
+			            <a ui-sref="group.general({ idGroup: item.idGroup })" class="custom-anchor-1"><span class="md-title font-16">{{ item.name }}</span></a>
 			            <span class="md-subhead font-12">{{ item.membersCount === 1 ? "1 member" : item.membersCount + " members" }}</span>
 		        	</md-card-header-text>
 		        	<md-button class="md-icon-button" aria-label="toggle" ng-init="item.showSubgroups = false;" ng-click="item.showSubgroups = !item.showSubgroups;">
@@ -61,7 +61,7 @@
 			<md-card class="custom-card-4" md-theme="" ng-repeat="item in groups2">
 		    	<md-card-header md-colors="{background: 'lime-background-600'}" ng-if="!item.amIMember">
 		        	<md-card-header-text>
-			            <a ui-sref="group.general({ idGroup: item.idGroup })" class="custom-anchor-1"><span class="md-title font-15">{{ item.name }}</span></a>
+			            <a ui-sref="group.general({ idGroup: item.idGroup })" class="custom-anchor-1"><span class="md-title font-16">{{ item.name }}</span></a>
 			            <span class="md-subhead font-12">{{ item.membersCount === 1 ? "1 member" : item.membersCount + " members" }}</span>
 		        	</md-card-header-text>
 		        	<md-button class="md-icon-button" aria-label="toggle" ng-init="item.showSubgroups = false;" ng-click="item.showSubgroups = !item.showSubgroups;">
@@ -71,7 +71,7 @@
 		        </md-card-header>
 		        <md-card-header md-colors="{background: 'lime-background-800'}" ng-if="item.amIMember">
 		        	<md-card-header-text>
-			            <a ui-sref="group.general({ idGroup: item.idGroup })" class="custom-anchor-1"><span class="md-title font-15">{{ item.name }}</span></a>
+			            <a ui-sref="group.general({ idGroup: item.idGroup })" class="custom-anchor-1"><span class="md-title font-16">{{ item.name }}</span></a>
 			            <span class="md-subhead font-12">{{ item.membersCount === 1 ? "1 member" : item.membersCount + " members" }}</span>
 		        	</md-card-header-text>
 		        	<md-button class="md-icon-button" aria-label="toggle" ng-init="item.showSubgroups = false;" ng-click="item.showSubgroups = !item.showSubgroups;">
@@ -96,7 +96,7 @@
 			<md-card class="custom-card-4" md-theme="" ng-repeat="item in groups3">
 		    	<md-card-header md-colors="{background: 'lime-background-600'}" ng-if="!item.amIMember">
 		        	<md-card-header-text>
-			            <a ui-sref="group.general({ idGroup: item.idGroup })" class="custom-anchor-1"><span class="md-title font-15">{{ item.name }}</span></a>
+			            <a ui-sref="group.general({ idGroup: item.idGroup })" class="custom-anchor-1"><span class="md-title font-16">{{ item.name }}</span></a>
 			            <span class="md-subhead font-12">{{ item.membersCount === 1 ? "1 member" : item.membersCount + " members" }}</span>
 		        	</md-card-header-text>
 		        	<md-button class="md-icon-button" aria-label="toggle" ng-init="item.showSubgroups = false;" ng-click="item.showSubgroups = !item.showSubgroups;">
@@ -106,7 +106,7 @@
 		        </md-card-header>
 		        <md-card-header md-colors="{background: 'lime-background-800'}" ng-if="item.amIMember">
 		        	<md-card-header-text>
-			            <a ui-sref="group.general({ idGroup: item.idGroup })" class="custom-anchor-1"><span class="md-title font-15">{{ item.name }}</span></a>
+			            <a ui-sref="group.general({ idGroup: item.idGroup })" class="custom-anchor-1"><span class="md-title font-16">{{ item.name }}</span></a>
 			            <span class="md-subhead font-12">{{ item.membersCount === 1 ? "1 member" : item.membersCount + " members" }}</span>
 		        	</md-card-header-text>
 		        	<md-button class="md-icon-button" aria-label="toggle" ng-init="item.showSubgroups = false;" ng-click="item.showSubgroups = !item.showSubgroups;">

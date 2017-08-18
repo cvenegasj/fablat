@@ -13,14 +13,14 @@ import java.util.List;
 import org.fablat.resource.dto.GroupDTO;
 import org.fablat.resource.dto.GroupMemberDTO;
 import org.fablat.resource.dto.SubGroupDTO;
+import org.fablat.resource.entities.ActivityLog;
 import org.fablat.resource.entities.Fabber;
 import org.fablat.resource.entities.Group;
-import org.fablat.resource.entities.GroupActivity;
 import org.fablat.resource.entities.GroupMember;
 import org.fablat.resource.entities.SubGroup;
 import org.fablat.resource.entities.SubGroupMember;
+import org.fablat.resource.model.dao.ActivityLogDAO;
 import org.fablat.resource.model.dao.FabberDAO;
-import org.fablat.resource.model.dao.GroupActivityDAO;
 import org.fablat.resource.model.dao.GroupDAO;
 import org.fablat.resource.model.dao.GroupMemberDAO;
 import org.fablat.resource.model.dao.SubGroupMemberDAO;
@@ -39,7 +39,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class GroupController {
 
 	private SimpleDateFormat timeFormatter = new SimpleDateFormat("h:mm a");
-	private SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("dd-MM-yyyy h:mm a");
+	private SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 
 	@Autowired
 	private FabberDAO fabberDAO;
@@ -50,13 +50,13 @@ public class GroupController {
 	@Autowired
 	private SubGroupMemberDAO subGroupMemberDAO;
 	@Autowired
-	private GroupActivityDAO groupActivityDAO;
+	private ActivityLogDAO activityLogDAO;
 
 	@RequestMapping(method = RequestMethod.GET)
 	public List<GroupDTO> findAll(Principal principal) {
 		List<GroupDTO> returnList = new ArrayList<GroupDTO>();
 		
-		for (Group group : groupDAO.findAll()) {
+		for (Group group : groupDAO.findAllOrderDate()) {
 			GroupDTO gDTO = convertToDTO(group);
 			
 			GroupMember userAsGroupMember = groupMemberDAO.findByGroupAndFabber(group.getIdGroup(), principal.getName());
@@ -88,13 +88,41 @@ public class GroupController {
 		return returnList;
 	}
 	
-	@RequestMapping(value = "/findAllMine", method = RequestMethod.GET)
+	@RequestMapping(value = "/find-all-mine", method = RequestMethod.GET)
 	public List<GroupDTO> findAllMine(Principal principal) {
 		Fabber me = fabberDAO.findByEmail(principal.getName());
 		List<GroupDTO> returnList = new ArrayList<GroupDTO>();
 		
 		// Mapping user's group and subgroups
 		for (GroupMember gm : me.getGroupMembers()) {
+			GroupDTO gDTO = convertToDTO(gm.getGroup());
+			// additional properties
+			gDTO.setAmIMember(true);
+      	  	gDTO.setAmICoordinator(gm.getIsCoordinator());
+			
+      	  	// subgroups
+      	  	List<SubGroupDTO> subGroups = new ArrayList<SubGroupDTO>();
+      	  	for (SubGroupMember sgm : gm.getSubGroupMembers()) {
+      	  		SubGroupDTO sDTO = convertToDTO(sgm.getSubGroup());
+				sDTO.setAmIMember(true);
+				sDTO.setAmICoordinator(sgm.getIsCoordinator());
+      	  		
+      	  		subGroups.add(sDTO);
+      	  	}
+      	  	gDTO.setSubGroups(subGroups);
+      	  	returnList.add(gDTO);
+		}	
+		
+		return returnList;
+	}
+	
+	@RequestMapping(value = "/find-all-fabber/{idFabber}", method = RequestMethod.GET)
+	public List<GroupDTO> findAllFabber(@PathVariable("idFabber") Integer idFabber) {
+		Fabber fabber = fabberDAO.findById(idFabber);
+		List<GroupDTO> returnList = new ArrayList<GroupDTO>();
+		
+		// Mapping user's group and subgroups
+		for (GroupMember gm : fabber.getGroupMembers()) {
 			GroupDTO gDTO = convertToDTO(gm.getGroup());
 			// additional properties
 			gDTO.setAmIMember(true);
@@ -162,9 +190,8 @@ public class GroupController {
 		
 		// group's members
 		List<GroupMemberDTO> members = new ArrayList<GroupMemberDTO>();
-		for (GroupMember gm : group.getGroupMembers()) {
+		for (GroupMember gm : groupMemberDAO.findAllByGroup(group.getIdGroup())) {
 			GroupMemberDTO gmDTO = convertToDTO(gm);
-			
 			members.add(gmDTO);
 		}
 		gDTO.setMembers(members);
@@ -192,15 +219,16 @@ public class GroupController {
         group.getGroupMembers().add(gm);
         
         // create activity on group creation
-        GroupActivity activity = new  GroupActivity();
-        activity.setType(Resources.ACTIVITY_ORIGIN); // it's the origin of the group
-        activity.setVisibility(Resources.VISIBILITY_EXTERNAL); // app-wide visibility
+        ActivityLog activity = new  ActivityLog();
+        activity.setLevel(Resources.ACTIVITY_LEVEL_GROUP);
+        activity.setType(Resources.ACTIVITY_TYPE_ORIGIN); // it's the origin of the group
+        activity.setVisibility(Resources.ACTIVITY_VISIBILITY_EXTERNAL); // app-wide visibility
         activity.setCreationDateTime(Date.from(zdtLima.toInstant()));
         activity.setGroup(group);
-        activity.setGroupMember(gm);
+        activity.setFabber(gm.getFabber());
         
         Group groupCreated = groupDAO.makePersistent(group);
-        groupActivityDAO.makePersistent(activity);
+        activityLogDAO.makePersistent(activity);
         
         return convertToDTO(groupCreated);
     }
@@ -229,6 +257,11 @@ public class GroupController {
 	@RequestMapping(value = "/{idGroup}/join", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
 	public void join(@PathVariable("idGroup") Integer idGroup, Principal principal) {
+		// check if is already member
+		if (groupMemberDAO.findByGroupAndFabber(idGroup, principal.getName()) != null) {
+			return;
+		}
+		
 		Group group = groupDAO.findById(idGroup);
 		
 		GroupMember member = new GroupMember();
@@ -243,14 +276,96 @@ public class GroupController {
         member.setGroup(group);
 		groupMemberDAO.makePersistent(member);
 		
-		// generate activity on member join
-        GroupActivity activity = new  GroupActivity();
-        activity.setType(Resources.ACTIVITY_USER_JOINED);
-        activity.setVisibility(Resources.VISIBILITY_INTERNAL); // internal visibility
+		// generate activity
+		ActivityLog activity = new  ActivityLog();
+		activity.setLevel(Resources.ACTIVITY_LEVEL_GROUP);
+        activity.setType(Resources.ACTIVITY_TYPE_USER_JOINED);
+        activity.setVisibility(Resources.ACTIVITY_VISIBILITY_INTERNAL); // internal visibility
         activity.setCreationDateTime(Date.from(zdtLima.toInstant()));
         activity.setGroup(group);
-        activity.setGroupMember(member);
-        groupActivityDAO.makePersistent(activity);
+        activity.setFabber(member.getFabber());
+        activityLogDAO.makePersistent(activity);
+	}
+	
+	@RequestMapping(value = "/{idGroup}/leave", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+	public void leave(@PathVariable("idGroup") Integer idGroup, Principal principal) {
+		GroupMember member = groupMemberDAO.findByGroupAndFabber(idGroup, principal.getName());
+		groupMemberDAO.makeTransient(member);
+		Group group = groupDAO.findById(idGroup);
+		
+		// if the user was the last member, the group disappears
+		if (group.getGroupMembers().size() == 0) {
+			groupDAO.makeTransient(group);
+			return;
+		}
+		
+		// if the user was the only coordinator, assign the oldest member as coordinator
+		if (!group.getGroupMembers().stream().anyMatch(item -> item.getIsCoordinator())) {
+			GroupMember oldestMember = group.getGroupMembers().stream().findFirst().get();
+			oldestMember.setIsCoordinator(true);		
+			groupMemberDAO.makePersistent(oldestMember);		
+		}
+		
+		// generate activity
+        ActivityLog activity = new  ActivityLog();
+        activity.setLevel(Resources.ACTIVITY_LEVEL_GROUP);
+        activity.setType(Resources.ACTIVITY_TYPE_USER_LEFT);
+        activity.setVisibility(Resources.ACTIVITY_VISIBILITY_INTERNAL); // internal visibility
+        Instant now = Instant.now();
+        ZonedDateTime zdtLima = now.atZone(ZoneId.of("GMT-05:00"));
+        activity.setCreationDateTime(Date.from(zdtLima.toInstant()));
+        activity.setGroup(group);
+        activity.setFabber(member.getFabber());
+        activityLogDAO.makePersistent(activity);
+	}
+	
+	@RequestMapping(value = "/{idGroup}/add-member", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+	public void addMember(@PathVariable("idGroup") Integer idGroup, @RequestBody GroupMemberDTO groupMemberDTO, Principal principal) {
+		GroupMember me = groupMemberDAO.findByGroupAndFabber(idGroup, principal.getName());
+		// action only allowed to coordinators
+		if (!me.getIsCoordinator()) {
+			return;
+		}
+		
+		GroupMember gm = new GroupMember();
+		gm.setIsCoordinator(groupMemberDTO.getIsCoordinator());
+		gm.setNotificationsEnabled(true);
+		Instant now = Instant.now();
+        ZonedDateTime zdtLima = now.atZone(ZoneId.of("GMT-05:00"));
+		gm.setCreationDateTime(Date.from(zdtLima.toInstant()));
+		gm.setFabber(fabberDAO.findById(groupMemberDTO.getFabberId()));
+		gm.setGroup(groupDAO.findById(idGroup));
+		
+		groupMemberDAO.makePersistent(gm);
+	}
+	
+	@RequestMapping(value = "/{idGroup}/delete-member", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+	public void deleteMember(@PathVariable("idGroup") Integer idGroup, @RequestBody GroupMemberDTO groupMemberDTO, Principal principal) {
+		GroupMember me = groupMemberDAO.findByGroupAndFabber(idGroup, principal.getName());
+		// action only allowed to coordinators
+		if (!me.getIsCoordinator()) {
+			return;
+		}
+		
+		GroupMember member = groupMemberDAO.findById(groupMemberDTO.getIdGroupMember());
+		groupMemberDAO.makeTransient(member);
+	}
+	
+	@RequestMapping(value = "/{idGroup}/name-coordinator", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+	public void nameCoordinator(@PathVariable("idGroup") Integer idGroup, @RequestBody GroupMemberDTO groupMemberDTO, Principal principal) {
+		GroupMember me = groupMemberDAO.findByGroupAndFabber(idGroup, principal.getName());
+		// action only allowed to coordinators
+		if (!me.getIsCoordinator()) {
+			return;
+		}
+		
+		GroupMember member = groupMemberDAO.findById(groupMemberDTO.getIdGroupMember());
+		member.setIsCoordinator(true);
+		groupMemberDAO.makePersistent(member);
 	}
 	
 	

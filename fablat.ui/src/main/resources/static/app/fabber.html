@@ -1,0 +1,55 @@
+<div layout-gt-sm="row" layout="column" ng-controller="FabberCtrl">
+	<div style="padding: 15px 35px;" layout="column" flex-gt-sm="25" flex>
+		<div layout="column" layout-align="center center" style="margin-top: 15px; margin-bottom: 35px;">
+			<user-avatar fabber="fabberLocal" avatar-w="100" avatar-h="100" avatar-font-size="40"></user-avatar>
+			<div class="md-headline" style="margin-top: 5px;">{{ fabberLocal.firstName }} {{ fabberLocal.lastName }}</div>
+			<div class="font-14"><span>{{ fabberLocal.email }}</span> <span class="color-4" ng-if="user.hasAdminGeneralRole">[ADMIN_GENERAL]</span></div>
+			<div class="font-14"><span>{{ fabberLocal.isNomade ? "Fab Nomade" : fabberLocal.labName }}</span></div>
+		</div>
+		<div layout-gt-sm="column" layout="row">
+			<md-card flex layout="column" layout-align="start center" md-theme="darkOrange" class="custom-card-1" layout-fill>
+				<div class="font-14">Total score</div>
+				<div>
+					<md-icon md-svg-icon="seal" class="icon-25"></md-icon> <span class="font-18">{{ fabberLocal.generalScore }}</span>
+				</div>
+			</md-card>
+			<md-card flex layout="column" layout-align="start center" md-theme="darkBlueGrey" class="custom-card-1" layout-fill>
+				<div class="font-14">Coordinator</div>
+				<div>
+					<md-icon md-svg-icon="headset" class="icon-25"></md-icon> <span class="font-18">{{ fabberLocal.coordinatorScore }}</span>
+				</div>
+			</md-card>
+			<md-card flex layout="column" layout-align="start center" md-theme="darkBlueGrey" class="custom-card-1" layout-fill>
+				<div class="font-14">Collaborator</div>
+				<div>
+					<md-icon md-svg-icon="puzzle" class="icon-25"></md-icon> <span class="font-18">{{ fabberLocal.collaboratorScore }}</span>
+				</div>
+			</md-card>
+			<md-card flex layout="column" layout-align="start center" md-theme="darkBlueGrey" class="custom-card-1" layout-fill>
+				<div class="font-14">Replicator</div>
+				<div>
+					<md-icon md-svg-icon="content-copy" class="icon-25"></md-icon> <span class="font-18">{{ fabberLocal.replicatorScore }}</span>
+				</div>
+			</md-card>
+			<md-card flex layout="column" layout-align="start center" md-theme="darkLightBlue" class="custom-card-1" layout-fill>
+				<div class="font-14">Goal for this week</div>
+				<md-content class="font-16" style="max-height: 57px;">
+					{{ fabberLocal.weekGoal ? fabberLocal.weekGoal : "" }}
+				</md-content>
+			</md-card>
+		</div>
+	</div>
+	
+	<div flex>
+		<md-nav-bar md-selected-nav-item="currentNavItem" nav-bar-aria-label="navigation links">
+	      	<md-nav-item md-nav-sref="fabber.groups" name="groups">
+	        	Groups & Subgroups
+	      	</md-nav-item>
+	      	<md-nav-item md-nav-sref="fabber.activity" name="activity">
+	        	Activity
+	      	</md-nav-item>
+	    </md-nav-bar>
+	    
+	    <div ui-view layout-fill></div>
+	</div>
+</div>

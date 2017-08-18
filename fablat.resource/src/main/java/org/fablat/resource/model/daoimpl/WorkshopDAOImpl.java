@@ -38,4 +38,18 @@ public class WorkshopDAOImpl extends GenericDAOImpl<Workshop, Integer> implement
 		return list;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Transactional
+	public List<Workshop> findAllAfterDate(Date date) {
+		List<Workshop> list = null;
+		list = (List<Workshop>) getSession()
+				.createQuery(
+						"select x from " + getDomainClassName() + " x "
+								+ "where x.startDateTime > :date")
+				.setDate("date", date)
+				.list();
+		
+		return list;
+	}
+
 }

@@ -51,6 +51,20 @@ public class WorkshopController {
 	@Autowired
 	private LocationDAO locationDAO;
 	
+	@RequestMapping(value = "/upcoming", method = RequestMethod.GET)
+    public List<WorkshopDTO> findUpcoming(Principal principal) {
+		List<WorkshopDTO> returnList = new ArrayList<WorkshopDTO>();
+		Instant now = Instant.now();
+        ZonedDateTime zdtLima = now.atZone(ZoneId.of("GMT-05:00"));
+		
+		for (Workshop w : workshopDAO.findAllAfterDate(Date.from(zdtLima.toInstant()))) {
+			WorkshopDTO wDTO = convertToDTO(w);
+			returnList.add(wDTO);
+		}
+		
+		return returnList;
+	}
+	
 	@RequestMapping(value = "/{idWorkshop}", method = RequestMethod.GET)
     public WorkshopDTO findOne(@PathVariable("idWorkshop") Integer idWorkshop, Principal principal) {
 		Workshop workshop = workshopDAO.findById(idWorkshop);

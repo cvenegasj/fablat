@@ -1,8 +1,8 @@
 <div class="md-padding" layout="column" flex ng-controller="GroupManagementSubgroupsCtrl">
 	<div class="generic-container-1">
-		<div class="header md-subhead" layout="row" layout-align="none center" style="position: relative;">
-			<div><span class="bold">{{ group.name }}</span> subgroups:</div>
-			<md-button class="md-raised md-accent" style="margin: 0; position: absolute; right: 15px;" ng-click="addSubgroup()">New subgroup</md-button>
+		<div class="header" md-colors="{background: 'darkLime-background-600'}" layout="row" layout-align="none center" style="position: relative;">
+			<div class="title"><span class="bold">{{ group.name }}</span> subgroups:</div>
+			<md-button class="md-raised" style="margin: 0; position: absolute; right: 15px;" ng-click="addSubgroup()">New subgroup</md-button>
 		</div>
 		<div>
 			<div ng-if="group.subGroups.length === 0" class="centered no-data-2" style="margin-top: 15px;">No subgroups created yet.</div>
@@ -12,9 +12,19 @@
 		            <h3><a ui-sref="subgroup.general({ idSubgroup: item.idSubGroup })" class="custom-anchor-1 bold">{{ item.name }}</a></h3>
 		            <p>{{ item.membersCount === 1 ? "1 member" : item.membersCount + " members" }}</p>
 		          </div>
-		          <md-button class="md-secondary md-icon-button" ng-click="doSecondaryAction($event)" aria-label="more">
-		          	<md-icon md-font-set="material-icons" aria-label="More">more_vert</md-icon>
-		          </md-button>
+		          
+		          <md-menu md-position-mode="target-right target" class="md-secondary">
+	      		  	<md-button class="md-icon-button" aria-label="more" ng-click="$mdMenu.open($event)">
+		    			<md-icon md-font-set="material-icons">more_vert</md-icon>
+		    		</md-button>
+			        <md-menu-content width="3">
+			        	<md-menu-item>
+			            	<md-button ng-click="removeSubgroup($event, item)">
+			                	Remove subgroup
+			              	</md-button>
+			            </md-menu-item>
+			      	</md-menu-content>
+			      </md-menu>
 		        </md-list-item>
 	        </md-list>
 		</div>

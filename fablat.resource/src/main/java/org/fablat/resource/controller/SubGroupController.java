@@ -14,15 +14,15 @@ import java.util.List;
 import org.fablat.resource.dto.SubGroupDTO;
 import org.fablat.resource.dto.SubGroupMemberDTO;
 import org.fablat.resource.dto.WorkshopDTO;
+import org.fablat.resource.entities.ActivityLog;
 import org.fablat.resource.entities.GroupMember;
 import org.fablat.resource.entities.SubGroup;
-import org.fablat.resource.entities.SubGroupActivity;
 import org.fablat.resource.entities.SubGroupMember;
 import org.fablat.resource.entities.Workshop;
+import org.fablat.resource.model.dao.ActivityLogDAO;
 import org.fablat.resource.model.dao.FabberDAO;
 import org.fablat.resource.model.dao.GroupDAO;
 import org.fablat.resource.model.dao.GroupMemberDAO;
-import org.fablat.resource.model.dao.SubGroupActivityDAO;
 import org.fablat.resource.model.dao.SubGroupDAO;
 import org.fablat.resource.model.dao.SubGroupMemberDAO;
 import org.fablat.resource.util.Resources;
@@ -41,7 +41,7 @@ public class SubGroupController {
 
 	private SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
 	private SimpleDateFormat timeFormatter = new SimpleDateFormat("h:mm a");
-	private SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("dd-MM-yyyy h:mm a");
+	private SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 	private SimpleDateFormat monthFormatter = new SimpleDateFormat("MMM");
 	private SimpleDateFormat dateFormatter2 = new SimpleDateFormat("MMMMM d(EEE) h:mm a");
 	
@@ -56,7 +56,7 @@ public class SubGroupController {
 	@Autowired
 	private GroupMemberDAO groupMemberDAO;
 	@Autowired
-	private SubGroupActivityDAO subGroupActivityDAO;
+	private ActivityLogDAO activityLogDAO;
 
 	@RequestMapping(value = "/{idSubGroup}", method = RequestMethod.GET)
 	public SubGroupDTO findOne(@PathVariable("idSubGroup") Integer idSubGroup, Principal principal) {
@@ -83,7 +83,7 @@ public class SubGroupController {
 
 		// subgroup's members
 		List<SubGroupMemberDTO> members = new ArrayList<SubGroupMemberDTO>();
-		for (SubGroupMember sgm : subGroup.getSubGroupMembers()) {
+		for (SubGroupMember sgm : subGroupMemberDAO.findAllBySubGroup(subGroup.getIdSubGroup())) {
 			SubGroupMemberDTO sgmDTO = convertToDTO(sgm);
 			members.add(sgmDTO);
 		}
@@ -114,16 +114,27 @@ public class SubGroupController {
 		sgm.setSubGroup(subGroup);
 		subGroup.getSubGroupMembers().add(sgm);
 		
-		// create activity on subgroup creation
-        SubGroupActivity activity = new  SubGroupActivity();
-        activity.setType(Resources.ACTIVITY_ORIGIN); // it's the origin of the subgroup
-        activity.setVisibility(Resources.VISIBILITY_EXTERNAL); // app-wide visibility
+		// create activities on subgroup creation
+        ActivityLog activity = new  ActivityLog();
+        activity.setLevel(Resources.ACTIVITY_LEVEL_SUBGROUP);
+        activity.setType(Resources.ACTIVITY_TYPE_ORIGIN); // it's the origin of the subgroup
+        activity.setVisibility(Resources.ACTIVITY_VISIBILITY_EXTERNAL); // app-wide visibility
         activity.setCreationDateTime(Date.from(zdtLima.toInstant()));
         activity.setSubGroup(subGroup);
-        activity.setSubGroupMember(sgm);
+        activity.setGroup(subGroup.getGroup());
+        activity.setFabber(sgm.getGroupMember().getFabber());
+        // activity for the parent group
+        ActivityLog activity2 = new ActivityLog();
+        activity2.setLevel(Resources.ACTIVITY_LEVEL_GROUP);
+        activity2.setType(Resources.ACTIVITY_TYPE_SUBGROUP_CREATED);
+        activity2.setVisibility(Resources.ACTIVITY_VISIBILITY_INTERNAL);
+        activity2.setCreationDateTime(Date.from(zdtLima.toInstant()));
+        activity2.setGroup(groupDAO.findById(subGroupDTO.getGroupId()));
+        activity2.setFabber(gm.getFabber());
 		
 		SubGroup subGroupCreated = subGroupDAO.makePersistent(subGroup);
-		subGroupActivityDAO.makePersistent(activity);
+		activityLogDAO.makePersistent(activity);
+		activityLogDAO.makePersistent(activity2);
 
 		return convertToDTO(subGroupCreated);
 	}
@@ -145,13 +156,32 @@ public class SubGroupController {
 	
 	@RequestMapping(value = "/{idSubGroup}", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
-	public void delete(@PathVariable("idSubGroup") Integer idSubGroup) {
-		subGroupDAO.makeTransient(subGroupDAO.findById(idSubGroup)); 
+	public void delete(@PathVariable("idSubGroup") Integer idSubGroup, Principal principal) {
+		SubGroup subGroup = subGroupDAO.findById(idSubGroup);
+		
+		// activity for the parent group
+        ActivityLog activity = new ActivityLog();
+        activity.setLevel(Resources.ACTIVITY_LEVEL_GROUP);
+        activity.setType(Resources.ACTIVITY_TYPE_SUBGROUP_DELETED);
+        activity.setVisibility(Resources.ACTIVITY_VISIBILITY_INTERNAL);
+        Instant now = Instant.now();
+		ZonedDateTime zdtLima = now.atZone(ZoneId.of("GMT-05:00"));
+        activity.setCreationDateTime(Date.from(zdtLima.toInstant()));
+        activity.setGroup(subGroup.getGroup());
+        activity.setFabber(groupMemberDAO.findByGroupAndFabber(subGroup.getGroup().getIdGroup(), principal.getName()).getFabber());
+        
+        activityLogDAO.makePersistent(activity);
+        subGroupDAO.makeTransient(subGroup); 
 	}
 	
 	@RequestMapping(value = "/{idSubGroup}/join", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
 	public void join(@PathVariable("idSubGroup") Integer idSubGroup, Principal principal) {
+		// check if is already member
+		if (subGroupMemberDAO.findBySubGroupAndFabber(idSubGroup, principal.getName()) != null) {
+			return;
+		}
+		
 		SubGroup subGroup = subGroupDAO.findById(idSubGroup);
 		
 		SubGroupMember member = new SubGroupMember();
@@ -175,6 +205,98 @@ public class SubGroupController {
       
         member.setGroupMember(gm);
         member.setSubGroup(subGroup);
+		subGroupMemberDAO.makePersistent(member);
+		
+		// generate activity
+        ActivityLog activity = new  ActivityLog();
+        activity.setLevel(Resources.ACTIVITY_LEVEL_SUBGROUP);
+        activity.setType(Resources.ACTIVITY_TYPE_USER_JOINED);
+        activity.setVisibility(Resources.ACTIVITY_VISIBILITY_INTERNAL); // internal visibility
+        activity.setCreationDateTime(Date.from(zdtLima.toInstant()));
+        activity.setSubGroup(subGroup);
+        activity.setFabber(member.getGroupMember().getFabber());
+        activityLogDAO.makePersistent(activity);
+	}
+	
+	@RequestMapping(value = "/{idSubGroup}/leave", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+	public void leave(@PathVariable("idSubGroup") Integer idSubGroup, Principal principal) {
+		SubGroupMember member = subGroupMemberDAO.findBySubGroupAndFabber(idSubGroup, principal.getName());
+		subGroupMemberDAO.makeTransient(member);
+		SubGroup subGroup = subGroupDAO.findById(idSubGroup);
+		
+		// if the user was the last member, the subgroup disappears
+		if (subGroup.getSubGroupMembers().size() == 0) {
+			subGroupDAO.makeTransient(subGroup);
+			return;
+		}
+		
+		// if the user was the only coordinator, assign the oldest member as coordinator
+		if (!subGroup.getSubGroupMembers().stream().anyMatch(item -> item.getIsCoordinator())) {
+			SubGroupMember oldestMember = subGroup.getSubGroupMembers().stream().findFirst().get();
+			oldestMember.setIsCoordinator(true);		
+			subGroupMemberDAO.makePersistent(oldestMember);		
+		}
+		
+		// generate activity
+        ActivityLog activity = new  ActivityLog();
+        activity.setLevel(Resources.ACTIVITY_LEVEL_SUBGROUP);
+        activity.setType(Resources.ACTIVITY_TYPE_USER_LEFT);
+        activity.setVisibility(Resources.ACTIVITY_VISIBILITY_INTERNAL); // internal visibility
+        Instant now = Instant.now();
+        ZonedDateTime zdtLima = now.atZone(ZoneId.of("GMT-05:00"));
+        activity.setCreationDateTime(Date.from(zdtLima.toInstant()));
+        activity.setSubGroup(subGroup);
+        activity.setFabber(member.getGroupMember().getFabber());
+        activityLogDAO.makePersistent(activity);
+	}
+	
+	@RequestMapping(value = "/{idSubGroup}/add-member", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+	public void addMember(@PathVariable("idSubGroup") Integer idSubGroup, @RequestBody SubGroupMemberDTO subGroupMemberDTO, Principal principal) {
+		SubGroupMember me = subGroupMemberDAO.findBySubGroupAndFabber(idSubGroup, principal.getName());
+		// action only allowed to coordinators
+		if (!me.getIsCoordinator()) {
+			return;
+		}
+		
+		SubGroup subGroup = subGroupDAO.findById(idSubGroup);
+		SubGroupMember sgm = new SubGroupMember();
+		sgm.setIsCoordinator(subGroupMemberDTO.getIsCoordinator());
+		sgm.setNotificationsEnabled(true);
+		Instant now = Instant.now();
+        ZonedDateTime zdtLima = now.atZone(ZoneId.of("GMT-05:00"));
+        sgm.setCreationDateTime(Date.from(zdtLima.toInstant()));
+        // sgm.setGroupMember(groupMemberDAO.findByGroupAndFabber(subGroup.getGroup().getIdGroup(), email));
+        sgm.setSubGroup(subGroup);
+		
+		subGroupMemberDAO.makePersistent(sgm);
+	}
+	
+	@RequestMapping(value = "/{idSubGroup}/delete-member", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+	public void deleteMember(@PathVariable("idSubGroup") Integer idSubGroup, @RequestBody SubGroupMemberDTO subGroupMemberDTO, Principal principal) {
+		SubGroupMember me = subGroupMemberDAO.findBySubGroupAndFabber(idSubGroup, principal.getName());
+		// action only allowed to coordinators
+		if (!me.getIsCoordinator()) {
+			return;
+		}
+		
+		SubGroupMember member = subGroupMemberDAO.findById(subGroupMemberDTO.getIdSubGroupMember());
+		subGroupMemberDAO.makeTransient(member);
+	}
+	
+	@RequestMapping(value = "/{idSubGroup}/name-coordinator", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+	public void nameCoordinator(@PathVariable("idSubGroup") Integer idSubGroup, @RequestBody SubGroupMemberDTO subGroupMemberDTO, Principal principal) {
+		SubGroupMember me = subGroupMemberDAO.findBySubGroupAndFabber(idSubGroup, principal.getName());
+		// action only allowed to coordinators
+		if (!me.getIsCoordinator()) {
+			return;
+		}
+		
+		SubGroupMember member = subGroupMemberDAO.findById(subGroupMemberDTO.getIdSubGroupMember());
+		member.setIsCoordinator(true);
 		subGroupMemberDAO.makePersistent(member);
 	}
 

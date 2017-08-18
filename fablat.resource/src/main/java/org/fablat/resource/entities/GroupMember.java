@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -100,6 +101,7 @@ public class GroupMember implements java.io.Serializable {
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "groupMember")
 	@Fetch(FetchMode.JOIN)
+	@OrderBy("date(creationDateTime) asc")
 	public Set<SubGroupMember> getSubGroupMembers() {
 		return subGroupMembers;
 	}

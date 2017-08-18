@@ -1,5 +1,72 @@
-<div class="md-padding">
-
-activity
-
+<div flex class="md-padding" ng-controller="GroupActivityCtrl">
+	<div layout="column" flex>
+		<div class="generic-container-1">
+			<div>
+				<md-list class="list-activities" dense flex>
+					<md-list-item class="md-2-line" ng-repeat="item in activities">
+			          <div layout="row" class="md-list-item-text compact" ng-if="item.type === 'ORIGIN'">
+			            <user-avatar ng-init="fabber = { idFabber: item.fabberId, firstName: item.fabberFirstName, lastName: item.fabberLastName }" fabber="fabber" avatar-w="38" avatar-h="38" avatar-font-size="18"></user-avatar>
+			            <div>
+			            	<h3>
+				            	<a ui-sref="fabber.groups({ idFabber: item.fabberId })" class="custom-anchor-1 bold">
+									{{ item.fabberFirstName + " " + item.fabberLastName }}
+								</a>
+				            	created the group.
+			            	</h3>
+			            	<p><span am-time-ago="item.creationDateTime | amParse:'DD-MM-YYYY HH:mm:ss'"></span></p>
+			            </div>
+			          </div>
+			          <div layout="row" class="md-list-item-text compact" ng-if="item.type === 'USER_JOINED'">
+			            <user-avatar ng-init="fabber = { idFabber: item.fabberId, firstName: item.fabberFirstName, lastName: item.fabberLastName }" fabber="fabber" avatar-w="38" avatar-h="38" avatar-font-size="18"></user-avatar>
+			            <div>
+				            <h3>
+				            	<a ui-sref="fabber.groups({ idFabber: item.fabberId })" class="custom-anchor-1 bold">
+									{{ item.fabberFirstName + " " + item.fabberLastName }}
+								</a>
+				            	joined the group.
+				            </h3>
+				            <p><span am-time-ago="item.creationDateTime | amParse:'DD-MM-YYYY HH:mm:ss'"></span></p>
+			            </div>
+			          </div>
+			          <div layout="row" class="md-list-item-text compact" ng-if="item.type === 'USER_LEFT'">
+			            <user-avatar ng-init="fabber = { idFabber: item.fabberId, firstName: item.fabberFirstName, lastName: item.fabberLastName }" fabber="fabber" avatar-w="38" avatar-h="38" avatar-font-size="18"></user-avatar>
+			            <div>
+				            <h3>
+				            	<a ui-sref="fabber.groups({ idFabber: item.fabberId })" class="custom-anchor-1 bold">
+									{{ item.fabberFirstName + " " + item.fabberLastName }}
+								</a>
+				            	left the group.
+				            </h3>
+				            <p><span am-time-ago="item.creationDateTime | amParse:'DD-MM-YYYY HH:mm:ss'"></span></p>
+			            </div>
+			          </div>
+			          <div layout="row" class="md-list-item-text compact" ng-if="item.type === 'SUBGROUP_CREATED'">
+			            <user-avatar ng-init="fabber = { idFabber: item.fabberId, firstName: item.fabberFirstName, lastName: item.fabberLastName }" fabber="fabber" avatar-w="38" avatar-h="38" avatar-font-size="18"></user-avatar>
+			            <div>
+				            <h3>
+				            	<a ui-sref="fabber.groups({ idFabber: item.fabberId })" class="custom-anchor-1 bold">
+									{{ item.fabberFirstName + " " + item.fabberLastName }}
+								</a>
+				            	created a subgroup.
+				            </h3>
+				            <p><span am-time-ago="item.creationDateTime | amParse:'DD-MM-YYYY HH:mm:ss'"></span></p>
+			            </div>
+			          </div>
+			          <div layout="row" class="md-list-item-text compact" ng-if="item.type === 'SUBGROUP_DELETED'">
+			            <user-avatar ng-init="fabber = { idFabber: item.fabberId, firstName: item.fabberFirstName, lastName: item.fabberLastName }" fabber="fabber" avatar-w="38" avatar-h="38" avatar-font-size="18"></user-avatar>
+			            <div>
+				            <h3>
+				            	<a ui-sref="fabber.groups({ idFabber: item.fabberId })" class="custom-anchor-1 bold">
+									{{ item.fabberFirstName + " " + item.fabberLastName }}
+								</a>
+				            	deleted a subgroup.
+				            </h3>
+				            <p><span am-time-ago="item.creationDateTime | amParse:'DD-MM-YYYY HH:mm:ss'"></span></p>
+			            </div>
+			          </div>
+			        </md-list-item>
+		        </md-list>
+			</div>
+		</div>
+	</div>
 </div>

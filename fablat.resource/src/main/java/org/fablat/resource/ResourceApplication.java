@@ -7,30 +7,28 @@ import java.util.UUID;
 import javax.sql.DataSource;
 
 import org.apache.commons.dbcp2.BasicDataSource;
+import org.fablat.resource.model.dao.ActivityLogDAO;
 import org.fablat.resource.model.dao.FabberDAO;
 import org.fablat.resource.model.dao.FabberInfoDAO;
-import org.fablat.resource.model.dao.GroupActivityDAO;
 import org.fablat.resource.model.dao.GroupDAO;
 import org.fablat.resource.model.dao.GroupMemberDAO;
 import org.fablat.resource.model.dao.LabDAO;
 import org.fablat.resource.model.dao.LocationDAO;
 import org.fablat.resource.model.dao.RoleDAO;
 import org.fablat.resource.model.dao.RoleFabberDAO;
-import org.fablat.resource.model.dao.SubGroupActivityDAO;
 import org.fablat.resource.model.dao.SubGroupDAO;
 import org.fablat.resource.model.dao.SubGroupMemberDAO;
 import org.fablat.resource.model.dao.WorkshopDAO;
 import org.fablat.resource.model.dao.WorkshopTutorDAO;
+import org.fablat.resource.model.daoimpl.ActivityLogDAOImpl;
 import org.fablat.resource.model.daoimpl.FabberDAOImpl;
 import org.fablat.resource.model.daoimpl.FabberInfoDAOImpl;
-import org.fablat.resource.model.daoimpl.GroupActivityDAOImpl;
 import org.fablat.resource.model.daoimpl.GroupDAOImpl;
 import org.fablat.resource.model.daoimpl.GroupMemberDAOImpl;
 import org.fablat.resource.model.daoimpl.LabDAOImpl;
 import org.fablat.resource.model.daoimpl.LocationDAOImpl;
 import org.fablat.resource.model.daoimpl.RoleDAOImpl;
 import org.fablat.resource.model.daoimpl.RoleFabberDAOImpl;
-import org.fablat.resource.model.daoimpl.SubGroupActivityDAOImpl;
 import org.fablat.resource.model.daoimpl.SubGroupDAOImpl;
 import org.fablat.resource.model.daoimpl.SubGroupMemberDAOImpl;
 import org.fablat.resource.model.daoimpl.WorkshopDAOImpl;
@@ -122,6 +120,11 @@ public class ResourceApplication {
 	
 	// ========== DAO Beans ==========
 
+	@Bean(name = "activityLogDAO")
+	public ActivityLogDAO getActivityLogDAO() {
+		return new ActivityLogDAOImpl();
+	}
+	
 	@Bean(name = "fabberDAO")
 	public FabberDAO getFabberDAO() {
 		return new FabberDAOImpl();
@@ -140,18 +143,6 @@ public class ResourceApplication {
 	@Bean(name = "groupMemberDAO")
 	public GroupMemberDAO getGroupMemberDAO() {
 		return new GroupMemberDAOImpl();
-	}
-	
-	@Autowired
-	@Bean(name = "groupActivityDAO")
-	public GroupActivityDAO getGroupActivityDAO() {
-		return new GroupActivityDAOImpl();
-	}
-	
-	@Autowired
-	@Bean(name = "subGroupActivityDAO")
-	public SubGroupActivityDAO getSubGroupActivityDAO() {
-		return new SubGroupActivityDAOImpl();
 	}
 	
 	@Bean(name = "labDAO")

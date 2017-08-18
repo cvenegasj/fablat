@@ -1,8 +1,8 @@
-<div class="md-padding" layout="column" flex>
+<div class="md-padding" layout="column" flex ng-controller="SubgroupManagementWorkshopsCtrl">
 	<div class="generic-container-1">
-		<div class="header md-subhead" layout="row" layout-align="none center" style="position: relative;">
-			<div><span class="bold">{{ subgroup.name }}</span> upcoming workshops:</div>
-			<md-button ui-sref="subgroup.addWorkshop" class="md-raised md-accent" style="margin: 0; position: absolute; right: 15px;">New workshop</md-button>
+		<div class="header" md-colors="{background: 'darkLightBlue-background-900'}" layout="row" layout-align="none center" style="position: relative;">
+			<div class="title"><span class="bold">{{ subgroup.name }}</span> upcoming workshops:</div>
+			<md-button ui-sref="subgroup.addWorkshop" class="md-raised" style="margin: 0; position: absolute; right: 15px;">New workshop</md-button>
 		</div>
 		<div>
 			<div ng-if="subgroup.workshops.length === 0" class="centered no-data-2" style="margin-top: 15px;">No workshops created yet.</div>
@@ -12,9 +12,19 @@
 		            <h3><a ui-sref="workshop.general({ idWorkshop: item.idWorkshop })" class="custom-anchor-1 bold">{{ item.name }}</a></h3>
 		            <p> {{ item.startDateMonth + " " + item.startDateDay }} · {{ item.labName ? item.labName + " · " : "" }} {{ item.isPaid ? item.price + item.currency : "FREE" }}</p>
 		          </div>
-		          <md-button class="md-secondary md-icon-button" ng-click="doSecondaryAction($event)" aria-label="more">
-		          	<md-icon md-font-set="material-icons" aria-label="More">more_vert</md-icon>
-		          </md-button>
+		          
+		          <md-menu md-position-mode="target-right target" class="md-secondary">
+	      		  	<md-button class="md-icon-button" aria-label="more" ng-click="$mdMenu.open($event)">
+		    			<md-icon md-font-set="material-icons">more_vert</md-icon>
+		    		</md-button>
+			        <md-menu-content width="3">
+			        	<md-menu-item>
+			            	<md-button ng-click="removeWorkshop($event, item)">
+			                	Remove workshop
+			              	</md-button>
+			            </md-menu-item>
+			      	</md-menu-content>
+			      </md-menu>
 		        </md-list-item>
 	        </md-list>
 		</div>

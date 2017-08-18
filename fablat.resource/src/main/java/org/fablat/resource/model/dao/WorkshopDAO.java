@@ -10,5 +10,7 @@ public interface WorkshopDAO extends GenericDAO<Workshop, Integer> {
 	Integer countAllBySubGroupBeforeDate(Integer idSubGroup, Date date);
 
 	List<Workshop> findAllBySubGroupAfterDate(Integer idSubGroup, Date date);
+	
+	List<Workshop> findAllAfterDate(Date date);
 
 }

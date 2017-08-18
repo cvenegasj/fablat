@@ -13,6 +13,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -37,7 +38,7 @@ public class Group implements java.io.Serializable {
 	private Boolean enabled;
 	private Set<GroupMember> groupMembers = new HashSet<GroupMember>();
 	private Set<SubGroup> subGroups = new HashSet<SubGroup>();
-	private Set<GroupActivity> activities = new HashSet<GroupActivity>(); 
+	private Set<ActivityLog> activities = new HashSet<ActivityLog>(); 
 
 	public Group() {
 
@@ -139,6 +140,7 @@ public class Group implements java.io.Serializable {
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "group")
 	@Fetch(FetchMode.JOIN)
+	@OrderBy("date(creationDateTime) asc")
 	public Set<GroupMember> getGroupMembers() {
 		return groupMembers;
 	}
@@ -159,11 +161,11 @@ public class Group implements java.io.Serializable {
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "group")
 	@Fetch(FetchMode.JOIN)
-	public Set<GroupActivity> getActivities() {
+	public Set<ActivityLog> getActivities() {
 		return activities;
 	}
 
-	public void setActivities(Set<GroupActivity> activities) {
+	public void setActivities(Set<ActivityLog> activities) {
 		this.activities = activities;
 	}
 

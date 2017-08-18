@@ -17,29 +17,40 @@ import javax.persistence.TemporalType;
 
 @SuppressWarnings("serial")
 @Entity
-@Table(name = "SubGroupActivity")
-public class SubGroupActivity implements java.io.Serializable {
+@Table(name = "ActivityLog")
+public class ActivityLog implements java.io.Serializable {
 
-	private Integer idSubGroupActivity;
+	private Integer idActivityLog;
+	private String level;
 	private String type;
 	private String visibility;
 	private Date creationDateTime;
+	private Fabber fabber;
+	private Group group;
 	private SubGroup subGroup;
-	private SubGroupMember subGroupMember;
 
-	public SubGroupActivity() {
+	public ActivityLog() {
 
 	}
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "idSubGroupActivity", unique = true, nullable = false)
-	public Integer getIdSubGroupActivity() {
-		return idSubGroupActivity;
+	@Column(name = "idActivityLog", unique = true, nullable = false)
+	public Integer getIdActivityLog() {
+		return idActivityLog;
 	}
 
-	public void setIdSubGroupActivity(Integer idSubGroupActivity) {
-		this.idSubGroupActivity = idSubGroupActivity;
+	public void setIdActivityLog(Integer idActivityLog) {
+		this.idActivityLog = idActivityLog;
+	}
+
+	@Column(name = "level", nullable = false)
+	public String getLevel() {
+		return level;
+	}
+
+	public void setLevel(String level) {
+		this.level = level;
 	}
 
 	@Column(name = "type", nullable = false)
@@ -71,23 +82,33 @@ public class SubGroupActivity implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "idSubGroup", nullable = false)
+	@JoinColumn(name = "idFabber", nullable = false)
+	public Fabber getFabber() {
+		return fabber;
+	}
+
+	public void setFabber(Fabber fabber) {
+		this.fabber = fabber;
+	}
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "idGroup")
+	public Group getGroup() {
+		return group;
+	}
+
+	public void setGroup(Group group) {
+		this.group = group;
+	}
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "idSubGroup")
 	public SubGroup getSubGroup() {
 		return subGroup;
 	}
 
 	public void setSubGroup(SubGroup subGroup) {
 		this.subGroup = subGroup;
-	}
-
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "idSubGroupMember", nullable = false)
-	public SubGroupMember getSubGroupMember() {
-		return subGroupMember;
-	}
-
-	public void setSubGroupMember(SubGroupMember subGroupMember) {
-		this.subGroupMember = subGroupMember;
 	}
 
 }

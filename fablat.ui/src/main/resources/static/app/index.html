@@ -15,7 +15,7 @@
 	<meta property="og:url" content="" />
 	
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/angular-material/1.1.1/angular-material.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/angular-material/1.1.4/angular-material.min.css">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 	<link rel="stylesheet" href="css/angular-material-sidenav.css">
 	<link rel="stylesheet" href="css/app.css">
@@ -23,6 +23,7 @@
 </head>
 <body layout="row" ng-cloak ng-controller="AppCtrl" ng-show="authenticated">
 
+	<!--
 	<md-sidenav id="left-sidenav" md-whiteframe="3" md-component-id="left" md-is-locked-open="$mdMedia('gt-sm')">
 		<header class="nav-header">
 	    	<a ng-href="#/" class="logo">
@@ -30,7 +31,7 @@
 	        	<h1 class="md-headline">Fab Lat Network</h1>
 	       </a>
 	    </header>
-
+	    
     	<md-content flex role="navigation">    
        		<md-menu-content id="left-sidenav-menu" flex>
 		        <md-menu-item>
@@ -43,7 +44,7 @@
 		          		Groups
 		          	</md-button>
 		        </md-menu-item>
-		        <!-- <md-menu-item>
+		        <md-menu-item>
 		          <md-button ui-sref="workshops" ui-sref-active="active">
 		          	Workshops
 		          </md-button>
@@ -52,23 +53,37 @@
 		          <md-button>
 		          	General admin features
 		          </md-button>
-		        </md-menu-item> -->
+		        </md-menu-item>
 		    </md-menu-content> 	
     	</md-content>
 	</md-sidenav>
+	-->
 
 	<div layout="column" flex role="main">
 		<md-progress-linear md-mode="indeterminate" class="md-hue-1" ng-if="isLoading"></md-progress-linear>
 		
 		<md-toolbar md-whiteframe="2">
 		    <div class="md-toolbar-tools">
-		    	<md-button class="md-icon-button" aria-label="Menu Button" hide-gt-sm ng-click="toggleSidenav('left')">
+		    	<!-- <md-button class="md-icon-button" aria-label="Menu Button" hide-gt-sm ng-click="toggleSidenav('left')">
 		            <md-icon md-font-set="material-icons" aria-label="Menu">menu</md-icon>
-		        </md-button>
-		        <h2>Fab Lat</h2>
+		        </md-button> -->
+		        <h1>
+		        	<a ui-sref="dashboard.groups">Fab Lat</a>
+		        </h1>
+		        
+		        <ul id="main-navbar" class="list-unstyled">
+		        	<li>
+		        		<a ui-sref="groups" ui-sref-active="active">Groups</a>
+		        	</li>
+		        	<li>
+		        		<a ui-sref="workshops" ui-sref-active="active">Workshops</a>
+		        	</li>
+		        </ul>
+		        
+		        
 		        <span flex></span>			
 				<md-menu md-offset="0 50" md-position-mode="target-right target" ng-if="user.firstName && user.lastName">
-			    	<md-button aria-label="Open user avatar menu" class="md-icon-button" style="height: auto; width: auto;" ng-click="openMenu($mdOpenMenu, $event)">
+			    	<md-button aria-label="Open user avatar menu" class="md-icon-button" style="height: auto; width: auto;" ng-click="$mdMenu.open($event)">
 			        	<user-avatar md-menu-origin fabber="user" avatar-w="38" avatar-h="38" avatar-font-size="18"></user-avatar>    	
 			      	</md-button>
 			      	<md-menu-content width="3">
@@ -97,7 +112,7 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.js"></script>
 	<script src="https://cdn.jsdelivr.net/angular.ui-router/1.0.0-alpha0/angular-ui-router.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-material/1.1.1/angular-material.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-material/1.1.4/angular-material.min.js"></script>
 	<!-- Date and Time manipulation libraries -->
 	<script src="js/moment.min.js"></script>
 	<script src="js/angular-moment.min.js"></script>

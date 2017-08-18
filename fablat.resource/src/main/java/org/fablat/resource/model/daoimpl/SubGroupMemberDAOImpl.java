@@ -1,5 +1,7 @@
 package org.fablat.resource.model.daoimpl;
 
+import java.util.List;
+
 import org.fablat.resource.entities.SubGroupMember;
 import org.fablat.resource.model.dao.SubGroupMemberDAO;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,4 +46,21 @@ public class SubGroupMemberDAOImpl extends GenericDAOImpl<SubGroupMember, Intege
 
 		return e;
 	}
+
+	@SuppressWarnings("unchecked")
+	@Transactional
+	public List<SubGroupMember> findAllBySubGroup(Integer idSubGroup) {
+		List<SubGroupMember> list = null;
+		list = (List<SubGroupMember>) getSession()
+				.createQuery(
+						"select x from " + getDomainClassName() + " x "
+								+ "where x.subGroup.id = :idSubGroup "
+								+ "order by case when x.isCoordinator = 1 then 0 else 1 end, "
+								+ "date(x.creationDateTime) asc")
+				.setInteger("idSubGroup", idSubGroup)
+				.list();
+
+		return list;
+	}
+	
 }

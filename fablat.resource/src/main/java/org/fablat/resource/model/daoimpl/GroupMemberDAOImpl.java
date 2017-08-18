@@ -1,5 +1,7 @@
 package org.fablat.resource.model.daoimpl;
 
+import java.util.List;
+
 import org.fablat.resource.entities.GroupMember;
 import org.fablat.resource.model.dao.GroupMemberDAO;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,6 +45,22 @@ public class GroupMemberDAOImpl extends GenericDAOImpl<GroupMember, Integer> imp
 				.setMaxResults(1).uniqueResult();
 
 		return e;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Transactional
+	public List<GroupMember> findAllByGroup(Integer idGroup) {
+		List<GroupMember> list = null;
+		list = (List<GroupMember>) getSession()
+				.createQuery(
+						"select x from " + getDomainClassName() + " x "
+								+ "where x.group.id = :idGroup "
+								+ "order by case when x.isCoordinator = 1 then 0 else 1 end, "
+								+ "date(x.creationDateTime) asc")
+				.setInteger("idGroup", idGroup)
+				.list();
+
+		return list;
 	}
 
 }

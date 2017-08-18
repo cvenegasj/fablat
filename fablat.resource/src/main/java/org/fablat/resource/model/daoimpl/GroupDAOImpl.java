@@ -22,4 +22,17 @@ public class GroupDAOImpl extends GenericDAOImpl<Group, Integer> implements Grou
 		return list;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Transactional
+	public List<Group> findAllOrderDate() {
+		List<Group> list = null;
+		list = (List<Group>) getSession()
+				.createQuery(
+						"select x from " + getDomainClassName() + " x "
+								+ "order by date(x.creationDateTime) asc")
+				.list();
+		
+		return list;
+	}
+
 }

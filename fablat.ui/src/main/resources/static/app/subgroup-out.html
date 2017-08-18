@@ -26,11 +26,6 @@
 				<div style="margin-bottom: 20px;">{{ subgroup.description }}</div>
 				<md-button class="md-raised md-accent" ng-click="joinSubgroup(subgroup.idSubGroup)">Join the subgroup</md-button>
 			</div>
-			<div class="info">
-				<div><md-icon md-svg-icon="timetable" class="icon-16"></md-icon> Reunions: Fridays, 3pm</div>
-				<div><md-icon md-svg-icon="web" class="icon-16"></md-icon> Main URL: <a href="" class="custom-anchor-1">www.bio.com</a></div>
-				<div><md-icon md-svg-icon="web" class="icon-16"></md-icon> Secondary URL: <a href="" class="custom-anchor-1">www.something.com</a></div>
-			</div>
 			<div class="members">
 				<div layout="row" layout-align="center center">
 					<h4>Members</h4>
@@ -39,9 +34,9 @@
 				<div flex layout="row" layout-wrap style="margin-top: 30px;">
 					<div flex-gt-sm="15" flex="25" style="margin-bottom: 10px;" ng-repeat="item in subgroup.members">
 						<a ui-sref="fabber({ idFabber: item.fabberId })">
-							<user-avatar fabber="user" avatar-w="50" avatar-h="50" avatar-font-size="18"></user-avatar>
+							<user-avatar fabber="item" avatar-w="50" avatar-h="50" avatar-font-size="18"></user-avatar>
 						</a>
-						<div class="font-12 color-2 centered" flex md-truncate style="margin-top: 5px;">{{ item.firstName + " " + item.lastName }}</div>
+						<div class="font-12 color-2 centered" style="margin-top: 5px;">{{ item.firstName + " " + item.lastName }}</div>
 						<div class="badge-2 centered" md-colors="{background: 'default-primary-A400'}" ng-if="item.isCoordinator">coordinator</div>
 					</div>
 				</div>

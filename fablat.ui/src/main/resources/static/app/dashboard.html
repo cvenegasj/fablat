@@ -1,12 +1,12 @@
-<div layout="column" layout-align="center none" ng-controller="DashboardCtrl">
-	<div layout="column" style="margin-bottom: 10px;">
-		<div layout="column" layout-align="center center" flex="90" flex-offset="5" style="margin-top: 30px; margin-bottom: 25px;">
+<div layout-gt-sm="row" layout="column" ng-controller="DashboardCtrl">
+	<div style="padding: 15px 35px;" layout="column" flex-gt-sm="25" flex>
+		<div layout="column" layout-align="center center" style="margin-top: 15px; margin-bottom: 35px;">
 			<user-avatar fabber="fabber" avatar-w="100" avatar-h="100" avatar-font-size="40"></user-avatar>
 			<div class="md-headline" style="margin-top: 5px;">{{ fabber.firstName }} {{ fabber.lastName }}</div>
 			<div class="font-14"><span>{{ fabber.email }}</span> <span class="color-4" ng-if="user.hasAdminGeneralRole">[ADMIN_GENERAL]</span></div>
 			<div class="font-14"><span>{{ fabber.isNomade ? "Fab Nomade" : fabber.labName }}</span> <span class="color-4" ng-if="user.hasAdminLabRole">[ADMIN_LAB]</span></div>
 		</div>
-		<div layout="row">
+		<div layout-gt-sm="column" layout="row">
 			<md-card flex layout="column" layout-align="start center" md-theme="darkOrange" class="custom-card-1" layout-fill>
 				<div class="font-14">Total score</div>
 				<div>
@@ -31,7 +31,7 @@
 					<md-icon md-svg-icon="content-copy" class="icon-25"></md-icon> <span class="font-18">{{ fabber.replicatorScore }}</span>
 				</div>
 			</md-card>
-			<md-card flex="25" layout="column" layout-align="start center" md-theme="darkLightBlue" class="custom-card-1" layout-fill>
+			<md-card flex layout="column" layout-align="start center" md-theme="darkLightBlue" class="custom-card-1" layout-fill>
 				<div class="font-14">Goal for this week</div>
 				<md-content class="font-16" style="max-height: 57px;">
 					{{ fabber.weekGoal ? fabber.weekGoal : "" }}
@@ -40,7 +40,7 @@
 		</div>
 	</div>
 	
-	<div class="md-padding">
+	<div flex>
 		<md-nav-bar md-selected-nav-item="currentNavItem" nav-bar-aria-label="navigation links">
 	      	<md-nav-item md-nav-sref="dashboard.groups" name="groups">
 	        	Your Groups & Subgroups

@@ -1,19 +1,41 @@
-<div class="md-padding" layout="column" flex>
+<div class="md-padding" layout="column" flex ng-controller="GroupManagementMembersCtrl">
 	<div class="generic-container-1">
-		<div class="header md-subhead" layout="row" layout-align="none center">
-			<div><span class="bold">{{ group.name }}</span> members:</div>
+		<div class="header" md-colors="{background: 'darkLime-background-600'}" layout="row" layout-align="none center">
+			<div class="title"><span class="bold">{{ group.name }}</span> members:</div>
 		</div>
 		<div>
 			<md-list class="list-type-1" dense flex>
 				<md-list-item class="md-2-line" ng-repeat="item in group.members">
-		          <div class="md-list-item-text compact">
-		            <h3> <a href="" class="custom-anchor-1 bold">{{ item.firstName + " " + item.lastName }}</a>
-		            <span class="badge-1" md-colors="{background: 'default-accent-300'}" ng-if="item.isCoordinator">coordinator</span></h3>
-		            <p> Joined 2 days ago </p>
-		          </div>
-		          <md-button class="md-secondary md-icon-button" ng-click="doSecondaryAction($event)" aria-label="more">
-		          	<md-icon md-font-set="material-icons" aria-label="More">more_vert</md-icon>
-		          </md-button>
+		        	<div class="md-list-item-text compact">
+			            <h3>
+			            	<a ui-sref="fabber.groups({ idFabber: item.fabberId })" class="custom-anchor-1 bold">{{ item.firstName + " " + item.lastName }}</a>
+			            	<span class="badge-1" md-colors="{background: 'default-accent-300'}" ng-if="item.isCoordinator">coordinator</span>
+			            </h3>
+		            	<p>joined <span am-time-ago="item.creationDateTime | amParse:'DD-MM-YYYY HH:mm:ss'"></span></p>
+		          	</div>
+		          
+		          	<md-menu md-position-mode="target-right target" class="md-secondary">
+			      		<md-button class="md-icon-button" aria-label="more" ng-click="$mdMenu.open($event)">
+				    		<md-icon md-font-set="material-icons">more_vert</md-icon>
+				    	</md-button>
+			        	<md-menu-content width="3">
+			        		<md-menu-item ng-if="item.fabberId == user.id">
+				            	<md-button ng-click="leave()">
+				                	Leave group
+				              	</md-button>
+			            	</md-menu-item>
+			            	<md-menu-item ng-if="item.fabberId != user.id">
+				            	<md-button ng-click="nameCoordinator(item)">
+				                	Name as coordinator
+				              	</md-button>
+			            	</md-menu-item>
+			            	<md-menu-item ng-if="item.fabberId != user.id">
+				            	<md-button ng-click="removeMember($event, item)">
+				                	Remove from group 
+				              	</md-button>
+			            	</md-menu-item>
+			      		</md-menu-content>
+			      	</md-menu>
 		        </md-list-item>
 	        </md-list>
 		</div>
