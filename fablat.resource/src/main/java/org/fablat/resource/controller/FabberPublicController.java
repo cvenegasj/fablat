@@ -1,5 +1,9 @@
 package org.fablat.resource.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 import org.fablat.resource.dto.FabberDTO;
 import org.fablat.resource.entities.Fabber;
 import org.fablat.resource.entities.FabberInfo;
@@ -34,6 +38,15 @@ public class FabberPublicController {
 	@Autowired
 	private RoleFabberDAO roleFabberDAO;
 
+	@RequestMapping(value = "/hello", method = RequestMethod.GET)
+	public Map<String, Object> home() {
+		Map<String, Object> model = new HashMap<String, Object>();
+		model.put("id", UUID.randomUUID().toString());
+		model.put("content", "Hello World");
+
+		return model;
+	}
+	
 	@RequestMapping(value = "/signup", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
 	public FabberDTO create(@RequestBody FabberDTO fabberDTO) {

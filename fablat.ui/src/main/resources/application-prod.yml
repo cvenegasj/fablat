@@ -26,6 +26,15 @@ zuul:
     user:
       path: /user/**
       url: http://159.203.118.244:9999/uaa/user
+  
+# Increase the Hystrix timeout to 60s (globally)
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 60000
       
 logging:
   level:

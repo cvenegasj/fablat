@@ -25,7 +25,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/signup-successful.html", "/signup.html", "/signup-fabs.html",
 						"/public.html", "/index.html", "/resource/public/**", "/login", "/")
 				.permitAll()
-				// Allow anyone
 				// .antMatchers("/app/index.html#/admin-lat/**").access("hasRole('ADMIN_LAT')")
 				// .antMatchers("/app/index.html#/admin-lab/**").access("hasRole('ADMIN_LAB')")
 				.anyRequest().authenticated()

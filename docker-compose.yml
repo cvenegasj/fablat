@@ -9,6 +9,7 @@ resource:
     - "9000:9000"
   links:
     - auth
+    - ui
 
 ui:
   image: carlosvj/fablat:fablat-ui
