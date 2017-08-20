@@ -1,5 +1,4 @@
 version: "3"
-
 services:
   auth:
     image: carlosvj/fablat:fablat-auth
