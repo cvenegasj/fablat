@@ -9,14 +9,14 @@ services:
   resource:
     image: carlosvj/fablat:fablat-resource
     ports:
-		- "9000:9000"
-	links:
-	    - auth
+      - "9000:9000"
+    links:
+      - auth
 	    
   ui:
 	image: carlosvj/fablat:fablat-ui
 	ports:
-	    - "8080:8080"
+      - "8080:8080"
 	links:
-	    - auth
-	    - resource
+      - auth
+      - resource
