@@ -22,7 +22,7 @@ zuul:
   routes:
     resource:
       path: /resource/**
-      url: http://159.203.118.244:9000
+      url: http://resource:9000/resource
     user:
       path: /user/**
       url: http://159.203.118.244:9999/uaa/user
