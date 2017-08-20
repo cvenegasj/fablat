@@ -6,17 +6,16 @@ debug: true
 spring:
   aop:
     proxy-target-class: true
-
 security:
   oauth2:
     client:
-      accessTokenUri: http://auth:9999/uaa/oauth/token
-      userAuthorizationUri: http://auth:9999/uaa/oauth/authorize
+      accessTokenUri: http://159.203.118.244:9999/uaa/oauth/token
+      userAuthorizationUri: http://159.203.118.244:9999/uaa/oauth/authorize
       clientId: fablat
       clientSecret: c6d4f0e6125fcc1879b8dc42983c73ea1b1adf4f67a1cba0010d29ed8895017c
       scope: openid
     resource:
-      userInfoUri: http://auth:9999/uaa/user
+      userInfoUri: http://159.203.118.244:9999/uaa/user
 
 zuul:
   routes:
@@ -25,7 +24,7 @@ zuul:
       url: http://resource:9000
     user:
       path: /user/**
-      url: http://auth:9999/uaa/user
+      url: http://159.203.118.244:9999/uaa/user
   
 # Increase the Hystrix timeout to 60s (globally)
 hystrix:
