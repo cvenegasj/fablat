@@ -17,4 +17,3 @@ ui:
     - "8080:8080"
   links:
     - auth
-    - resource
