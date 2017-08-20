@@ -1,0 +1,107 @@
+<div layout="column" ng-controller="WorkshopsCtrl">
+	<md-toolbar md-whiteframe="1" md-theme="neutral" class="md-hue-1">
+    	<div class="md-toolbar-tools" >
+	    	<h2 flex md-truncate>Workshops</h2>
+		</div>
+	</md-toolbar>
+
+	<div class="md-padding">
+		<div layout="row" layout-align="center center">
+			<h4 class="md-title">Upcoming workshops</h4>
+		</div>
+		<div ng-if="workshops.length === 0" class="centered no-data-3" style="margin-top: 25px;">No upcoming workshops.</div>
+		<div class="workshop-list-2" flex-offset="15" flex="70" layout="column" ng-if="workshops.length > 0">
+			<div ng-repeat="item in workshops">
+				<div layout="row" class="list-item" ng-init="item.showDetail = false;" ng-click="item.showDetail = !item.showDetail;">
+					<div class="date uppercase" flex="15" layout="column" layout-align="center center" md-colors="{background: 'default-accent-400'}">
+						<div class="day">{{ item.startDateDay }}</div>
+						<div class="month uppercase">{{ item.startDateMonth }}</div>
+						<div class="hour">{{ item.startTime }}</div>
+					</div>
+					<div class="description" flex="85" layout="column" layout-align="center auto">
+						<div class="font-20 bold workshop-name">#{{ item.replicationNumber }}: {{ item.name }}</div>
+						<div class="font-13">
+							<span ng-if="item.labName">{{ item.labName }} · </span>
+							<span ng-if="!item.isPaid">Free</span>
+							<span ng-if="item.isPaid">{{ item.price + " " + item.currency }}</span>
+						</div>
+					</div>
+				</div>
+				<div class="workshop-container-2" ng-show="item.showDetail">
+					<div class="section" flex>
+						<md-icon md-font-set="material-icons" aria-label="Info" style="position: absolute;">info_outline</md-icon>
+						<div class="section-header">
+							<h2 class="font-16">Workshop details</h2>
+						</div>
+						<div class="font-14 section-content">
+							<p style="margin-bottom: 20px;">{{ item.description }}</p>
+							<span ng-if="item.facebookUrl">
+								Follow the event on Facebook: 
+								<a href="{{ item.facebookUrl }}" target="_blank" class="custom-anchor-1" md-colors="{color: 'accent-900'}">{{ item.facebookUrl }}</a>
+							</span>
+						</div>
+					</div>
+					<md-divider></md-divider>
+					<div layout-gt-xs="row">
+						<div class="section" flex>
+							<md-icon md-font-set="material-icons" aria-label="Time" style="position: absolute;">schedule</md-icon>
+							<div class="section-header">
+								<h2 class="font-16">Time</h2>
+							</div>
+							<div class="font-14 section-content">
+								<span ng-if="item.startDate === item.endDate">{{ item.startDateFormatted + " - " + item.endTime }}</span>
+								<span ng-if="item.startDate !== item.endDate">{{ item.startDateFormatted }} - {{ item.endDateFormatted }}</span>
+							</div>
+						</div>
+						<md-divider></md-divider>
+						<div class="section" flex>
+							<md-icon md-font-set="material-icons" aria-label="Time" style="position: absolute;">place</md-icon>
+							<div class="section-header">
+								<h2 class="font-16">Location</h2>
+							</div>
+							<div class="font-14 section-content">
+								<span ng-if="item.labName">{{ item.labName }}</span><br ng-if="workshop.labName" />
+								<span ng-if="item.locationAddress">{{ item.locationAddress + " · " }}</span>
+								<span ng-if="item.locationCity && item.locationCountry">{{ item.locationCity + ", " + item.locationCountry }}</span><br ng-if="item.locationCity && item.locationCountry" />
+								<span ng-if="item.locationLatitude && item.locationLongitude"><a href="http://www.google.com/maps/place/{{ item.locationLatitude }},{{ item.locationLongitude }}" target="_blank" class="custom-anchor-1" md-colors="{color: 'accent-900'}">ver mapa</a></span>
+							</div>
+						</div>
+					</div>
+					<md-divider></md-divider>
+					<div class="section" flex>
+						<md-icon md-font-set="material-icons" aria-label="Cost" style="position: absolute;">attach_money</md-icon>
+						<div class="section-header">
+							<h2 class="font-16">Cost</h2>
+						</div>
+						<div class="font-14 section-content">
+							<span ng-if="!item.isPaid">FREE</span>
+							<span ng-if="item.isPaid">{{ item.price + " " + item.currency }}</span>
+							<br />
+							<span ng-if="item.ticketsUrl">
+								Tickets available <a href="{{ item.ticketsUrl }}" target="_blank" class="custom-anchor-1" md-colors="{color: 'accent-900'}">here</a>.
+							</span>
+						</div>
+					</div>
+					<md-divider></md-divider>
+					<div class="section" flex>
+						<md-icon md-font-set="material-icons" aria-label="Tutor" style="position: absolute;">headset_mic</md-icon>
+						<div class="section-header">
+							<h2 class="font-16">Tutor(s)</h2>
+						</div>
+						<div class="font-14 section-content">
+							<div class="tutor" ng-repeat="subitem in item.tutors">
+								{{ subitem.firstName + " " + subitem.lastName }} <br />
+								<span class="font-13"><i>{{ subitem.email }}</i></span>
+							</div>	
+						</div>
+					</div>
+					<md-divider></md-divider>
+					<div class="section" flex style="padding-top: 10px; padding-bottom: 10px;">
+						<md-button class="md-accent" ng-click="">Add to Google Calendar</md-button>
+					</div>
+				</div>
+				<md-divider ng-if="!$last"></md-divider>
+			</div>	
+		</div>
+	</div>
+</div>

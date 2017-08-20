@@ -13,7 +13,7 @@
 		</div>
 	</md-toolbar>
 	
-	<div class="workshop-container-1" >
+	<div class="workshop-container-1">
 		<div class="header" layout="row" layout-align="none center">
 			<h1 class="font-20 bold">{{ "#" + workshop.replicationNumber + ": " + workshop.name }}</h1>
 		</div>
@@ -53,7 +53,7 @@
 					<span ng-if="workshop.labName">{{ workshop.labName }}</span><br ng-if="workshop.labName" />
 					<span ng-if="workshop.locationAddress">{{ workshop.locationAddress + " · " }}</span>
 					<span ng-if="workshop.locationCity && workshop.locationCountry">{{ workshop.locationCity + ", " + workshop.locationCountry }}</span><br ng-if="workshop.locationCity && workshop.locationCountry" />
-					<span ng-if="workshop.locationLatitude && workshop.locationLongitude">(<a href="" class="custom-anchor-1" md-colors="{color: 'accent-900'}">ver mapa</a>)</span>
+					<span ng-if="workshop.locationLatitude && workshop.locationLongitude"><a href="http://www.google.com/maps/place/{{ workshop.locationLatitude }},{{ workshop.locationLongitude }}" target="_blank" class="custom-anchor-1" md-colors="{color: 'accent-900'}">ver mapa</a></span>
 				</div>
 			</div>
 		</div>
@@ -68,7 +68,7 @@
 				<span ng-if="workshop.isPaid">{{ workshop.price + " " + workshop.currency }}</span>
 				<br />
 				<span ng-if="workshop.ticketsUrl">
-					Tickets available at <a href="{{ workshop.ticketsUrl }}" target="_blank" class="custom-anchor-1" md-colors="{color: 'accent-900'}">Eventbrite</a>.
+					Tickets available <a href="{{ workshop.ticketsUrl }}" target="_blank" class="custom-anchor-1" md-colors="{color: 'accent-900'}">here</a>.
 				</span>
 			</div>
 		</div>

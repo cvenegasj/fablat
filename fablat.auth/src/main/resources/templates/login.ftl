@@ -77,11 +77,11 @@
 			  
 			  <div style="margin-top: 15px; margin-bottom: 30px;">
 			  	<div style="display: inline-block; padding: 10px;">
-			  		<a href="http://lowcost-env.p2wn4fjmir.us-east-1.elasticbeanstalk.com/public.html" style="color: #00C853; font-size: 14px;">Create an account</a>
+			  		<a href="http://fablat.net/public.html" style="color: #00C853; font-size: 14px;">Create an account</a>
 			  	</div>
 			  	|
 			  	<div style="display: inline-block; padding: 10px;">
-			  		<a href="http://lowcost-env.p2wn4fjmir.us-east-1.elasticbeanstalk.com/public.html" style="color: #00C853; font-size: 14px;">Forgot your password?</a>
+			  		<a href="http://fablat.net/public.html" style="color: #00C853; font-size: 14px;">Forgot your password?</a>
 			  	</div>
 			  </div>
 			  

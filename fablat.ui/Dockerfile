@@ -1,4 +1,4 @@
-FROM openjdk:8-jdk-alpine
+FROM openjdk:8-jre-alpine
 ADD target/fablat-ui.jar fablat-ui.jar
 ENV JAVA_OPTS=""
 EXPOSE 8080

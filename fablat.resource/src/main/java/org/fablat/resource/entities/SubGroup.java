@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -162,6 +163,7 @@ public class SubGroup implements java.io.Serializable {
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "subGroup")
 	@Fetch(FetchMode.JOIN)
+	@OrderBy("date(startDateTime) asc")
 	public Set<Workshop> getWorkshops() {
 		return workshops;
 	}

@@ -9,8 +9,8 @@
 			<md-list class="list-type-1" dense flex>
 				<md-list-item class="md-2-line" ng-repeat="item in subgroup.workshops">
 		          <div class="md-list-item-text compact">
-		            <h3><a ui-sref="workshop.general({ idWorkshop: item.idWorkshop })" class="custom-anchor-1 bold">{{ item.name }}</a></h3>
-		            <p> {{ item.startDateMonth + " " + item.startDateDay }} · {{ item.labName ? item.labName + " · " : "" }} {{ item.isPaid ? item.price + item.currency : "FREE" }}</p>
+		            <h3><a ui-sref="workshop.general({ idWorkshop: item.idWorkshop })" class="custom-anchor-1 bold">#{{ item.replicationNumber }}:  {{ item.name }}</a></h3>
+		            <p>{{ item.startDateMonth + " " + item.startDateDay }} · {{ item.labName ? item.labName + " · " : "" }} {{ item.isPaid ? item.price + item.currency : "FREE" }}</p>
 		          </div>
 		          
 		          <md-menu md-position-mode="target-right target" class="md-secondary">

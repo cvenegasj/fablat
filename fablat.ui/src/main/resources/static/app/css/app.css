@@ -179,6 +179,11 @@ html {
 	line-height: 24px !important;
 }
 
+.font-21 {
+	font-size: 21px !important;
+	line-height: 26px !important;
+}
+
 .icon-16 {
 	width: 20px !important;
 	height: auto;
@@ -628,10 +633,89 @@ div.workshop-list .list-item .hour {
 }
 /******/
 
+/*** workshops.html ***/
+div.workshop-list-2 {
+	border: 1px solid #E0E0E0;
+}
+
+div.workshop-list-2 .list-item .date {
+	padding: 5px;
+}
+
+div.workshop-list-2 .list-item .description {
+	padding: 5px 15px;
+	background-color: #fff;
+	color: #616161;
+}
+
+div.workshop-list-2 .list-item .description .workshop-name {
+	color: #424242;
+	margin-bottom: 2px;
+}
+	
+div.workshop-list-2 .list-item .day {
+	font-size: 22px;
+	line-height: 27px;
+	font-weight: 600;
+}
+
+div.workshop-list-2 .list-item .month {
+	font-size: 12px;
+	line-height: 16px;
+	font-weight: 400;
+}
+
+div.workshop-list-2 .list-item .hour {
+	font-size: 12px;
+	line-height: 16px;
+	font-weight: 400;
+}
+
+.workshop-container-2 {
+	background-color: #fff;
+}
+
+.workshop-container-2 div.header {
+	background-color: #D4E157;
+	padding: 30px;
+}
+
+.workshop-container-2 div.header h1 {
+	margin: 0;
+}
+
+.workshop-container-2 div.section {
+	padding: 30px;
+	position: relative;
+}
+
+.workshop-container-2 div.section md-icon {
+	position: absolute;
+}
+
+.workshop-container-2 div.section .section-header {
+	padding-left: 30px;
+	margin-bottom: 15px;
+}
+
+.workshop-container-2 div.section .section-header h2 {
+	margin: 3px;
+}
+
+.workshop-container-2 div.section .section-content {
+	padding-left: 30px;
+}
+
+.workshop-container-2 div.section .section-content .tutor {
+	margin-bottom: 15px;
+}
+/******/
+
 /*** workshop.general.html  ****/
 .workshop-container-1 {
 	border: 1px solid #E0E0E0;
 	border-radius: 3px;
+	background-color: #fff;
 }
 
 .workshop-container-1 div.header {

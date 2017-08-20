@@ -39,7 +39,7 @@
 					<span ng-if="workshop.labName">{{ workshop.labName }}</span><br ng-if="workshop.labName" />
 					<span ng-if="workshop.locationAddress">{{ workshop.locationAddress + " - " }}</span>
 					<span ng-if="workshop.locationCity && workshop.locationCountry">{{ workshop.locationCity + ", " + workshop.locationCountry }}</span><br ng-if="workshop.locationCity && workshop.locationCountry" />
-					<span ng-if="workshop.locationLatitude && workshop.locationLongitude"><a href="http://www.google.com/maps/place/{{workshop.locationLatitude}},{{workshop.locationLongitude}}" target="_blank" class="custom-anchor-1" md-colors="{color: 'accent-900'}">ver mapa</a></span>
+					<span ng-if="workshop.locationLatitude && workshop.locationLongitude"><a href="http://www.google.com/maps/place/{{ workshop.locationLatitude }},{{ workshop.locationLongitude }}" target="_blank" class="custom-anchor-1" md-colors="{color: 'accent-900'}">ver mapa</a></span>
 				</div>
 			</div>
 		</div>

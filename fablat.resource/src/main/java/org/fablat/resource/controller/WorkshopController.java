@@ -14,6 +14,7 @@ import java.util.List;
 import org.fablat.resource.dto.WorkshopDTO;
 import org.fablat.resource.dto.WorkshopTutorDTO;
 import org.fablat.resource.entities.Location;
+import org.fablat.resource.entities.SubGroup;
 import org.fablat.resource.entities.Workshop;
 import org.fablat.resource.entities.WorkshopTutor;
 import org.fablat.resource.model.dao.LocationDAO;
@@ -57,8 +58,16 @@ public class WorkshopController {
 		Instant now = Instant.now();
         ZonedDateTime zdtLima = now.atZone(ZoneId.of("GMT-05:00"));
 		
+        // find all workshops after today
 		for (Workshop w : workshopDAO.findAllAfterDate(Date.from(zdtLima.toInstant()))) {
 			WorkshopDTO wDTO = convertToDTO(w);
+			// workshop's tutors
+			List<WorkshopTutorDTO> tutors = new ArrayList<WorkshopTutorDTO>();
+			for (WorkshopTutor wt : w.getWorkshopTutors()) {
+				WorkshopTutorDTO wtDTO = convertToDTO(wt);
+				tutors.add(wtDTO);
+			}
+			wDTO.setTutors(tutors);
 			returnList.add(wDTO);
 		}
 		
@@ -121,21 +130,20 @@ public class WorkshopController {
         }
         
         // replication number: inserting and updating
-        // first getting the workshops count before 'now'
-        Integer beforeCount = workshopDAO.countAllBySubGroupBeforeDate(workshopDTO.getSubGroupId(), Date.from(zdtLima.toInstant()));
-        workshop.setReplicationNumber(beforeCount + 1);
-        
+        workshop.setReplicationNumber(workshop.getSubGroup().getWorkshops().size() + 1);
         Workshop workshopCreated = workshopDAO.makePersistent(workshop);
-        // then updating the replication number of the workshops 'after'
-        updateReplicationNumbers(workshopDTO.getSubGroupId(), Date.from(zdtLima.toInstant()));
+        // then updating the replication number of the workshops
+        updateReplicationNumbers(workshopDTO.getSubGroupId());
 		
 		return convertToDTO(workshopCreated);
 	}
 	
-	private void updateReplicationNumbers(Integer idSubGroup, Date date) {
-		for (Workshop w : workshopDAO.findAllBySubGroupAfterDate(idSubGroup, date)) {
-        	w.setReplicationNumber(w.getReplicationNumber() + 1);
+	private void updateReplicationNumbers(Integer idSubGroup) {
+		int i = 1;
+		for (Workshop w : subGroupDAO.findById(idSubGroup).getWorkshops()) {
+        	w.setReplicationNumber(i);
         	workshopDAO.makePersistent(w);
+        	i++;
         }
 	}
 	
@@ -173,7 +181,11 @@ public class WorkshopController {
 	@RequestMapping(value = "/{idWorkshop}", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
 	public void delete(@PathVariable("idWorkshop") Integer idWorkshop) {
-		workshopDAO.makeTransient(workshopDAO.findById(idWorkshop)); 
+		Workshop workshop = workshopDAO.findById(idWorkshop);
+		SubGroup subGroup = workshop.getSubGroup();
+		workshopDAO.makeTransient(workshop);
+		// update replication numbers
+		updateReplicationNumbers(subGroup.getIdSubGroup());
 	}
 	
 	
