@@ -11,9 +11,9 @@ services:
     links:
       - auth   
   ui:
-	image: carlosvj/fablat:fablat-ui
-	ports:
+    image: carlosvj/fablat:fablat-ui
+    ports:
       - "8080:8080"
-	links:
+    links:
       - auth
       - resource
