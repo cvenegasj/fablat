@@ -4,6 +4,8 @@ services:
     image: carlosvj/fablat:fablat-auth
     ports:
       - "9999:9999"
+    links:
+      - ui
   resource:
     image: carlosvj/fablat:fablat-resource
     ports:
