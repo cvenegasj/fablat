@@ -4,10 +4,16 @@ services:
     image: carlosvj/fablat:fablat-auth
     ports:
       - "9999:9999"
+    environment:
+      VIRTUAL_HOST: fablat.net
+      LETSENCRYPT_HOST: fablat.net
   resource:
     image: carlosvj/fablat:fablat-resource
     ports:
       - "9000:9000"
+    environment:
+      VIRTUAL_HOST: fablat.net
+      LETSENCRYPT_HOST: fablat.net
     links:
       - auth
   ui:
