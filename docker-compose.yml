@@ -21,6 +21,9 @@ services:
       VIRTUAL_HOST: fablat.net
       LETSENCRYPT_HOST: fablat.net
       LETSENCRYPT_EMAIL: cvj_2311@hotmail.com
+    expose:
+      - "80"
+      - "443"
 
 networks:
   default:
