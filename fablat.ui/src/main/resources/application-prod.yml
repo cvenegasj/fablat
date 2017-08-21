@@ -24,7 +24,7 @@ zuul:
       url: http://resource:9000
     user:
       path: /user/**
-      url: http://159.203.118.244:9999/uaa/user
+      url: http://auth:9999/uaa/user
   
 # Increase the Hystrix timeout to 60s (globally)
 hystrix:

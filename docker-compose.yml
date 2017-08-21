@@ -9,7 +9,7 @@ services:
     ports:
       - "9000:9000"
     links:
-      - auth   
+      - auth
   ui:
     image: carlosvj/fablat:fablat-ui
     ports:
@@ -17,3 +17,12 @@ services:
     links:
       - auth
       - resource
+    environment:
+      VIRTUAL_HOST: fablat.net
+      LETSENCRYPT_HOST: fablat.net
+      LETSENCRYPT_EMAIL: cvj_2311@hotmail.com
+
+networks:
+  default:
+    external:
+      name: nginx-proxy
