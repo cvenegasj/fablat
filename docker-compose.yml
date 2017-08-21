@@ -5,15 +5,13 @@ services:
     expose:
       - "9999"
     environment:
-      VIRTUAL_HOST: auth.fablat.net
-      LETSENCRYPT_HOST: fablat.net
+      VIRTUAL_HOST: fablat.net
   resource:
     image: carlosvj/fablat:fablat-resource
     expose:
       - "9000"
     environment:
-      VIRTUAL_HOST: resource.fablat.net
-      LETSENCRYPT_HOST: fablat.net
+      VIRTUAL_HOST: fablat.net
     links:
       - auth
   ui:
