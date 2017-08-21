@@ -12,8 +12,6 @@ services:
       - auth
   ui:
     image: carlosvj/fablat:fablat-ui
-    ports:
-      - "80:8080"
     links:
       - auth
       - resource
@@ -24,7 +22,6 @@ services:
     expose:
       - "80"
       - "443"
-
 networks:
   default:
     external:
