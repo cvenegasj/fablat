@@ -21,10 +21,10 @@ zuul:
   routes:
     resource:
       path: /resource/**
-      url: http://resource
+      url: http://resource.fablat.net
     user:
       path: /user/**
-      url: http://auth/uaa/user
+      url: http://auth.fablat.net/uaa/user
   
 # Increase the Hystrix timeout to 60s (globally)
 hystrix:
