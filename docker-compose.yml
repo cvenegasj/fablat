@@ -2,20 +2,27 @@ version: "3"
 services:
   auth:
     image: carlosvj/fablat:fablat-auth
-    expose:
-      - "9999"
+    #expose:
+    #  - "9999"
     environment:
-      VIRTUAL_HOST: fablat.net.auth
+      VIRTUAL_HOST: auth.fablat.net
+      VIRTUAL_PORT: 9999
+      LETSENCRYPT_HOST: auth.fablat.net
   resource:
     image: carlosvj/fablat:fablat-resource
-    expose:
-      - "9000"
+    #expose:
+    #  - "9000"
     environment:
-      VIRTUAL_HOST: fablat.net.resource
+      VIRTUAL_HOST: resource.fablat.net
+      VIRTUAL_PORT: 9000
+      LETSENCRYPT_HOST: resource.fablat.net
     links:
       - auth
   ui:
     image: carlosvj/fablat:fablat-ui
+    expose:
+      - "80"
+      - "443"
     links:
       - auth
       - resource
@@ -23,9 +30,6 @@ services:
       VIRTUAL_HOST: fablat.net
       LETSENCRYPT_HOST: fablat.net
       LETSENCRYPT_EMAIL: cvj_2311@hotmail.com
-    expose:
-      - "80"
-      - "443"
 networks:
   default:
     external:

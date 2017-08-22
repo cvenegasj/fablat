@@ -9,13 +9,13 @@ spring:
 security:
   oauth2:
     client:
-      accessTokenUri: https://fablat.net:9999/uaa/oauth/token
-      userAuthorizationUri: https://fablat.net:9999/uaa/oauth/authorize
+      accessTokenUri: https://auth.fablat.net/uaa/oauth/token
+      userAuthorizationUri: https://auth.fablat.net/uaa/oauth/authorize
       clientId: fablat
       clientSecret: c6d4f0e6125fcc1879b8dc42983c73ea1b1adf4f67a1cba0010d29ed8895017c
       scope: openid
     resource:
-      userInfoUri: https://fablat.net:9999/uaa/user
+      userInfoUri: https://auth.fablat.net/uaa/user
 
 zuul:
   routes:
