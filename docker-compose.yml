@@ -2,6 +2,7 @@ version: "3"
 services:
   auth:
     image: carlosvj/fablat:fablat-auth
+    restart: always
     #expose:
     #  - "9999"
     environment:
@@ -10,6 +11,7 @@ services:
       LETSENCRYPT_HOST: auth.fablat.net
   resource:
     image: carlosvj/fablat:fablat-resource
+    restart: always
     #expose:
     #  - "9000"
     environment:
@@ -20,6 +22,7 @@ services:
       - auth
   ui:
     image: carlosvj/fablat:fablat-ui
+    restart: always
     expose:
       - "80"
       - "443"
