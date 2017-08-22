@@ -14,12 +14,12 @@ services:
     restart: always
     #expose:
     #  - "9000"
+    links:
+      - auth
     environment:
       VIRTUAL_HOST: resource.fablat.net
       VIRTUAL_PORT: 9000
       LETSENCRYPT_HOST: resource.fablat.net
-    links:
-      - auth
   ui:
     image: carlosvj/fablat:fablat-ui
     restart: always
