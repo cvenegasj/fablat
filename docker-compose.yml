@@ -3,23 +3,23 @@ services:
   auth:
     image: carlosvj/fablat:fablat-auth
     restart: always
-    #expose:
-    #  - "9999"
+    expose:
+      - "9999"
     environment:
       VIRTUAL_HOST: auth.fablat.net
       VIRTUAL_PORT: 9999
-      LETSENCRYPT_HOST: auth.fablat.net
+      LETSENCRYPT_HOST: fablat.net
   resource:
     image: carlosvj/fablat:fablat-resource
     restart: always
-    #expose:
-    #  - "9000"
+    expose:
+      - "9000"
     links:
       - auth
     environment:
       VIRTUAL_HOST: resource.fablat.net
       VIRTUAL_PORT: 9000
-      LETSENCRYPT_HOST: resource.fablat.net
+      LETSENCRYPT_HOST: fablat.net
   ui:
     image: carlosvj/fablat:fablat-ui
     restart: always

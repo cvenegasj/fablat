@@ -9,22 +9,22 @@ spring:
 security:
   oauth2:
     client:
-      accessTokenUri: http://auth.fablat.net/uaa/oauth/token
-      userAuthorizationUri: http://auth.fablat.net/uaa/oauth/authorize
+      accessTokenUri: https://fablat.net:9999/uaa/oauth/token
+      userAuthorizationUri: https://fablat.net:9999/uaa/oauth/authorize
       clientId: fablat
       clientSecret: c6d4f0e6125fcc1879b8dc42983c73ea1b1adf4f67a1cba0010d29ed8895017c
       scope: openid
     resource:
-      userInfoUri: http://auth.fablat.net/uaa/user
+      userInfoUri: https://fablat.net:9999/uaa/user
 
 zuul:
   routes:
     resource:
       path: /resource/**
-      url: http://resource.fablat.net
+      url: http://resource:9000 #this works
     user:
       path: /user/**
-      url: http://auth.fablat.net/uaa/user
+      url: http://auth:9999/uaa/user
   
 # Increase the Hystrix timeout to 60s (globally)
 hystrix:
