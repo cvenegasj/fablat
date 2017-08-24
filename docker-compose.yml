@@ -6,9 +6,9 @@ services:
     expose:
       - "9999"
     environment:
-      VIRTUAL_HOST: auth.fablat.net
-      VIRTUAL_PORT: 9999
-      LETSENCRYPT_HOST: fablat.net,resource.fablat.net,auth.fablat.net
+      VIRTUAL_HOST=auth.fablat.net
+      VIRTUAL_PORT=9999
+      LETSENCRYPT_HOST=fablat.net,resource.fablat.net,auth.fablat.net
   resource:
     image: carlosvj/fablat:fablat-resource
     restart: always
@@ -17,9 +17,9 @@ services:
     links:
       - auth
     environment:
-      VIRTUAL_HOST: resource.fablat.net
-      VIRTUAL_PORT: 9000
-      LETSENCRYPT_HOST: fablat.net,resource.fablat.net,auth.fablat.net
+      VIRTUAL_HOST=resource.fablat.net
+      VIRTUAL_PORT=9000
+      LETSENCRYPT_HOST=fablat.net,resource.fablat.net,auth.fablat.net
   ui:
     image: carlosvj/fablat:fablat-ui
     restart: always
@@ -30,9 +30,9 @@ services:
       - auth
       - resource
     environment:
-      VIRTUAL_HOST: fablat.net
-      LETSENCRYPT_HOST: fablat.net,resource.fablat.net,auth.fablat.net
-      LETSENCRYPT_EMAIL: cvj_2311@hotmail.com
+      VIRTUAL_HOST=fablat.net
+      LETSENCRYPT_HOST=fablat.net,resource.fablat.net,auth.fablat.net
+      LETSENCRYPT_EMAIL=cvj_2311@hotmail.com
 networks:
   default:
     external:
