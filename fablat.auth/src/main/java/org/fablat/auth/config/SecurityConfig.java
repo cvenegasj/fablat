@@ -9,10 +9,10 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
-//@Configuration
-//@Order(-20)
-public class SecurityConfig /*extends WebSecurityConfigurerAdapter*/ {
-/*
+@Configuration
+@Order(-20)
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
 	@Value("${ui.url}")
 	private String uiUrl;
 
@@ -39,5 +39,5 @@ public class SecurityConfig /*extends WebSecurityConfigurerAdapter*/ {
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.parentAuthenticationManager(authenticationManager);
 	}
-*/
+
 }

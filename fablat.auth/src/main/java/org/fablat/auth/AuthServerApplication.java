@@ -21,7 +21,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,17 +29,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 // @SessionAttributes("authorizationRequest")
 @EnableResourceServer
-@EnableAuthorizationServer
 public class AuthServerApplication {
 
 	@Autowired
 	private UserDetailsService userDetailsService;
-	
-	// For Tomcat deployment
-	/*@Override
-    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        return application.sources(AuthserverApplication.class);
-    }*/
 	
 	@RequestMapping("/user")
 	public Principal user(Principal user) {
