@@ -14,8 +14,8 @@ services:
     restart: always
     expose:
       - "9000"
-    links:
-      - auth
+#    links:
+#      - auth
     environment:
       VIRTUAL_HOST: resource.fablat.net
       VIRTUAL_PORT: 9000
@@ -27,7 +27,7 @@ services:
       - "80"
       - "443"
     links:
-      - auth
+#      - auth
       - resource
     environment:
       VIRTUAL_HOST: fablat.net
