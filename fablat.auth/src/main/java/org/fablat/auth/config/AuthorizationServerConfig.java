@@ -9,10 +9,10 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 
-@Configuration
-@EnableAuthorizationServer
-public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
-
+//@Configuration
+//@EnableAuthorizationServer
+public class AuthorizationServerConfig /*extends AuthorizationServerConfigurerAdapter*/ {
+/*
 	@Autowired
 	private AuthenticationManager authenticationManager;
 
@@ -33,11 +33,11 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 				.withClient("fablat")
 				.secret("c6d4f0e6125fcc1879b8dc42983c73ea1b1adf4f67a1cba0010d29ed8895017c")
 				.authorizedGrantTypes("password", "authorization_code", "refresh_token", "implicit",
-						"client_credentials").authorities("ROLE_USER", "ROLE_CLIENT", "ROLE_TRUSTED_CLIENT")
+						"client_credentials")
+				.authorities("ROLE_USER", "ROLE_CLIENT", "ROLE_TRUSTED_CLIENT")
 				.scopes("read", "write", "trust", "openid")
 				// .redirectUris("http://localhost:8080/login")
 				.autoApprove(true);
 		// @formatter:on
-	}
-
+	}*/
 }

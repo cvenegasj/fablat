@@ -16,7 +16,7 @@ public class AppUserDetailsService implements UserDetailsService {
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		Fabber user = fabberDAO.findByEmail(username);
 		if (user == null) {
-			throw new UsernameNotFoundException("User already exists.");
+			throw new UsernameNotFoundException("User does not exist.");
 		}
 
 		return new AppUserDetails(user);

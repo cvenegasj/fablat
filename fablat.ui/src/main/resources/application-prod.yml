@@ -1,21 +1,25 @@
 server:
   port: 80
+  session:
+    cookie:
+    name: UISESSION
   
 debug: true
 
 spring:
   aop:
     proxy-target-class: true
+    
 security:
   oauth2:
     client:
-      accessTokenUri: https://fablat.net:9999/uaa/oauth/token
-      userAuthorizationUri: https://fablat.net:9999/uaa/oauth/authorize
+      accessTokenUri: http://fablatauth-env.2hyhxb24pj.sa-east-1.elasticbeanstalk.com/uaa/oauth/token
+      userAuthorizationUri: http://fablatauth-env.2hyhxb24pj.sa-east-1.elasticbeanstalk.com/uaa/oauth/authorize
       clientId: fablat
       clientSecret: c6d4f0e6125fcc1879b8dc42983c73ea1b1adf4f67a1cba0010d29ed8895017c
-      scope: openid
+      #scope: openid
     resource:
-      userInfoUri: https://fablat.net:9999/uaa/user
+      userInfoUri: http://fablatauth-env.2hyhxb24pj.sa-east-1.elasticbeanstalk.com/uaa/user
 
 zuul:
   routes:
@@ -24,7 +28,7 @@ zuul:
       url: http://resource:9000 #this works
     user:
       path: /user/**
-      url: http://auth:9999/uaa/user
+      url: http://fablatauth-env.2hyhxb24pj.sa-east-1.elasticbeanstalk.com/uaa/user
   
 # Increase the Hystrix timeout to 60s (globally)
 hystrix:

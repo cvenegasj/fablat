@@ -3,7 +3,7 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700" type="text/css" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" type="text/css" />
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
 <link rel="stylesheet" href="https://code.getmdl.io/1.2.1/material.light_blue-green.min.css" />
 <script defer src="https://code.getmdl.io/1.2.1/material.min.js"></script>
@@ -51,7 +51,7 @@
 	<div class="mdl-layout-spacer"></div>
 	<div class="login-card mdl-card mdl-shadow--4dp mdl-cell mdl-cell--5-col mdl-cell--6-col-tablet mdl-cell--4-col-phone">
 		<div class="mdl-card__title">
-			<img src="http://i.imgur.com/6IQ6pH3.png" />
+			<img src="https://i.imgur.com/6IQ6pH3.png" />
 		
 			<h2 class="mdl-card__title-text centered">Fab Lat Network</h2>
 		</div>

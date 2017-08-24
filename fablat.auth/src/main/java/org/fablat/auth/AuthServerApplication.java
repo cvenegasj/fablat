@@ -21,15 +21,16 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.SessionAttributes;
 
 @SpringBootApplication
 @RestController
-@SessionAttributes("authorizationRequest")
+// @SessionAttributes("authorizationRequest")
 @EnableResourceServer
+@EnableAuthorizationServer
 public class AuthServerApplication {
 
 	@Autowired
@@ -41,13 +42,13 @@ public class AuthServerApplication {
         return application.sources(AuthserverApplication.class);
     }*/
 	
-	public static void main(String[] args) {
-		SpringApplication.run(AuthServerApplication.class, args);
-	}
-	
 	@RequestMapping("/user")
 	public Principal user(Principal user) {
 		return user;
+	}
+	
+	public static void main(String[] args) {
+		SpringApplication.run(AuthServerApplication.class, args);
 	}
 	
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
