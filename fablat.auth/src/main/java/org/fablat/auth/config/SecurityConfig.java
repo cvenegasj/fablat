@@ -22,16 +22,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		// @formatter:off
-		http.formLogin()
-				.loginPage("/login")
-				// redirect to UI /app/index.html if success
-				.defaultSuccessUrl(uiUrl + "/app/index.html", true).permitAll()
-				.and()
-				// .requestMatchers()
-				.authorizeRequests()
-				.antMatchers("/login", "/oauth/authorize", "/oauth/confirm_access").permitAll()
-				//.and()
-				.anyRequest().authenticated();
+		http
+			.formLogin().loginPage("/login")
+			.defaultSuccessUrl(uiUrl + "/app/index.html", true).permitAll()
+			.and()
+			.requestMatchers()
+			.antMatchers("/login", "/oauth/authorize", "/oauth/confirm_access")
+			.and()
+			.authorizeRequests()
+			.anyRequest().authenticated();
 		// @formatter:on
 	}
 

@@ -8,8 +8,6 @@
 <link rel="stylesheet" href="https://code.getmdl.io/1.2.1/material.light_blue-green.min.css" />
 <script defer src="https://code.getmdl.io/1.2.1/material.min.js"></script>
 
-<!--<link rel="stylesheet" href="css/public.css" /> -->
-
 <style>
 
 .login-card .mdl-card {
@@ -49,6 +47,7 @@
 	<div class="mdl-grid">
 	
 	<div class="mdl-layout-spacer"></div>
+	
 	<div class="login-card mdl-card mdl-shadow--4dp mdl-cell mdl-cell--5-col mdl-cell--6-col-tablet mdl-cell--4-col-phone">
 		<div class="mdl-card__title">
 			<img src="https://i.imgur.com/6IQ6pH3.png" />
@@ -96,25 +95,6 @@
 	</div>
 	
 	<div class="mdl-layout-spacer"></div>
-	
-	</div>
-	
-	<!-- <div class="container">
-		<form role="form" action="login" method="post">
-		  <div class="form-group">
-		    <label for="username">Username:</label>
-		    <input type="text" class="form-control" id="username" name="username"/>
-		  </div>
-		  <div class="form-group">
-		    <label for="password">Password:</label>
-		    <input type="password" class="form-control" id="password" name="password"/>
-		  </div>
-		  <input type="hidden" id="csrf_token" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-		  <button type="submit" class="btn btn-primary">Submit</button>
-		</form>
-		
-		<a href="http://fablat.net/public.html">Do not have an account? Register here.</a>
-	</div> -->
 
 </body>
 </html>

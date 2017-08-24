@@ -23,7 +23,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	public void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
 				.antMatchers("/signup-successful.html", "/signup.html", "/signup-fabs.html",
-						"/public.html", "/index.html", "/resource/public/**", "/login**", "/")
+						"/public.html", "/index.html", "/resource/public/**", "/login", "/")
 				.permitAll()
 				// .antMatchers("/app/index.html#/admin-lat/**").access("hasRole('ADMIN_LAT')")
 				// .antMatchers("/app/index.html#/admin-lab/**").access("hasRole('ADMIN_LAB')")
