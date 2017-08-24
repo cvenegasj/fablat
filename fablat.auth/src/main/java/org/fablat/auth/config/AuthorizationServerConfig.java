@@ -32,10 +32,9 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 		clients.inMemory()
 				.withClient("fablat")
 				.secret("c6d4f0e6125fcc1879b8dc42983c73ea1b1adf4f67a1cba0010d29ed8895017c")
-				.authorizedGrantTypes("password", "authorization_code", "refresh_token", "implicit",
-						"client_credentials")
+				.authorizedGrantTypes("authorization_code", "refresh_token", "password")
 				.authorities("ROLE_USER")
-				.scopes("read", "write", "trust", "openid")
+				.scopes("openid")
 				// .redirectUris("http://localhost:8080/login")
 				.autoApprove(true);
 		// @formatter:on
