@@ -1707,7 +1707,7 @@ function AddSubgroupDialogController($scope, $mdDialog, $http, $stateParams, $st
 			// pass data retrieved to parent controller
 			$mdDialog.hide(response.data);	
 			// reload current state
-			$state.go($state.current, {}, {reload: true});
+			$state.go("subgroup.general", { idSubgroup: response.data.idSubGroup }, {});
 		}, function errorCallback(response) {
 			$mdToast.show(
 		      $mdToast.simple()

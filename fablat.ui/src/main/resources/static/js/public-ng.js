@@ -138,7 +138,7 @@ app.controller('SignUp2Ctrl', function($rootScope, $scope, $http, $filter, $mdDi
 	$scope.showConfirm = function(event, idLab, labName) {
 	    var confirm = $mdDialog.confirm()
 	          .title("Join '" + labName + "'")
-	          .textContent('A request for joining this lab will be send to the Lab Manager. Would you like to continue?')
+	          .textContent('Would you like to continue?')
 	          .ariaLabel('Confirm')
 	          .targetEvent(event)
 	          .ok('Continue')
@@ -164,7 +164,7 @@ app.controller('SignUp2Ctrl', function($rootScope, $scope, $http, $filter, $mdDi
 				lastName: $rootScope.user.lastName,
 				isFabAcademyGrad: $rootScope.user.isFabAcademyGrad,
 				fabAcademyGradYear: $rootScope.user.fabAcademyGradYear,
-				idLab: $rootScope.user.idLab
+				labId: $rootScope.user.idLab
 		  }).then(function(response) {
 			  $location.path("/signup-successful");		
 		  });
