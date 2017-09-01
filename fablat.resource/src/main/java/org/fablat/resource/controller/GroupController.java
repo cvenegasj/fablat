@@ -2,12 +2,12 @@ package org.fablat.resource.controller;
 
 import java.security.Principal;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.fablat.resource.dto.GroupDTO;
@@ -38,8 +38,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/auth/groups")
 public class GroupController {
 
-	private SimpleDateFormat timeFormatter = new SimpleDateFormat("h:mm a");
-	private SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+	private final DateTimeFormatter timeFormatterIn = DateTimeFormatter.ofPattern("h:m a");
+	private final DateTimeFormatter timeFormatterOut = DateTimeFormatter.ofPattern("h:mm a");
 
 	@Autowired
 	private FabberDAO fabberDAO;
@@ -206,14 +206,13 @@ public class GroupController {
         group.setEnabled(true);
         // set creation datetime 
         Instant now = Instant.now();
-        ZonedDateTime zdtLima = now.atZone(ZoneId.of("GMT-05:00"));
-        group.setCreationDateTime(Date.from(zdtLima.toInstant()));
+        group.setCreationDateTime(LocalDateTime.ofInstant(now, ZoneOffset.UTC));
         
         // creator
         GroupMember gm = new GroupMember();
         gm.setIsCoordinator(true);
         gm.setNotificationsEnabled(true);
-        gm.setCreationDateTime(Date.from(zdtLima.toInstant()));
+        gm.setCreationDateTime(LocalDateTime.ofInstant(now, ZoneOffset.UTC));
         gm.setFabber(fabberDAO.findByEmail(principal.getName()));
         gm.setGroup(group);
         group.getGroupMembers().add(gm);
@@ -223,7 +222,7 @@ public class GroupController {
         activity.setLevel(Resources.ACTIVITY_LEVEL_GROUP);
         activity.setType(Resources.ACTIVITY_TYPE_ORIGIN); // it's the origin of the group
         activity.setVisibility(Resources.ACTIVITY_VISIBILITY_EXTERNAL); // app-wide visibility
-        activity.setCreationDateTime(Date.from(zdtLima.toInstant()));
+        activity.setCreationDateTime(LocalDateTime.ofInstant(now, ZoneOffset.UTC));
         activity.setGroup(group);
         activity.setFabber(gm.getFabber());
         
@@ -240,7 +239,7 @@ public class GroupController {
 		group.setName(groupDTO.getName());
 		group.setDescription(groupDTO.getDescription());
 		group.setReunionDay(groupDTO.getReunionDay());
-		group.setReunionTime(groupDTO.getReunionTime() != null ? timeFormatter.parse(groupDTO.getReunionTime()) : null);
+		group.setReunionTime(groupDTO.getReunionTime() != null ? LocalTime.parse(groupDTO.getReunionTime(), timeFormatterIn) : null);
 		group.setMainUrl(groupDTO.getMainUrl());
 		group.setSecondaryUrl(groupDTO.getSecondaryUrl());
 		group.setPhotoUrl(groupDTO.getPhotoUrl());
@@ -269,8 +268,7 @@ public class GroupController {
 		member.setNotificationsEnabled(true);
 		// set creation datetime 
         Instant now = Instant.now();
-        ZonedDateTime zdtLima = now.atZone(ZoneId.of("GMT-05:00"));
-        member.setCreationDateTime(Date.from(zdtLima.toInstant()));  
+        member.setCreationDateTime(LocalDateTime.ofInstant(now, ZoneOffset.UTC));  
         
         member.setFabber(fabberDAO.findByEmail(principal.getName()));
         member.setGroup(group);
@@ -281,7 +279,7 @@ public class GroupController {
 		activity.setLevel(Resources.ACTIVITY_LEVEL_GROUP);
         activity.setType(Resources.ACTIVITY_TYPE_USER_JOINED);
         activity.setVisibility(Resources.ACTIVITY_VISIBILITY_INTERNAL); // internal visibility
-        activity.setCreationDateTime(Date.from(zdtLima.toInstant()));
+        activity.setCreationDateTime(LocalDateTime.ofInstant(now, ZoneOffset.UTC));
         activity.setGroup(group);
         activity.setFabber(member.getFabber());
         activityLogDAO.makePersistent(activity);
@@ -313,8 +311,7 @@ public class GroupController {
         activity.setType(Resources.ACTIVITY_TYPE_USER_LEFT);
         activity.setVisibility(Resources.ACTIVITY_VISIBILITY_INTERNAL); // internal visibility
         Instant now = Instant.now();
-        ZonedDateTime zdtLima = now.atZone(ZoneId.of("GMT-05:00"));
-        activity.setCreationDateTime(Date.from(zdtLima.toInstant()));
+        activity.setCreationDateTime(LocalDateTime.ofInstant(now, ZoneOffset.UTC));
         activity.setGroup(group);
         activity.setFabber(member.getFabber());
         activityLogDAO.makePersistent(activity);
@@ -333,8 +330,7 @@ public class GroupController {
 		gm.setIsCoordinator(groupMemberDTO.getIsCoordinator());
 		gm.setNotificationsEnabled(true);
 		Instant now = Instant.now();
-        ZonedDateTime zdtLima = now.atZone(ZoneId.of("GMT-05:00"));
-		gm.setCreationDateTime(Date.from(zdtLima.toInstant()));
+		gm.setCreationDateTime(LocalDateTime.ofInstant(now, ZoneOffset.UTC));
 		gm.setFabber(fabberDAO.findById(groupMemberDTO.getFabberId()));
 		gm.setGroup(groupDAO.findById(idGroup));
 		
@@ -377,11 +373,11 @@ public class GroupController {
 		groupDTO.setName(group.getName());
 		groupDTO.setDescription(group.getDescription());
 		groupDTO.setReunionDay(group.getReunionDay());
-		groupDTO.setReunionTime(group.getReunionTime() != null ? timeFormatter.format(group.getReunionTime()) : null);
+		groupDTO.setReunionTime(group.getReunionTime() != null ? timeFormatterOut.format(group.getReunionTime()) : null);
 		groupDTO.setMainUrl(group.getMainUrl());
 		groupDTO.setSecondaryUrl(group.getSecondaryUrl());
 		groupDTO.setPhotoUrl(group.getPhotoUrl());
-		groupDTO.setCreationDateTime(dateTimeFormatter.format(group.getCreationDateTime()));
+		groupDTO.setCreationDateTime(DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(group.getCreationDateTime()));
 		
 		groupDTO.setMembersCount(group.getGroupMembers().size());
 		
@@ -413,7 +409,7 @@ public class GroupController {
 		gmDTO.setLastName(gm.getFabber().getLastName());
 		gmDTO.setEmail(gm.getFabber().getEmail());
 		gmDTO.setIsCoordinator(gm.getIsCoordinator());
-		gmDTO.setCreationDateTime(dateTimeFormatter.format(gm.getCreationDateTime()));
+		gmDTO.setCreationDateTime(DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(gm.getCreationDateTime()));
 		gmDTO.setFabberId(gm.getFabber().getIdFabber());
 		
 		return gmDTO;

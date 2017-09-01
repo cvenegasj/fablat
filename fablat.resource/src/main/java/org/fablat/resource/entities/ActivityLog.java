@@ -2,7 +2,7 @@ package org.fablat.resource.entities;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,8 +12,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 @SuppressWarnings("serial")
 @Entity
@@ -24,7 +22,7 @@ public class ActivityLog implements java.io.Serializable {
 	private String level;
 	private String type;
 	private String visibility;
-	private Date creationDateTime;
+	private LocalDateTime creationDateTime;
 	private Fabber fabber;
 	private Group group;
 	private SubGroup subGroup;
@@ -71,13 +69,12 @@ public class ActivityLog implements java.io.Serializable {
 		this.visibility = visibility;
 	}
 
-	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "creationDateTime", nullable = false)
-	public Date getCreationDateTime() {
+	public LocalDateTime getCreationDateTime() {
 		return creationDateTime;
 	}
 
-	public void setCreationDateTime(Date creationDateTime) {
+	public void setCreationDateTime(LocalDateTime creationDateTime) {
 		this.creationDateTime = creationDateTime;
 	}
 

@@ -16,7 +16,7 @@
 				            		{{ item.groupName }}
 				            	</a>
 			            	</h3>
-			            	<p><span am-time-ago="item.creationDateTime | amParse:'DD-MM-YYYY HH:mm:ss'"></span></p>
+			            	<p><span am-time-ago="item.creationDateTime | UTCToNow"></span></p>
 			            </div>
 			          </div>
 			          <div layout="row" class="md-list-item-text compact" ng-if="item.level === 'SUBGROUP' && item.type === 'ORIGIN'">
@@ -31,7 +31,7 @@
 				            		{{ item.groupName }} > {{ item.subGroupName }}
 				            	</a>
 				            </h3>
-				            <p><span am-time-ago="item.creationDateTime | amParse:'DD-MM-YYYY HH:mm:ss'"></span></p>
+				            <p><span am-time-ago="item.creationDateTime | UTCToNow"></span></p>
 			            </div>
 			          </div>
 			        </md-list-item>

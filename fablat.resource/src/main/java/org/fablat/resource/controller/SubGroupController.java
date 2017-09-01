@@ -2,13 +2,12 @@ package org.fablat.resource.controller;
 
 import java.security.Principal;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import org.fablat.resource.dto.SubGroupDTO;
@@ -39,11 +38,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/auth/subgroups")
 public class SubGroupController {
 
-	private SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
-	private SimpleDateFormat timeFormatter = new SimpleDateFormat("h:mm a");
-	private SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-	private SimpleDateFormat monthFormatter = new SimpleDateFormat("MMM");
-	private SimpleDateFormat dateFormatter2 = new SimpleDateFormat("MMMMM d(EEE) h:mm a");
+	private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+	private final DateTimeFormatter timeFormatterIn = DateTimeFormatter.ofPattern("h:m a");
+	private final DateTimeFormatter timeFormatterOut = DateTimeFormatter.ofPattern("h:mm a");
+	private final DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MMM");
+	private final DateTimeFormatter dateFormatter2 = DateTimeFormatter.ofPattern("MMM d(EEE) h:mm a");
 	
 	@Autowired
 	private FabberDAO fabberDAO;
@@ -99,8 +98,7 @@ public class SubGroupController {
 		subGroup.setEnabled(true);
 		// set creation datetime
 		Instant now = Instant.now();
-		ZonedDateTime zdtLima = now.atZone(ZoneId.of("GMT-05:00"));
-		subGroup.setCreationDateTime(Date.from(zdtLima.toInstant()));
+		subGroup.setCreationDateTime(LocalDateTime.ofInstant(now, ZoneOffset.UTC));
 
 		// parent group
 		subGroup.setGroup(groupDAO.findById(subGroupDTO.getGroupId()));
@@ -108,7 +106,7 @@ public class SubGroupController {
 		SubGroupMember sgm = new SubGroupMember();
 		sgm.setIsCoordinator(true);
 		sgm.setNotificationsEnabled(true);
-		sgm.setCreationDateTime(Date.from(zdtLima.toInstant()));
+		sgm.setCreationDateTime(LocalDateTime.ofInstant(now, ZoneOffset.UTC));
 		GroupMember gm = groupMemberDAO.findByGroupAndFabber(subGroupDTO.getGroupId(), principal.getName());
 		sgm.setGroupMember(gm);
 		sgm.setSubGroup(subGroup);
@@ -119,7 +117,7 @@ public class SubGroupController {
         activity.setLevel(Resources.ACTIVITY_LEVEL_SUBGROUP);
         activity.setType(Resources.ACTIVITY_TYPE_ORIGIN); // it's the origin of the subgroup
         activity.setVisibility(Resources.ACTIVITY_VISIBILITY_EXTERNAL); // app-wide visibility
-        activity.setCreationDateTime(Date.from(zdtLima.toInstant()));
+        activity.setCreationDateTime(LocalDateTime.ofInstant(now, ZoneOffset.UTC));
         activity.setSubGroup(subGroup);
         activity.setGroup(subGroup.getGroup());
         activity.setFabber(sgm.getGroupMember().getFabber());
@@ -128,7 +126,7 @@ public class SubGroupController {
         activity2.setLevel(Resources.ACTIVITY_LEVEL_GROUP);
         activity2.setType(Resources.ACTIVITY_TYPE_SUBGROUP_CREATED);
         activity2.setVisibility(Resources.ACTIVITY_VISIBILITY_INTERNAL);
-        activity2.setCreationDateTime(Date.from(zdtLima.toInstant()));
+        activity2.setCreationDateTime(LocalDateTime.ofInstant(now, ZoneOffset.UTC));
         activity2.setGroup(groupDAO.findById(subGroupDTO.getGroupId()));
         activity2.setFabber(gm.getFabber());
 		
@@ -146,7 +144,7 @@ public class SubGroupController {
 		subGroup.setName(subGroupDTO.getName());
 		subGroup.setDescription(subGroupDTO.getDescription());
 		subGroup.setReunionDay(subGroupDTO.getReunionDay());
-		subGroup.setReunionTime(subGroupDTO.getReunionTime() != null ? timeFormatter.parse(subGroupDTO.getReunionTime()) : null);
+		subGroup.setReunionTime(subGroupDTO.getReunionTime() != null ? LocalTime.parse(subGroupDTO.getReunionTime(), timeFormatterIn) : null);
 		subGroup.setMainUrl(subGroupDTO.getMainUrl());
 		subGroup.setSecondaryUrl(subGroupDTO.getSecondaryUrl());
 		subGroup.setPhotoUrl(subGroupDTO.getPhotoUrl());
@@ -165,8 +163,7 @@ public class SubGroupController {
         activity.setType(Resources.ACTIVITY_TYPE_SUBGROUP_DELETED);
         activity.setVisibility(Resources.ACTIVITY_VISIBILITY_INTERNAL);
         Instant now = Instant.now();
-		ZonedDateTime zdtLima = now.atZone(ZoneId.of("GMT-05:00"));
-        activity.setCreationDateTime(Date.from(zdtLima.toInstant()));
+        activity.setCreationDateTime(LocalDateTime.ofInstant(now, ZoneOffset.UTC));
         activity.setGroup(subGroup.getGroup());
         activity.setFabber(groupMemberDAO.findByGroupAndFabber(subGroup.getGroup().getIdGroup(), principal.getName()).getFabber());
         
@@ -189,8 +186,7 @@ public class SubGroupController {
 		member.setNotificationsEnabled(true);
 		// set creation datetime 
         Instant now = Instant.now();
-        ZonedDateTime zdtLima = now.atZone(ZoneId.of("GMT-05:00"));
-        member.setCreationDateTime(Date.from(zdtLima.toInstant()));  
+        member.setCreationDateTime(LocalDateTime.ofInstant(now, ZoneOffset.UTC));  
         
         GroupMember gm = groupMemberDAO.findByGroupAndFabber(subGroup.getGroup().getIdGroup(), principal.getName());
         // if user is not member of parent group, we add it
@@ -198,9 +194,10 @@ public class SubGroupController {
         	gm = new GroupMember();
         	gm.setIsCoordinator(false);
         	gm.setNotificationsEnabled(true);
-        	gm.setCreationDateTime(Date.from(zdtLima.toInstant()));
+        	gm.setCreationDateTime(LocalDateTime.ofInstant(now, ZoneOffset.UTC));
         	gm.setFabber(fabberDAO.findByEmail(principal.getName()));
         	gm.setGroup(subGroup.getGroup());
+        	groupMemberDAO.makePersistent(gm);
         }
       
         member.setGroupMember(gm);
@@ -212,7 +209,7 @@ public class SubGroupController {
         activity.setLevel(Resources.ACTIVITY_LEVEL_SUBGROUP);
         activity.setType(Resources.ACTIVITY_TYPE_USER_JOINED);
         activity.setVisibility(Resources.ACTIVITY_VISIBILITY_INTERNAL); // internal visibility
-        activity.setCreationDateTime(Date.from(zdtLima.toInstant()));
+        activity.setCreationDateTime(LocalDateTime.ofInstant(now, ZoneOffset.UTC));
         activity.setSubGroup(subGroup);
         activity.setFabber(member.getGroupMember().getFabber());
         activityLogDAO.makePersistent(activity);
@@ -244,8 +241,7 @@ public class SubGroupController {
         activity.setType(Resources.ACTIVITY_TYPE_USER_LEFT);
         activity.setVisibility(Resources.ACTIVITY_VISIBILITY_INTERNAL); // internal visibility
         Instant now = Instant.now();
-        ZonedDateTime zdtLima = now.atZone(ZoneId.of("GMT-05:00"));
-        activity.setCreationDateTime(Date.from(zdtLima.toInstant()));
+        activity.setCreationDateTime(LocalDateTime.ofInstant(now, ZoneOffset.UTC));
         activity.setSubGroup(subGroup);
         activity.setFabber(member.getGroupMember().getFabber());
         activityLogDAO.makePersistent(activity);
@@ -265,8 +261,7 @@ public class SubGroupController {
 		sgm.setIsCoordinator(subGroupMemberDTO.getIsCoordinator());
 		sgm.setNotificationsEnabled(true);
 		Instant now = Instant.now();
-        ZonedDateTime zdtLima = now.atZone(ZoneId.of("GMT-05:00"));
-        sgm.setCreationDateTime(Date.from(zdtLima.toInstant()));
+        sgm.setCreationDateTime(LocalDateTime.ofInstant(now, ZoneOffset.UTC));
         // sgm.setGroupMember(groupMemberDAO.findByGroupAndFabber(subGroup.getGroup().getIdGroup(), email));
         sgm.setSubGroup(subGroup);
 		
@@ -309,11 +304,11 @@ public class SubGroupController {
 		sDTO.setName(subGroup.getName());
 		sDTO.setDescription(subGroup.getDescription());
 		sDTO.setReunionDay(subGroup.getReunionDay());
-		sDTO.setReunionTime(subGroup.getReunionTime() != null ? timeFormatter.format(subGroup.getReunionTime()) : null);
+		sDTO.setReunionTime(subGroup.getReunionTime() != null ? timeFormatterOut.format(subGroup.getReunionTime()) : null);
 		sDTO.setMainUrl(subGroup.getMainUrl());
 		sDTO.setSecondaryUrl(subGroup.getSecondaryUrl());
 		sDTO.setPhotoUrl(subGroup.getPhotoUrl());
-		sDTO.setCreationDateTime(dateTimeFormatter.format(subGroup.getCreationDateTime()));
+		sDTO.setCreationDateTime(DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(subGroup.getCreationDateTime()));
 		sDTO.setGroupId(subGroup.getGroup().getIdGroup());
 		sDTO.setGroupName(subGroup.getGroup().getName());
 
@@ -337,16 +332,17 @@ public class SubGroupController {
 		wDTO.setName(workshop.getName());
 		// workshopDTO.setDescription(workshop.getDescription());
 		wDTO.setStartDate(dateFormatter.format(workshop.getStartDateTime()));
-		wDTO.setStartTime(timeFormatter.format(workshop.getStartDateTime()));
+		wDTO.setStartTime(timeFormatterOut.format(workshop.getStartDateTime()));
 		wDTO.setEndDate(dateFormatter.format(workshop.getEndDateTime()));
-		wDTO.setEndTime(timeFormatter.format(workshop.getEndDateTime()));
+		wDTO.setEndTime(timeFormatterOut.format(workshop.getEndDateTime()));
 		
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(workshop.getStartDateTime());
-		wDTO.setStartDateDay(cal.get(Calendar.DAY_OF_MONTH));
+		wDTO.setStartDateDay(workshop.getStartDateTime().getDayOfMonth());
 		wDTO.setStartDateMonth(monthFormatter.format(workshop.getStartDateTime()));
 		wDTO.setStartDateFormatted(dateFormatter2.format(workshop.getStartDateTime()));
 		wDTO.setEndDateFormatted(dateFormatter2.format(workshop.getEndDateTime()));
+		
+		wDTO.setStartDateTimeISO(DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(workshop.getStartDateTime()));
+		wDTO.setEndDateTimeISO(DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(workshop.getEndDateTime()));
 		
 		wDTO.setIsPaid(workshop.getIsPaid());
 		wDTO.setPrice(workshop.getPrice());
@@ -363,7 +359,7 @@ public class SubGroupController {
 		sgmDTO.setLastName(sgm.getGroupMember().getFabber().getLastName());
 		sgmDTO.setEmail(sgm.getGroupMember().getFabber().getEmail());
 		sgmDTO.setIsCoordinator(sgm.getIsCoordinator());
-		sgmDTO.setCreationDateTime(dateTimeFormatter.format(sgm.getCreationDateTime()));
+		sgmDTO.setCreationDateTime(DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(sgm.getCreationDateTime()));
 		sgmDTO.setFabberId(sgm.getGroupMember().getFabber().getIdFabber());
 
 		return sgmDTO;

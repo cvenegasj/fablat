@@ -13,8 +13,8 @@
 			<span ng-if="group.reunionDay">{{ group.reunionDay + "S - "}}</span>
 			<span ng-if="group.reunionTime">{{ group.reunionTime }}</span>
 		</div>
-		<div ng-if="group.mainUrl"><md-icon md-svg-icon="web" class="icon-16"></md-icon>Main URL: <a href="" class="custom-anchor-1">{{ group.mainUrl }}</a></div>
-		<div ng-if="group.secondaryUrl"><md-icon md-svg-icon="web" class="icon-16"></md-icon>Secondary URL: <a href="" class="custom-anchor-1">{{ group.secondaryUrl }}</a></div>
+		<div ng-if="group.mainUrl"><md-icon md-svg-icon="web" class="icon-16"></md-icon>Main URL: <a href="{{ group.mainUrl }}" target="_blank" class="custom-anchor-1">{{ group.mainUrl }}</a></div>
+		<div ng-if="group.secondaryUrl"><md-icon md-svg-icon="web" class="icon-16"></md-icon>Secondary URL: <a href="{{ group.secondaryUrl }}" target="_blank" class="custom-anchor-1">{{ group.secondaryUrl }}</a></div>
 	</div>
 	<div class="members">
 		<div layout="row" layout-align="center center">

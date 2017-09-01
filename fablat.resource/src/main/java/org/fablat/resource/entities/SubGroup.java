@@ -2,7 +2,8 @@ package org.fablat.resource.entities;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,9 +18,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -32,11 +30,11 @@ public class SubGroup implements java.io.Serializable {
 	private String name;
 	private String description;
 	private String reunionDay;
-	private Date reunionTime;
+	private LocalTime reunionTime;
 	private String mainUrl;
 	private String secondaryUrl;
 	private String photoUrl;
-	private Date creationDateTime;
+	private LocalDateTime creationDateTime;
 	private Boolean enabled;
 	private Group group;
 	private Set<SubGroupMember> subGroupMembers = new HashSet<SubGroupMember>();
@@ -85,13 +83,12 @@ public class SubGroup implements java.io.Serializable {
 		this.reunionDay = reunionDay;
 	}
 
-	@Temporal(TemporalType.TIME)
 	@Column(name = "reunionTime")
-	public Date getReunionTime() {
+	public LocalTime getReunionTime() {
 		return reunionTime;
 	}
 
-	public void setReunionTime(Date reunionTime) {
+	public void setReunionTime(LocalTime reunionTime) {
 		this.reunionTime = reunionTime;
 	}
 
@@ -122,13 +119,12 @@ public class SubGroup implements java.io.Serializable {
 		this.photoUrl = photoUrl;
 	}
 
-	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "creationDateTime", nullable = false)
-	public Date getCreationDateTime() {
+	public LocalDateTime getCreationDateTime() {
 		return creationDateTime;
 	}
 
-	public void setCreationDateTime(Date creationDateTime) {
+	public void setCreationDateTime(LocalDateTime creationDateTime) {
 		this.creationDateTime = creationDateTime;
 	}
 

@@ -10,28 +10,26 @@ public class SubGroupMemberDAOImpl extends GenericDAOImpl<SubGroupMember, Intege
 
 	@Transactional
 	public Integer countAllByFabberAsCoordinator(String email) {
-		Integer count = null;
-		count = ((Long) getSession()
+		Long count = getSession()
 				.createQuery(
 						"select count(x) from " + getDomainClassName() + " x "
-								+ "where x.isCoordinator = 1 and x.groupMember.fabber.email = :email")
-				.setString("email", email)
-				.iterate().next()).intValue();
+								+ "where x.isCoordinator = 1 and x.groupMember.fabber.email = :email", Long.class)
+				.setParameter("email", email)
+				.getSingleResult();
 		
-		return count;
+		return count.intValue();
 	}
 
 	@Transactional
 	public Integer countAllByFabberAsCollaborator(String email) {
-		Integer count = null;
-		count = ((Long) getSession()
+		Long count = getSession()
 				.createQuery(
 						"select count(x) from " + getDomainClassName() + " x "
-								+ "where x.isCoordinator = 0 and x.groupMember.fabber.email = :email")
-				.setString("email", email)
-				.iterate().next()).intValue();
+								+ "where x.isCoordinator = 0 and x.groupMember.fabber.email = :email", Long.class)
+				.setParameter("email", email)
+				.getSingleResult();
 		
-		return count;
+		return count.intValue();
 	}
 	
 	@Transactional
@@ -41,8 +39,8 @@ public class SubGroupMemberDAOImpl extends GenericDAOImpl<SubGroupMember, Intege
 				.createQuery(
 						"from " + getDomainClassName() + " x where x.subGroup.id = :idSubGroup "
 								+ "and x.groupMember.fabber.email = :email")
-				.setInteger("idSubGroup", idSubGroup)
-				.setString("email", email).setMaxResults(1).uniqueResult();
+				.setParameter("idSubGroup", idSubGroup)
+				.setParameter("email", email).setMaxResults(1).uniqueResult();
 
 		return e;
 	}
@@ -57,7 +55,7 @@ public class SubGroupMemberDAOImpl extends GenericDAOImpl<SubGroupMember, Intege
 								+ "where x.subGroup.id = :idSubGroup "
 								+ "order by case when x.isCoordinator = 1 then 0 else 1 end, "
 								+ "date(x.creationDateTime) asc")
-				.setInteger("idSubGroup", idSubGroup)
+				.setParameter("idSubGroup", idSubGroup)
 				.list();
 
 		return list;

@@ -33,7 +33,7 @@
 				<md-divider></md-divider>
 				<div flex layout="row" layout-wrap style="margin-top: 30px;">
 					<div flex-gt-sm="15" flex="25" style="margin-bottom: 10px;" ng-repeat="item in subgroup.members">
-						<a ui-sref="fabber({ idFabber: item.fabberId })">
+						<a ui-sref="fabber.groups({ idFabber: item.fabberId })">
 							<user-avatar fabber="item" avatar-w="50" avatar-h="50" avatar-font-size="18"></user-avatar>
 						</a>
 						<div class="font-12 color-2 centered" style="margin-top: 5px;">{{ item.firstName + " " + item.lastName }}</div>

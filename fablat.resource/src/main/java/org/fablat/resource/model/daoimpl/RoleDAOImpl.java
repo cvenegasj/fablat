@@ -8,11 +8,10 @@ public class RoleDAOImpl extends GenericDAOImpl<Role, Integer> implements RoleDA
 
 	@Transactional
 	public Role findByName(String name) {
-
 		Role role = null;
-
 		role = (Role) getSession().createQuery("from " + getDomainClassName() + " x where x.name = :name")
-				.setString("name", name).setMaxResults(1).uniqueResult();
+				.setParameter("name", name)
+				.setMaxResults(1).uniqueResult();
 
 		return role;
 	}

@@ -33,7 +33,7 @@ public class ActivityLogDAOImpl extends GenericDAOImpl<ActivityLog, Integer> imp
 						+ "and x.level = 'GROUP' "
 						+ "and x.group.id = :idGroup "
 						+ "order by date(x.creationDateTime) desc")
-				.setInteger("idGroup", idGroup)
+				.setParameter("idGroup", idGroup)
 				.list();
 		
 		return list;
@@ -50,7 +50,7 @@ public class ActivityLogDAOImpl extends GenericDAOImpl<ActivityLog, Integer> imp
 						+ "and x.level = 'SUBGROUP' "
 						+ "and x.subGroup.id = :idSubGroup "
 						+ "order by date(x.creationDateTime) desc")
-				.setInteger("idSubGroup", idSubGroup)
+				.setParameter("idSubGroup", idSubGroup)
 				.list();
 		
 		return list;

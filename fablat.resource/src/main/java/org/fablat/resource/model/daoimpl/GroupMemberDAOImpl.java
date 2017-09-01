@@ -10,27 +10,26 @@ public class GroupMemberDAOImpl extends GenericDAOImpl<GroupMember, Integer> imp
 
 	@Transactional
 	public Integer countAllByFabberAsCoordinator(String email) {
-		Integer count = null;
-		count = ((Long) getSession()
+		Long count = getSession()
 				.createQuery(
 						"select count(x) from " + getDomainClassName() + " x "
-								+ "where x.isCoordinator = 1 and x.fabber.email = :email").setString("email", email)
-				.iterate().next()).intValue();
+								+ "where x.isCoordinator = 1 and x.fabber.email = :email", Long.class)
+				.setParameter("email", email)
+				.getSingleResult();
 		
-		return count;
+		return count.intValue();
 	}
 
 	@Transactional
 	public Integer countAllByFabberAsCollaborator(String email) {
-		Integer count = null;
-		count = ((Long) getSession()
+		Long count = getSession()
 				.createQuery(
 						"select count(x) from " + getDomainClassName() + " x "
-								+ "where x.isCoordinator = 0 and x.fabber.email = :email")
-				.setString("email", email)
-				.iterate().next()).intValue();
+								+ "where x.isCoordinator = 0 and x.fabber.email = :email", Long.class)
+				.setParameter("email", email)
+				.getSingleResult();
 		
-		return count;
+		return count.intValue();
 	}
 
 	@Transactional
@@ -40,8 +39,8 @@ public class GroupMemberDAOImpl extends GenericDAOImpl<GroupMember, Integer> imp
 				.createQuery(
 						"select x from " + getDomainClassName() + " x "
 								+ "where x.group.id = :idGroup and x.fabber.email = :email")
-				.setInteger("idGroup", idGroup)
-				.setString("email", email)
+				.setParameter("idGroup", idGroup)
+				.setParameter("email", email)
 				.setMaxResults(1).uniqueResult();
 
 		return e;
@@ -57,7 +56,7 @@ public class GroupMemberDAOImpl extends GenericDAOImpl<GroupMember, Integer> imp
 								+ "where x.group.id = :idGroup "
 								+ "order by case when x.isCoordinator = 1 then 0 else 1 end, "
 								+ "date(x.creationDateTime) asc")
-				.setInteger("idGroup", idGroup)
+				.setParameter("idGroup", idGroup)
 				.list();
 
 		return list;

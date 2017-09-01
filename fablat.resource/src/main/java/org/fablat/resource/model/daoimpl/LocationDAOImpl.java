@@ -18,7 +18,7 @@ public class LocationDAOImpl extends GenericDAOImpl<Location, Integer> implement
 						+ "where lower(x.address1) like :term or "
 						+ "lower(x.address2) like :term or "
 						+ "lower(l.name) like :term")
-				.setString("term", "%" + term.toLowerCase() + "%")
+				.setParameter("term", "%" + term.toLowerCase() + "%")
 				.list();
 		
 		return list;

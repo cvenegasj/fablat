@@ -1,6 +1,6 @@
 package org.fablat.resource.model.daoimpl;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.fablat.resource.entities.Workshop;
@@ -11,29 +11,14 @@ public class WorkshopDAOImpl extends GenericDAOImpl<Workshop, Integer> implement
 
 	@SuppressWarnings("unchecked")
 	@Transactional
-	public List<Workshop> findAllBySubGroupAfterDate(Integer idSubGroup, Date date) {
-		List<Workshop> list = null;
-		list = (List<Workshop>) getSession()
-				.createQuery(
-						"select x from " + getDomainClassName() + " x "
-								+ "where x.subGroup.id = :idSubGroup and x.startDateTime > :date")
-				.setInteger("idSubGroup", idSubGroup)
-				.setDate("date", date)
-				.list();
-		
-		return list;
-	}
-
-	@SuppressWarnings("unchecked")
-	@Transactional
-	public List<Workshop> findAllAfterDate(Date date) {
+	public List<Workshop> findAllAfterDate(LocalDateTime date) {
 		List<Workshop> list = null;
 		list = (List<Workshop>) getSession()
 				.createQuery(
 						"select x from " + getDomainClassName() + " x "
 								+ "where x.startDateTime > :date "
 								+ "order by date(x.startDateTime) asc")
-				.setDate("date", date)
+				.setParameter("date", date)
 				.list();
 		
 		return list;

@@ -50,7 +50,8 @@
 							</div>
 							<div class="font-14 section-content">
 								<span ng-if="item.startDate === item.endDate">{{ item.startDateFormatted + " - " + item.endTime }}</span>
-								<span ng-if="item.startDate !== item.endDate">{{ item.startDateFormatted }} - {{ item.endDateFormatted }}</span>
+								<span ng-if="item.startDate !== item.endDate">{{ item.startDateFormatted }} - {{ item.endDateFormatted }}</span><br />
+								<span>GMT-5 Lima/Bogotá</span>
 							</div>
 						</div>
 						<md-divider></md-divider>

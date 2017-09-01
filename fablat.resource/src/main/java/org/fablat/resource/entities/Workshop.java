@@ -3,7 +3,7 @@ package org.fablat.resource.entities;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -18,8 +18,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -33,14 +31,14 @@ public class Workshop implements java.io.Serializable {
 	private Integer replicationNumber;
 	private String name;
 	private String description;
-	private Date startDateTime;
-	private Date endDateTime;
+	private LocalDateTime startDateTime;
+	private LocalDateTime endDateTime;
 	private Boolean isPaid;
 	private BigDecimal price;
 	private String currency;
 	private String facebookUrl;
 	private String ticketsUrl;
-	private Date creationDateTime;
+	private LocalDateTime creationDateTime;
 	private Boolean enabled;
 	private Location location;
 	private SubGroup subGroup;
@@ -88,23 +86,21 @@ public class Workshop implements java.io.Serializable {
 		this.description = description;
 	}
 
-	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "startDateTime", nullable = false)
-	public Date getStartDateTime() {
+	public LocalDateTime getStartDateTime() {
 		return startDateTime;
 	}
 
-	public void setStartDateTime(Date startDateTime) {
+	public void setStartDateTime(LocalDateTime startDateTime) {
 		this.startDateTime = startDateTime;
 	}
 
-	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "endDateTime", nullable = false)
-	public Date getEndDateTime() {
+	public LocalDateTime getEndDateTime() {
 		return endDateTime;
 	}
 
-	public void setEndDateTime(Date endDateTime) {
+	public void setEndDateTime(LocalDateTime endDateTime) {
 		this.endDateTime = endDateTime;
 	}
 
@@ -153,13 +149,12 @@ public class Workshop implements java.io.Serializable {
 		this.ticketsUrl = ticketsUrl;
 	}
 
-	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "creationDateTime", nullable = false)
-	public Date getCreationDateTime() {
+	public LocalDateTime getCreationDateTime() {
 		return creationDateTime;
 	}
 
-	public void setCreationDateTime(Date creationDateTime) {
+	public void setCreationDateTime(LocalDateTime creationDateTime) {
 		this.creationDateTime = creationDateTime;
 	}
 

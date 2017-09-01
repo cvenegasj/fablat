@@ -925,7 +925,7 @@ app.controller('GroupManagementGeneralCtrl', function($scope, $http, $state, $md
 			name: $scope._group.name,
 			description: $scope._group.description,
 			reunionDay: $scope._group.reunionDay,
-			reunionTime: $scope._group.reunionTimeHour.toString() && $scope._group.reunionTimeMinutes.toString() && $scope._group.reunionTimeMeridian.toString() ? $scope._group.reunionTimeHour + ":" + parsedMinutes + " " + $scope._group.reunionTimeMeridian : null,
+			reunionTime: $scope._group.reunionTimeHour != null && $scope._group.reunionTimeMinutes != null && $scope._group.reunionTimeMeridian != null ? $scope._group.reunionTimeHour + ":" + parsedMinutes + " " + $scope._group.reunionTimeMeridian : null,
 			mainUrl: $scope._group.mainUrl,
 			secondaryUrl: $scope._group.secondaryUrl,
 			photoUrl: $scope._group.photoUrl	
@@ -1184,7 +1184,7 @@ app.controller('SubgroupManagementGeneralCtrl', function($scope, $http, $state, 
 			name: $scope._subgroup.name,
 			description: $scope._subgroup.description,
 			reunionDay: $scope._subgroup.reunionDay,
-			reunionTime: $scope._subgroup.reunionTimeHour.toString() && $scope._subgroup.reunionTimeMinutes.toString() && $scope._subgroup.reunionTimeMeridian.toString() ? $scope._subgroup.reunionTimeHour + ":" + parsedMinutes + " " + $scope._subgroup.reunionTimeMeridian : null,
+			reunionTime: $scope._subgroup.reunionTimeHour != null && $scope._subgroup.reunionTimeMinutes != null && $scope._subgroup.reunionTimeMeridian != null ? $scope._subgroup.reunionTimeHour + ":" + parsedMinutes + " " + $scope._subgroup.reunionTimeMeridian : null,
 			mainUrl: $scope._subgroup.mainUrl,
 			secondaryUrl: $scope._subgroup.secondaryUrl,
 			photoUrl: $scope._subgroup.photoUrl	
@@ -1720,6 +1720,18 @@ function AddSubgroupDialogController($scope, $mdDialog, $http, $stateParams, $st
 };
 
 
+//================= Custom filters =====================
+
+app.filter('UTCToNow', ['moment', function (moment) {
+    return function (input, format) {
+       if(format) {
+    	   return moment.utc(input).local().format('dddd, MMMM Do YYYY, h:mm:ss a');
+       }
+       else {
+    	   return moment.utc(input).local();
+       }
+    };
+}]);
 
 
 //================= Custom directives =====================

@@ -13,7 +13,7 @@
 								</a>
 				            	created the subgroup.
 			            	</h3>
-			            	<p><span am-time-ago="item.creationDateTime | amParse:'DD-MM-YYYY HH:mm:ss'"></span></p>
+			            	<p><span am-time-ago="item.creationDateTime | UTCToNow"></span></p>
 			            </div>
 			          </div>
 			          <div layout="row" class="md-list-item-text compact" ng-if="item.type === 'USER_JOINED'">
@@ -25,7 +25,7 @@
 								</a>
 				            	joined the subgroup.
 				            </h3>
-				            <p><span am-time-ago="item.creationDateTime | amParse:'DD-MM-YYYY HH:mm:ss'"></span></p>
+				            <p><span am-time-ago="item.creationDateTime | UTCToNow"></span></p>
 			            </div>
 			          </div>
 			          <div layout="row" class="md-list-item-text compact" ng-if="item.type === 'USER_LEFT'">
@@ -37,7 +37,7 @@
 								</a>
 				            	left the subgroup.
 				            </h3>
-				            <p><span am-time-ago="item.creationDateTime | amParse:'DD-MM-YYYY HH:mm:ss'"></span></p>
+				            <p><span am-time-ago="item.creationDateTime | UTCToNow"></span></p>
 			            </div>
 			          </div>
 			          <div layout="row" class="md-list-item-text compact" ng-if="item.type === 'WORKSHOP_CREATED'">
@@ -49,7 +49,7 @@
 								</a>
 				            	created a workshop.
 				            </h3>
-				            <p><span am-time-ago="item.creationDateTime | amParse:'DD-MM-YYYY HH:mm:ss'"></span></p>
+				            <p><span am-time-ago="item.creationDateTime | UTCToNow"></span></p>
 			            </div>
 			          </div>
 			          <div layout="row" class="md-list-item-text compact" ng-if="item.type === 'WORKSHOP_DELETED'">
@@ -61,7 +61,7 @@
 								</a>
 				            	deleted a workshop.
 				            </h3>
-				            <p><span am-time-ago="item.creationDateTime | amParse:'DD-MM-YYYY HH:mm:ss'"></span></p>
+				            <p><span am-time-ago="item.creationDateTime | UTCToNow"></span></p>
 			            </div>
 			          </div>
 			        </md-list-item>

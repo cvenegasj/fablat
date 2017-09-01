@@ -14,7 +14,8 @@ public class LabDAOImpl extends GenericDAOImpl<Lab, Integer> implements LabDAO {
 		List<Lab> list = null;
 		list = (List<Lab>) getSession()
 				.createQuery("select x from " + getDomainClassName() + " x " + "where lower(x.name) like :term")
-				.setString("term", "%" + term.toLowerCase() + "%").list();
+				.setParameter("term", "%" + term.toLowerCase() + "%")
+				.list();
 
 		return list;
 	}

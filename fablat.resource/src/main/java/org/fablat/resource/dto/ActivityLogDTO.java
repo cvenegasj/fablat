@@ -1,6 +1,6 @@
 package org.fablat.resource.dto;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class ActivityLogDTO {
 
@@ -17,7 +17,7 @@ public class ActivityLogDTO {
 	private Integer subGroupId;
 	private String subGroupName;
 	// additional
-	private Date creationDateTimeRaw;
+	private LocalDateTime creationDateTimeRaw;
 
 	public Integer getIdActivityLog() {
 		return idActivityLog;
@@ -115,11 +115,11 @@ public class ActivityLogDTO {
 		this.subGroupName = subGroupName;
 	}
 
-	public Date getCreationDateTimeRaw() {
+	public LocalDateTime getCreationDateTimeRaw() {
 		return creationDateTimeRaw;
 	}
 
-	public void setCreationDateTimeRaw(Date creationDateTimeRaw) {
+	public void setCreationDateTimeRaw(LocalDateTime creationDateTimeRaw) {
 		this.creationDateTimeRaw = creationDateTimeRaw;
 	}
 

@@ -10,7 +10,7 @@ public class FabberDAOImpl extends GenericDAOImpl<Fabber, Integer> implements Fa
 	public Fabber findByEmail(String email) {
 		Fabber fabber = null;
 		fabber = (Fabber) getSession().createQuery("from " + getDomainClassName() + " f where f.email = :email")
-				.setString("email", email).setMaxResults(1).uniqueResult();
+				.setParameter("email", email).setMaxResults(1).uniqueResult();
 		return fabber;
 	}
 

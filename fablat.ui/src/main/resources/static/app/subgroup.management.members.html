@@ -11,7 +11,7 @@
 		            		<a ui-sref="fabber.groups({ idFabber: item.fabberId })" class="custom-anchor-1 bold">{{ item.firstName + " " + item.lastName }}</a>
 		            		<span class="badge-1" md-colors="{background: 'default-accent-300'}" ng-if="item.isCoordinator">coordinator</span>
 		            	</h3>
-		            	<p>joined <span am-time-ago="item.creationDateTime | amParse:'DD-MM-YYYY HH:mm:ss'"></span></p>
+		            	<p>joined <span am-time-ago="item.creationDateTime | UTCToNow"></span></p>
 		          	</div>
 		        	
 					<md-menu md-position-mode="target-right target" class="md-secondary">

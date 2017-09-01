@@ -2,13 +2,11 @@ package org.fablat.resource.controller;
 
 import java.security.Principal;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import org.fablat.resource.dto.WorkshopDTO;
@@ -35,11 +33,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/auth/workshops")
 public class WorkshopController {
 	
-	private SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
-	private SimpleDateFormat timeFormatter = new SimpleDateFormat("h:mm a");
-	private SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("dd-MM-yyyy h:mm a");
-	private SimpleDateFormat monthFormatter = new SimpleDateFormat("MMM");
-	private SimpleDateFormat dateFormatter2 = new SimpleDateFormat("MMMMM d(EEE) h:mm a");
+	private final DateTimeFormatter dateTimeFormatterIn = DateTimeFormatter.ofPattern("d-M-yyyy h:m a"); // for creation/update
+	private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+	private final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("h:mm a");
+	private final DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MMM");
+	private final DateTimeFormatter dateFormatter2 = DateTimeFormatter.ofPattern("MMM d(EEE) h:mm a");
 	
 	@Autowired
 	private SubGroupDAO subGroupDAO;
@@ -55,11 +53,9 @@ public class WorkshopController {
 	@RequestMapping(value = "/upcoming", method = RequestMethod.GET)
     public List<WorkshopDTO> findUpcoming(Principal principal) {
 		List<WorkshopDTO> returnList = new ArrayList<WorkshopDTO>();
-		Instant now = Instant.now();
-        ZonedDateTime zdtLima = now.atZone(ZoneId.of("GMT-05:00"));
 		
         // find all workshops after today
-		for (Workshop w : workshopDAO.findAllAfterDate(Date.from(zdtLima.toInstant()))) {
+		for (Workshop w : workshopDAO.findAllAfterDate(LocalDateTime.ofInstant(Instant.now(), ZoneOffset.UTC))) {
 			WorkshopDTO wDTO = convertToDTO(w);
 			// workshop's tutors
 			List<WorkshopTutorDTO> tutors = new ArrayList<WorkshopTutorDTO>();
@@ -103,8 +99,7 @@ public class WorkshopController {
 		workshop.setEnabled(true);
 		// set creation datetime 
         Instant now = Instant.now();
-        ZonedDateTime zdtLima = now.atZone(ZoneId.of("GMT-05:00"));
-        workshop.setCreationDateTime(Date.from(zdtLima.toInstant()));
+        workshop.setCreationDateTime(LocalDateTime.ofInstant(now, ZoneOffset.UTC));
         
         // Parent SubGroup
         workshop.setSubGroup(subGroupDAO.findById(workshopDTO.getSubGroupId()));
@@ -153,8 +148,8 @@ public class WorkshopController {
 		Workshop workshop = workshopDAO.findById(idWorkshop);
 		workshop.setName(workshopDTO.getName());
 		workshop.setDescription(workshopDTO.getDescription());
-		workshop.setStartDateTime(dateTimeFormatter.parse(workshopDTO.getStartDate() + " " + workshopDTO.getStartTime()));
-		workshop.setEndDateTime(dateTimeFormatter.parse(workshopDTO.getEndDate() + " " + workshopDTO.getEndTime()));
+		workshop.setStartDateTime(LocalDateTime.parse(workshopDTO.getStartDate() + " " + workshopDTO.getStartTime(), dateTimeFormatterIn));
+		workshop.setEndDateTime(LocalDateTime.parse(workshopDTO.getEndDate() + " " + workshopDTO.getEndTime(), dateTimeFormatterIn));
 		workshop.setIsPaid(workshopDTO.getIsPaid());
 		workshop.setPrice(workshopDTO.getPrice());
 		workshop.setCurrency(workshopDTO.getCurrency());
@@ -176,6 +171,7 @@ public class WorkshopController {
 		}
 		
 		workshopDAO.makePersistent(workshop);
+		updateReplicationNumbers(workshop.getSubGroup().getIdSubGroup());
 	}
 	
 	@RequestMapping(value = "/{idWorkshop}", method = RequestMethod.DELETE)
@@ -202,9 +198,7 @@ public class WorkshopController {
 		wDTO.setEndDate(dateFormatter.format(workshop.getEndDateTime()));
 		wDTO.setEndTime(timeFormatter.format(workshop.getEndDateTime()));
 		
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(workshop.getStartDateTime());
-		wDTO.setStartDateDay(cal.get(Calendar.DAY_OF_MONTH));
+		wDTO.setStartDateDay(workshop.getStartDateTime().getDayOfMonth());
 		wDTO.setStartDateMonth(monthFormatter.format(workshop.getStartDateTime()));
 		wDTO.setStartDateFormatted(dateFormatter2.format(workshop.getStartDateTime()));
 		wDTO.setEndDateFormatted(dateFormatter2.format(workshop.getEndDateTime()));
@@ -214,7 +208,7 @@ public class WorkshopController {
 		wDTO.setCurrency(workshop.getCurrency());
 		wDTO.setFacebookUrl(workshop.getFacebookUrl());
 		wDTO.setTicketsUrl(workshop.getTicketsUrl());
-		wDTO.setCreationDateTime(dateTimeFormatter.format(workshop.getCreationDateTime()));
+		wDTO.setCreationDateTime(DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(workshop.getCreationDateTime()));
 		wDTO.setLocationId(workshop.getLocation().getIdLocation());
 		wDTO.setLocationAddress(workshop.getLocation().getAddress1());
 		wDTO.setLocationCity(workshop.getLocation().getCity());
@@ -235,8 +229,8 @@ public class WorkshopController {
 		w.setName(wDTO.getName());
 		w.setDescription(wDTO.getDescription());
 		// format the date and time strings
-		w.setStartDateTime(dateTimeFormatter.parse(wDTO.getStartDate() + " " + wDTO.getStartTime()));
-		w.setEndDateTime(dateTimeFormatter.parse(wDTO.getEndDate() + " " + wDTO.getEndTime()));
+		w.setStartDateTime(LocalDateTime.parse(wDTO.getStartDate() + " " + wDTO.getStartTime(), dateTimeFormatterIn));
+		w.setEndDateTime(LocalDateTime.parse(wDTO.getEndDate() + " " + wDTO.getEndTime(), dateTimeFormatterIn));
 		w.setIsPaid(wDTO.getIsPaid());
 		w.setPrice(wDTO.getPrice());
 		w.setCurrency(wDTO.getCurrency());

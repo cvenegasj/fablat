@@ -16,7 +16,7 @@ public class GroupDAOImpl extends GenericDAOImpl<Group, Integer> implements Grou
 				.createQuery(
 						"select x from " + getDomainClassName() + " x "
 								+ "where lower(x.name) like :term")
-				.setString("term", "%" + term.toLowerCase() + "%")
+				.setParameter("term", "%" + term.toLowerCase() + "%")
 				.list();
 		
 		return list;

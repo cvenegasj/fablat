@@ -2,7 +2,7 @@ package org.fablat.resource.entities;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,8 +16,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -30,7 +28,7 @@ public class SubGroupMember implements java.io.Serializable {
 	private Integer idSubGroupMember;
 	private Boolean isCoordinator;
 	private Boolean notificationsEnabled;
-	private Date creationDateTime;
+	private LocalDateTime creationDateTime;
 	private SubGroup subGroup;
 	private GroupMember groupMember;
 	private Set<WorkshopTutor> workshopTutors = new HashSet<WorkshopTutor>();
@@ -68,13 +66,12 @@ public class SubGroupMember implements java.io.Serializable {
 		this.notificationsEnabled = notificationsEnabled;
 	}
 
-	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "creationDateTime", nullable = false)
-	public Date getCreationDateTime() {
+	public LocalDateTime getCreationDateTime() {
 		return creationDateTime;
 	}
 
-	public void setCreationDateTime(Date creationDateTime) {
+	public void setCreationDateTime(LocalDateTime creationDateTime) {
 		this.creationDateTime = creationDateTime;
 	}
 

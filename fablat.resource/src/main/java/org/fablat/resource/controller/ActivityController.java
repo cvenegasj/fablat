@@ -1,7 +1,7 @@
 package org.fablat.resource.controller;
 
 import java.security.Principal;
-import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,8 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "/auth/activities")
 public class ActivityController {
-	
-	private SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 	
 	@Autowired
 	private ActivityLogDAO activityLogDAO;
@@ -66,7 +64,8 @@ public class ActivityController {
 		aDTO.setLevel(a.getLevel());
 		aDTO.setType(a.getType());
 		aDTO.setVisibility(a.getVisibility());
-		aDTO.setCreationDateTime(dateTimeFormatter.format(a.getCreationDateTime()));
+		
+		aDTO.setCreationDateTime(DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(a.getCreationDateTime()));
 		aDTO.setCreationDateTimeRaw(a.getCreationDateTime());
 		aDTO.setGroupId(a.getGroup() != null ? a.getGroup().getIdGroup() : null);
 		aDTO.setGroupName(a.getGroup() != null ? a.getGroup().getName() : null);

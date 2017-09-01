@@ -8,13 +8,14 @@ public class WorkshopTutorDAOImpl extends GenericDAOImpl<WorkshopTutor, Integer>
 
 	@Transactional
 	public Integer countAllByFabber(String email) {
-		Integer count = null;
-		count = ((Long) getSession()
+		Long count = getSession()
 				.createQuery(
 						"select count(x) from " + getDomainClassName() + " x "
-								+ "where x.subGroupMember.groupMember.fabber.email = :email").setString("email", email)
-				.iterate().next()).intValue();
-		return count;
+								+ "where x.subGroupMember.groupMember.fabber.email = :email", Long.class)
+				.setParameter("email", email)
+				.getSingleResult();
+		
+		return count.intValue();
 	}
 
 	@Transactional
@@ -24,8 +25,8 @@ public class WorkshopTutorDAOImpl extends GenericDAOImpl<WorkshopTutor, Integer>
 				.createQuery(
 						"from " + getDomainClassName() + " x where x.workshop.id = :idWorkshop "
 								+ "and x.subGroupMember.groupMember.fabber.email = :email")
-				.setInteger("idWorkshop", idWorkshop)
-				.setString("email", email).setMaxResults(1).uniqueResult();
+				.setParameter("idWorkshop", idWorkshop)
+				.setParameter("email", email).setMaxResults(1).uniqueResult();
 
 		return e;
 	}

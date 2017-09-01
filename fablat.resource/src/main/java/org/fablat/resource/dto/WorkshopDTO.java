@@ -17,6 +17,8 @@ public class WorkshopDTO {
 	private String startDateMonth;
 	private String startDateFormatted;
 	private String endDateFormatted;
+	private String startDateTimeISO;
+	private String endDateTimeISO;
 	private Boolean isPaid;
 	private BigDecimal price;
 	private String currency;
@@ -133,6 +135,22 @@ public class WorkshopDTO {
 
 	public void setEndDateFormatted(String endDateFormatted) {
 		this.endDateFormatted = endDateFormatted;
+	}
+
+	public String getStartDateTimeISO() {
+		return startDateTimeISO;
+	}
+
+	public void setStartDateTimeISO(String startDateTimeISO) {
+		this.startDateTimeISO = startDateTimeISO;
+	}
+
+	public String getEndDateTimeISO() {
+		return endDateTimeISO;
+	}
+
+	public void setEndDateTimeISO(String endDateTimeISO) {
+		this.endDateTimeISO = endDateTimeISO;
 	}
 
 	public Boolean getIsPaid() {
