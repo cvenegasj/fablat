@@ -23,7 +23,7 @@
 				<div>
 					<h3>{{ subgroup.name }}</h3>
 				</div>
-				<div style="margin-bottom: 20px;">{{ subgroup.description }}</div>
+				<div style="margin-bottom: 20px; white-space: pre-wrap;">{{ subgroup.description | decodeURIComponent }}</div>
 				<md-button class="md-raised md-accent" ng-click="joinSubgroup(subgroup.idSubGroup)">Join the subgroup</md-button>
 			</div>
 			<div class="members">

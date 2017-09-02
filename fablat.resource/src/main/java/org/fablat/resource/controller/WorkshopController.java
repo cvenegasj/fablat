@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class WorkshopController {
 	
 	private final DateTimeFormatter dateTimeFormatterIn = DateTimeFormatter.ofPattern("d-M-yyyy h:m a"); // for creation/update
+	private final DateTimeFormatter dateTimeFormatterCalendar = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss"); // for google calendar
 	private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 	private final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("h:mm a");
 	private final DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MMM");
@@ -202,6 +203,12 @@ public class WorkshopController {
 		wDTO.setStartDateMonth(monthFormatter.format(workshop.getStartDateTime()));
 		wDTO.setStartDateFormatted(dateFormatter2.format(workshop.getStartDateTime()));
 		wDTO.setEndDateFormatted(dateFormatter2.format(workshop.getEndDateTime()));
+		
+		wDTO.setStartDateTimeISO(DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(workshop.getStartDateTime()));
+		wDTO.setEndDateTimeISO(DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(workshop.getEndDateTime()));
+		
+		wDTO.setStartDateTimeCalendar(dateTimeFormatterCalendar.format(workshop.getStartDateTime()));
+		wDTO.setEndDateTimeCalendar(dateTimeFormatterCalendar.format(workshop.getEndDateTime()));
 		
 		wDTO.setIsPaid(workshop.getIsPaid());
 		wDTO.setPrice(workshop.getPrice());

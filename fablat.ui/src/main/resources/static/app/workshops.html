@@ -34,7 +34,7 @@
 							<h2 class="font-16">Workshop details</h2>
 						</div>
 						<div class="font-14 section-content">
-							<p style="margin-bottom: 20px;">{{ item.description }}</p>
+							<p style="margin-bottom: 20px; white-space: pre-wrap;">{{ item.description | decodeURIComponent }}</p>
 							<span ng-if="item.facebookUrl">
 								Follow the event on Facebook: 
 								<a href="{{ item.facebookUrl }}" target="_blank" class="custom-anchor-1" md-colors="{color: 'accent-900'}">{{ item.facebookUrl }}</a>
@@ -61,7 +61,7 @@
 								<h2 class="font-16">Location</h2>
 							</div>
 							<div class="font-14 section-content">
-								<span ng-if="item.labName">{{ item.labName }}</span><br ng-if="workshop.labName" />
+								<span ng-if="item.labName">{{ item.labName }}</span><br ng-if="item.labName" />
 								<span ng-if="item.locationAddress">{{ item.locationAddress + " · " }}</span>
 								<span ng-if="item.locationCity && item.locationCountry">{{ item.locationCity + ", " + item.locationCountry }}</span><br ng-if="item.locationCity && item.locationCountry" />
 								<span ng-if="item.locationLatitude && item.locationLongitude"><a href="http://www.google.com/maps/place/{{ item.locationLatitude }},{{ item.locationLongitude }}" target="_blank" class="custom-anchor-1" md-colors="{color: 'accent-900'}">ver mapa</a></span>
@@ -98,7 +98,14 @@
 					</div>
 					<md-divider></md-divider>
 					<div class="section" flex style="padding-top: 10px; padding-bottom: 10px;">
-						<md-button class="md-accent" ng-click="">Add to Google Calendar</md-button>
+						<md-button class="md-accent" href="http://www.google.com/calendar/event?
+							action=TEMPLATE
+							&text={{ item.name }}
+							&dates={{ item.startDateTimeCalendar }}/{{ item.endDateTimeCalendar }}
+							&details={{ item.description }}
+							&location={{ item.labName ? item.labName + ' - ' : '' }} {{ item.locationAddress ? item.locationAddress + ', ' : '' }} {{ item.locationCity + ', ' }} {{ item.locationCountry }}
+							&ctz=America/Lima" 
+							target="_blank" rel="nofollow">Add to Google Calendar</md-button>
 					</div>
 				</div>
 				<md-divider ng-if="!$last"></md-divider>

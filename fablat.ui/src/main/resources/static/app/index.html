@@ -73,14 +73,15 @@
 		        
 		        <ul id="main-navbar" class="list-unstyled">
 		        	<li>
+		        		<a ui-sref="dashboard.groups" ui-sref-active="active">Dashboard</a>
+		        	</li>
+		        	<li>
 		        		<a ui-sref="groups" ui-sref-active="active">Groups</a>
 		        	</li>
 		        	<li>
 		        		<a ui-sref="workshops" ui-sref-active="active">Workshops</a>
 		        	</li>
 		        </ul>
-		        
-		        
 		        <span flex></span>			
 				<md-menu md-offset="0 50" md-position-mode="target-right target" ng-if="user.firstName && user.lastName">
 			    	<md-button aria-label="Open user avatar menu" class="md-icon-button" style="height: auto; width: auto;" ng-click="$mdMenu.open($event)">

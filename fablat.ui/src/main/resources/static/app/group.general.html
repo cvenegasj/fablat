@@ -6,7 +6,7 @@
 		<div>
 			<h3>{{ group.name }}</h3>
 		</div>
-		<div style="margin-bottom: 20px;">{{ group.description }}</div>
+		<div style="margin-bottom: 20px; white-space: pre-wrap;">{{ group.description | decodeURIComponent }}</div>
 	</div>
 	<div class="info" ng-if="group.reunionDay || group.reunionTime || group.mainUrl || group.secondaryUrl">
 		<div ng-if="group.reunionDay || group.reunionTime"><md-icon md-svg-icon="timetable" class="icon-16"></md-icon>Reunions: 

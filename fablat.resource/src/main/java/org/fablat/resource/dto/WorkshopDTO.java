@@ -19,6 +19,8 @@ public class WorkshopDTO {
 	private String endDateFormatted;
 	private String startDateTimeISO;
 	private String endDateTimeISO;
+	private String startDateTimeCalendar;
+	private String endDateTimeCalendar;
 	private Boolean isPaid;
 	private BigDecimal price;
 	private String currency;
@@ -151,6 +153,22 @@ public class WorkshopDTO {
 
 	public void setEndDateTimeISO(String endDateTimeISO) {
 		this.endDateTimeISO = endDateTimeISO;
+	}
+
+	public String getStartDateTimeCalendar() {
+		return startDateTimeCalendar;
+	}
+
+	public void setStartDateTimeCalendar(String startDateTimeCalendar) {
+		this.startDateTimeCalendar = startDateTimeCalendar;
+	}
+
+	public String getEndDateTimeCalendar() {
+		return endDateTimeCalendar;
+	}
+
+	public void setEndDateTimeCalendar(String endDateTimeCalendar) {
+		this.endDateTimeCalendar = endDateTimeCalendar;
 	}
 
 	public Boolean getIsPaid() {

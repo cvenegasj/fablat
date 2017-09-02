@@ -10,7 +10,7 @@
 				<h2 class="font-16">Workshop details</h2>
 			</div>
 			<div class="font-14 section-content">
-				<p style="margin-bottom: 20px;">{{ workshop.description }}</p>
+				<p style="margin-bottom: 20px; white-space: pre-wrap;">{{ workshop.description | decodeURIComponent }}</p>
 				<span ng-if="workshop.facebookUrl">
 					Follow the event on Facebook: 
 					<a href="{{ workshop.facebookUrl }}" target="_blank" class="custom-anchor-1" md-colors="{color: 'accent-900'}">{{ workshop.facebookUrl }}</a>
@@ -74,7 +74,14 @@
 		</div>
 		<md-divider></md-divider>
 		<div class="section" flex style="padding-top: 10px; padding-bottom: 10px;">
-			<md-button class="md-accent" ng-click="">Add to Google Calendar</md-button>
+			<md-button class="md-accent" href="http://www.google.com/calendar/event?
+				action=TEMPLATE
+				&text={{ workshop.name }}
+				&dates={{ workshop.startDateTimeCalendar }}/{{ workshop.endDateTimeCalendar }}
+				&details={{ workshop.description }}
+				&location={{ workshop.labName ? workshop.labName + ' - ' : '' }} {{ workshop.locationAddress ? workshop.locationAddress + ', ' : '' }} {{ workshop.locationCity + ', ' }} {{ workshop.locationCountry }}
+				&ctz=America/Lima" 
+				target="_blank" rel="nofollow">Add to Google Calendar</md-button>
 		</div>
 	</div>
 </div>

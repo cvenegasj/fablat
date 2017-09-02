@@ -17,7 +17,7 @@
 				<div>
 					<h3>{{ group.name }}</h3>
 				</div>
-				<div style="margin-bottom: 20px;">{{ group.description }}</div>
+				<div style="margin-bottom: 20px; white-space: pre-wrap;">{{ group.description | decodeURIComponent }}</div>
 				<md-button class="md-raised md-accent" ng-click="joinGroup(group.idGroup)">Join the group</md-button>
 			</div>
 			<div class="members">
