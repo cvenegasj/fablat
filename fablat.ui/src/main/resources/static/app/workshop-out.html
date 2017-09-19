@@ -14,8 +14,12 @@
 	</md-toolbar>
 	
 	<div class="workshop-container-1">
-		<div class="header" layout="row" layout-align="none center">
-			<h1 class="font-20 bold">{{ "#" + workshop.replicationNumber + ": " + workshop.name }}</h1>
+		<div class="header" md-colors="{background: 'darkPurple-background-600'}" layout-align="none center">
+			<div>
+				<span>{{ "#" + workshop.replicationNumber }}</span>
+				<h1 class="font-22 bold uppercase">{{ workshop.name }}</h1>
+				<h2 class="font-15 font-weight-400 no-margin">from {{ workshop.groupName }}</h2>
+			</div>
 		</div>
 		<md-divider></md-divider>
 		<div class="section" flex>

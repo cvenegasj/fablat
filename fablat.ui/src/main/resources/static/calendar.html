@@ -1,16 +1,10 @@
-<div layout="column" ng-controller="WorkshopsCtrl">
-	<md-toolbar md-whiteframe="1" md-theme="neutral" class="md-hue-1">
-    	<div class="md-toolbar-tools" >
-	    	<h2 flex md-truncate>Workshops</h2>
-		</div>
-	</md-toolbar>
-
+<div layout="column" ng-controller="CalendarCtrl">
 	<div class="md-padding">
 		<div layout="row" layout-align="center center">
 			<h4 class="md-title">Upcoming workshops</h4>
 		</div>
 		<div ng-if="workshops.length === 0" class="centered no-data-3" style="margin-top: 25px;">No upcoming workshops.</div>
-		<div class="workshop-list-2" flex-offset="15" flex="70" layout="column" ng-if="workshops.length > 0">
+		<div class="workshop-list-3" flex-offset="15" flex="70" layout="column" ng-if="workshops.length > 0">
 			<div ng-repeat="item in workshops">
 				<div layout="row" class="list-item" ng-init="item.showDetail = false;" ng-click="item.showDetail = !item.showDetail;">
 					<div class="date uppercase" flex="15" layout="column" layout-align="center center" md-colors="{background: 'default-accent-400'}">
@@ -19,7 +13,7 @@
 						<div class="hour">{{ item.startTime }}</div>
 					</div>
 					<div class="description" flex="85" layout="column" layout-align="center auto">
-						<div class="font-20 bold workshop-name">{{ item.name }} #{{ item.replicationNumber }}</div>
+						<div class="font-20 bold workshop-name uppercase">{{ item.name }} #{{ item.replicationNumber }}</div>
 						<div class="font-13">
 							<span ng-if="item.labName">{{ item.labName }} · </span>
 							<span>from {{ item.groupName }} · </span>

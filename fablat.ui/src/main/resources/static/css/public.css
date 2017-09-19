@@ -32,6 +32,33 @@ html {
 	text-transform: uppercase;
 }
 
+.centered {
+	text-align: center;
+}
+
+.no-data-3 {
+	font-size: 16px;
+	line-height: 20px;
+	opacity: 0.7;
+	color: #9E9E9E;
+}
+
+.font-weight-300 {
+	font-weight: 300;
+}
+
+.font-weight-400 {
+	font-weight: 400 !important;
+}
+
+.bold {
+	font-weight: 500 !important;
+}
+
+.bolder {
+	font-weight: 600;
+}
+
 .font-size-1 {
 	font-size: 10px;
 	line-height: 13px;
@@ -55,6 +82,67 @@ html {
 .font-size-5 {
 	font-size: 18px;
 	line-height: 21px;
+}
+
+/* Extra fonts */
+.font-10 {
+	font-size: 10px !important;
+	line-height: 13px !important;
+}
+
+.font-11 {
+	font-size: 11px !important;
+	line-height: 14px !important;
+}
+
+.font-12 {
+	font-size: 12px !important;
+	line-height: 15px !important;
+}
+
+.font-13 {
+	font-size: 13px !important;
+	line-height: 16px !important;
+}
+
+.font-14 {
+	font-size: 14px !important;
+	line-height: 17px !important;
+}
+
+.font-15 {
+	font-size: 15px !important;
+	line-height: 18px !important;
+}
+
+.font-16 {
+	font-size: 16px !important;
+	line-height: 19px !important;
+}
+
+.font-17 {
+	font-size: 17px !important;
+	line-height: 20px !important;
+}
+
+.font-18 {
+	font-size: 18px !important;
+	line-height: 21px !important;
+}
+
+.font-20 {
+	font-size: 20px !important;
+	line-height: 24px !important;
+}
+
+.font-21 {
+	font-size: 21px !important;
+	line-height: 26px !important;
+}
+
+.font-22 {
+	font-size: 22px !important;
+	line-height: 27px !important;
 }
 
 .color-1 {
@@ -82,7 +170,79 @@ html {
 	min-width: 385px !important;
 }
 
-.centered {
-	text-align: center;
+div.workshop-list-3 {
+	border: 1px solid #E0E0E0;
+}
+
+div.workshop-list-3 .list-item .date {
+	padding: 10px;
+}
+
+div.workshop-list-3 .list-item .description {
+	padding: 10px 15px;
+	background-color: #fff;
+	color: #616161;
+}
+
+div.workshop-list-3 .list-item .description .workshop-name {
+	color: #424242;
+	margin-bottom: 2px;
+}
+	
+div.workshop-list-3 .list-item .day {
+	font-size: 22px;
+	line-height: 27px;
+	font-weight: 600;
+}
+
+div.workshop-list-3 .list-item .month {
+	font-size: 12px;
+	line-height: 16px;
+	font-weight: 400;
+}
+
+div.workshop-list-3 .list-item .hour {
+	font-size: 12px;
+	line-height: 16px;
+	font-weight: 400;
+}
+
+.workshop-container-2 {
+	background-color: #fff;
+}
+
+.workshop-container-2 div.header {
+	background-color: #D4E157;
+	padding: 30px;
+}
+
+.workshop-container-2 div.header h1 {
+	margin: 0;
+}
+
+.workshop-container-2 div.section {
+	padding: 30px;
+	position: relative;
+}
+
+.workshop-container-2 div.section md-icon {
+	position: absolute;
+}
+
+.workshop-container-2 div.section .section-header {
+	padding-left: 30px;
+	margin-bottom: 15px;
+}
+
+.workshop-container-2 div.section .section-header h2 {
+	margin: 3px;
+}
+
+.workshop-container-2 div.section .section-content {
+	padding-left: 30px;
+}
+
+.workshop-container-2 div.section .section-content .tutor {
+	margin-bottom: 15px;
 }
 

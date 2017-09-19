@@ -1,4 +1,4 @@
-var app = angular.module('FabLatAppPublic', [ 'ui.router', 'ngMaterial', 'ng.group', 'ngMessages' ]);
+var app = angular.module('FabLatAppPublic', [ 'ui.router', 'ngMaterial', 'ng.group' ]);
 
 app.config(function($mdThemingProvider, $urlRouterProvider, $stateProvider) {
 
@@ -33,9 +33,26 @@ app.config(function($mdThemingProvider, $urlRouterProvider, $stateProvider) {
     });
     
     $stateProvider.state({
-        name: 'signup1',
+        name: 'home',
         url: '/',
-        templateUrl: 'signup.html',
+        templateUrl: 'home.html'
+    });
+    
+    $stateProvider.state({
+        name: 'calendar',
+        url: '/calendar',
+        templateUrl: 'calendar.html',
+        controller: function ($rootScope) {
+        	$rootScope.model = {
+                title: 'Calendar'
+            };
+        }
+    });
+    
+    $stateProvider.state({
+        name: 'join',
+        url: '/join',
+        templateUrl: 'signup-1.html',
         controller: function ($rootScope) {
         	$rootScope.model = {
                 title: 'Sign Up'
@@ -44,9 +61,9 @@ app.config(function($mdThemingProvider, $urlRouterProvider, $stateProvider) {
     });
     
     $stateProvider.state({
-        name: 'signup2',
-        url: '/signup2',
-        templateUrl: 'signup-fabs.html',
+        name: 'signup-2',
+        url: '/signup-2',
+        templateUrl: 'signup-2.html',
         controller: function ($rootScope) {
         	$rootScope.model = {
                 title: 'Sign Up'
@@ -93,7 +110,7 @@ app.controller('SignUp1Ctrl', function($rootScope, $scope, $http, $filter, $loca
 		$rootScope.user.idLab = null;
 		
 		// redirect
-		$location.path("/signup2");
+		$location.path("/signup-2");
     }
 	
 });
@@ -170,3 +187,35 @@ app.controller('SignUp2Ctrl', function($rootScope, $scope, $http, $filter, $mdDi
 		  });
 	 }
 });
+
+//Controller in: calendar.html
+app.controller('CalendarCtrl', function($rootScope, $scope, $http) {
+	
+	$rootScope.isLoading = true;
+	$scope.loading1 = true;
+	
+	$http.get('/resource/public/workshops/upcoming')
+		.then(function(response) {
+			$scope.workshops = response.data;
+			
+		}).finally(function() {
+		    // called no matter success or failure
+		    $scope.loading1 = false;
+		    $rootScope.isLoading = $scope.loading1;
+		});
+	
+});
+
+app.controller('HomeController', function($scope) {
+
+});
+
+
+//================= Custom filters =====================
+
+app.filter('decodeURIComponent', function($window) {
+    return $window.decodeURIComponent;
+});
+
+	
+

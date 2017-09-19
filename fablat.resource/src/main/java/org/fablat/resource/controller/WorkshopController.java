@@ -52,7 +52,7 @@ public class WorkshopController {
 	private LocationDAO locationDAO;
 	
 	@RequestMapping(value = "/upcoming", method = RequestMethod.GET)
-    public List<WorkshopDTO> findUpcoming(Principal principal) {
+    public List<WorkshopDTO> findUpcoming() {
 		List<WorkshopDTO> returnList = new ArrayList<WorkshopDTO>();
 		
         // find all workshops after today

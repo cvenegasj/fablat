@@ -13,13 +13,13 @@ spring:
 security:
   oauth2:
     client:
-      accessTokenUri: http://fablatauth-env.2hyhxb24pj.sa-east-1.elasticbeanstalk.com/uaa/oauth/token
-      userAuthorizationUri: http://fablatauth-env.2hyhxb24pj.sa-east-1.elasticbeanstalk.com/uaa/oauth/authorize
+      accessTokenUri: http://fablat-auth-env-1.2hyhxb24pj.sa-east-1.elasticbeanstalk.com/uaa/oauth/token
+      userAuthorizationUri: http://fablat-auth-env-1.2hyhxb24pj.sa-east-1.elasticbeanstalk.com/uaa/oauth/authorize
       clientId: fablat
       clientSecret: c6d4f0e6125fcc1879b8dc42983c73ea1b1adf4f67a1cba0010d29ed8895017c
       #scope: openid
     resource:
-      userInfoUri: http://fablatauth-env.2hyhxb24pj.sa-east-1.elasticbeanstalk.com/uaa/user
+      userInfoUri: http://fablat-auth-env-1.2hyhxb24pj.sa-east-1.elasticbeanstalk.com/uaa/user
 
 zuul:
   routes:
@@ -28,7 +28,7 @@ zuul:
       url: http://resource:9000 #this works
     user:
       path: /user/**
-      url: http://fablatauth-env.2hyhxb24pj.sa-east-1.elasticbeanstalk.com/uaa/user
+      url: http://fablat-auth-env-1.2hyhxb24pj.sa-east-1.elasticbeanstalk.com/uaa/user
   
 # Increase the Hystrix timeout to 60s (globally)
 hystrix:
