@@ -31,7 +31,7 @@ services:
       VIRTUAL_HOST: fablat.net
       LETSENCRYPT_HOST: fablat.net,resource.fablat.net
       LETSENCRYPT_EMAIL: cvj_2311@hotmail.com
-#networks:
-#  default:
-#    external:
-#      name: nginx-proxy
+networks:
+  default:
+    external:
+      name: nginx-proxy
