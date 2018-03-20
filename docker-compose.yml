@@ -1,37 +1,13 @@
 version: "3"
 
 services:
-#  auth:
-#    image: carlosvj/fablat:fablat-auth
-#    restart: always
-#    expose:
-#      - "9999"
-#    environment:
-#      VIRTUAL_HOST: auth.fablat.net
-#      VIRTUAL_PORT: 9999
-#      LETSENCRYPT_HOST: fablat.net,resource.fablat.net
   resource:
     image: carlosvj/fablat:fablat-resource
-    restart: always
-    expose:
-      - "9000"
-    environment:
-      VIRTUAL_HOST: resource.fablat.net
-      VIRTUAL_PORT: 9000
-      LETSENCRYPT_HOST: fablat.net,resource.fablat.net
+    ports:
+      - "9000:9000"
   ui:
     image: carlosvj/fablat:fablat-ui
-    restart: always
-    expose:
-      - "80"
-      - "443"
+    ports:
+      - "80:8080"
     links:
       - resource
-    environment:
-      VIRTUAL_HOST: fablat.net
-      LETSENCRYPT_HOST: fablat.net,resource.fablat.net
-      LETSENCRYPT_EMAIL: cvj_2311@hotmail.com
-networks:
-  default:
-    external:
-      name: nginx-proxy
