@@ -17,9 +17,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-
 @SuppressWarnings("serial")
 @Entity
 @Table(name = "SubGroupMember")
@@ -96,7 +93,6 @@ public class SubGroupMember implements java.io.Serializable {
 	}
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "subGroupMember")
-	@Fetch(FetchMode.JOIN)
 	public Set<WorkshopTutor> getWorkshopTutors() {
 		return workshopTutors;
 	}

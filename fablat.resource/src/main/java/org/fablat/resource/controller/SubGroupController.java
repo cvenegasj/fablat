@@ -24,6 +24,7 @@ import org.fablat.resource.model.dao.GroupDAO;
 import org.fablat.resource.model.dao.GroupMemberDAO;
 import org.fablat.resource.model.dao.SubGroupDAO;
 import org.fablat.resource.model.dao.SubGroupMemberDAO;
+import org.fablat.resource.model.dao.WorkshopDAO;
 import org.fablat.resource.util.Resources;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -55,6 +56,8 @@ public class SubGroupController {
 	@Autowired
 	private GroupMemberDAO groupMemberDAO;
 	@Autowired
+	private WorkshopDAO workshopDAO;
+	@Autowired
 	private ActivityLogDAO activityLogDAO;
 
 	@RequestMapping(value = "/{idSubGroup}", method = RequestMethod.GET)
@@ -74,7 +77,7 @@ public class SubGroupController {
 
 		// subgroup's workshops
 		List<WorkshopDTO> workshops = new ArrayList<WorkshopDTO>();
-		for (Workshop w : subGroup.getWorkshops()) {
+		for (Workshop w : workshopDAO.findAllBySubGroup(idSubGroup)) {
 			WorkshopDTO wDTO = convertToDTO(w);
 			workshops.add(wDTO);
 		}
@@ -87,6 +90,24 @@ public class SubGroupController {
 			members.add(sgmDTO);
 		}
 		sDTO.setMembers(members);
+
+		return sDTO;
+	}
+	
+	@RequestMapping(value = "/{idSubGroup}/verify-me", method = RequestMethod.GET)
+	public SubGroupDTO verifyMe(@PathVariable("idSubGroup") Integer idSubGroup, Principal principal) {
+		SubGroup subGroup = subGroupDAO.findById(idSubGroup);
+		SubGroupDTO sDTO = convertToDTO(subGroup);
+
+		// additional properties
+		SubGroupMember userAsSubGroupMember = subGroupMemberDAO
+				.findBySubGroupAndFabber(idSubGroup, principal.getName());
+		if (userAsSubGroupMember != null) {
+			sDTO.setAmIMember(true);
+			sDTO.setAmICoordinator(userAsSubGroupMember.getIsCoordinator());
+		} else {
+			sDTO.setAmIMember(false);
+		}
 
 		return sDTO;
 	}
@@ -311,8 +332,6 @@ public class SubGroupController {
 		sDTO.setCreationDateTime(DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(subGroup.getCreationDateTime()));
 		sDTO.setGroupId(subGroup.getGroup().getIdGroup());
 		sDTO.setGroupName(subGroup.getGroup().getName());
-
-		sDTO.setMembersCount(subGroup.getSubGroupMembers().size());
 
 		return sDTO;
 	}

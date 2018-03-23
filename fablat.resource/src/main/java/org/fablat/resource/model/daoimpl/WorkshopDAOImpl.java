@@ -24,4 +24,18 @@ public class WorkshopDAOImpl extends GenericDAOImpl<Workshop, Integer> implement
 		return list;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Transactional
+	public List<Workshop> findAllBySubGroup(Integer idSubGroup) {
+		List<Workshop> list = null;
+		list = (List<Workshop>) getSession()
+				.createQuery(
+						"select x from " + getDomainClassName() + " x "
+								+ "where x.subGroup.id = :idSubGroup ")
+				.setParameter("idSubGroup", idSubGroup)
+				.list();
+		
+		return list;
+	}
+
 }

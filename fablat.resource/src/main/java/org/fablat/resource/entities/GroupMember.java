@@ -18,9 +18,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-
 @SuppressWarnings("serial")
 @Entity
 @Table(name = "GroupMember")
@@ -97,7 +94,6 @@ public class GroupMember implements java.io.Serializable {
 	}
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "groupMember")
-	@Fetch(FetchMode.JOIN)
 	@OrderBy("date(creationDateTime) asc")
 	public Set<SubGroupMember> getSubGroupMembers() {
 		return subGroupMembers;

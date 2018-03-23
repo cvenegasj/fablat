@@ -3,8 +3,8 @@
 		<div layout="column" layout-align="center center" style="margin-top: 15px; margin-bottom: 35px;">
 			<user-avatar fabber="fabber" avatar-w="100" avatar-h="100" avatar-font-size="40"></user-avatar>
 			<div class="md-headline" style="margin-top: 5px;">{{ fabber.firstName }} {{ fabber.lastName }}</div>
-			<div class="font-14"><span>{{ fabber.email }}</span> <span class="color-4" ng-if="user.hasAdminGeneralRole">[ADMIN_GENERAL]</span></div>
-			<div class="font-14"><span>{{ fabber.isNomade ? "Fab Nomade" : fabber.labName }}</span> <span class="color-4" ng-if="user.hasAdminLabRole">[ADMIN_LAB]</span></div>
+			<div class="font-14 centered"><span>{{ fabber.email }}</span> <span class="color-4" ng-if="user.hasAdminGeneralRole">[ADMIN_GENERAL]</span></div>
+			<div class="font-14 centered"><span>{{ fabber.isNomade ? "Fab Nomade" : fabber.labName }}</span> <span class="color-4" ng-if="user.hasAdminLabRole">[ADMIN_LAB]</span></div>
 		</div>
 		<div layout-gt-sm="column" layout="row">
 			<md-card flex layout="column" layout-align="start center" md-theme="darkOrange" class="custom-card-1" layout-fill>

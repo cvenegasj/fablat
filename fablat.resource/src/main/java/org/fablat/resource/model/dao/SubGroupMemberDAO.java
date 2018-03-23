@@ -14,4 +14,8 @@ public interface SubGroupMemberDAO extends GenericDAO<SubGroupMember, Integer> {
 	
 	List<SubGroupMember> findAllBySubGroup(Integer idSubGroup);
 	
+	List<SubGroupMember> findAllByGroupAndFabber(Integer idGroup, String email);
+	
+	List<SubGroupMember> findAllByGroupAndFabber(Integer idGroup, Integer idFabber);
+	
 }

@@ -12,6 +12,12 @@ public interface GroupMemberDAO extends GenericDAO<GroupMember, Integer> {
 	
 	GroupMember findByGroupAndFabber(Integer idGroup, String email);
 	
+	GroupMember findByGroupAndFabber(Integer idGroup, Integer idFabber);
+	
 	List<GroupMember> findAllByGroup(Integer idGroup);
+	
+	List<GroupMember> findAllByFabber(String email);
+	
+	List<GroupMember> findAllByFabber(Integer idFabber);
 
 }

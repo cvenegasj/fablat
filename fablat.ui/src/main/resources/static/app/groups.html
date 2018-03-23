@@ -21,6 +21,38 @@
 	</md-toolbar>
 	
 	<!-- Cards container -->
+	<div layout="row" layout-align="none" layout-wrap style="margin: 35px 45px;">
+		<div flex-xs="100" flex-sm="50" flex-gt-sm="25" ng-repeat="item in groups">
+			<md-card class="custom-card-4" flex>
+				<img src="http://via.placeholder.com/350x200" class="md-card-image" alt="Group image">
+		        <div class="header">
+		        	<h3>
+		        		<a ui-sref="group.general({ idGroup: item.idGroup })" class="custom-anchor-2"><span class="title">{{ item.name }}</span></a>
+		        	</h3>	
+		        </div>
+		        <div class="content">
+		        	<p class="description">
+		            	{{ item.description | decodeURIComponent }}
+		          	</p>
+		          	<p class="summary">
+		          		{{ item.membersCount === 1 ? "1 member" : item.membersCount + " members" }} · {{ item.subGroupsCount }} subgroups
+		          	</p>
+		        </div>
+		        <div class="actions" layout="column" layout-align="center stretch">
+		        	<md-button class="md-accent" ng-click="joinGroup(item.idGroup)" ng-if="!item.amIMember">Join</md-button>
+		          	<md-button class="" ui-sref="group.general({ idGroup: item.idGroup })" ng-if="item.amIMember">View</md-button>
+		        </div>
+		     </md-card>
+	     </div>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<!--
 	<div style="padding-left: 10%; padding-right: 10%;" layout-xs="column" layout="row" flex>
 		<div flex layout="column" class="md-padding">
 			<md-card class="custom-card-4" md-theme="" ng-repeat="item in groups1">
@@ -127,7 +159,7 @@
 		        </md-card-content>
 		     </md-card>	
 		</div>
-	</div>
+	</div> -->
 	<!-- **** Cards containder **** -->
 	
 	<md-button class="md-fab md-fab-bottom-right" style="position: fixed !important;" aria-label="Add" ng-click="addGroup($event)">

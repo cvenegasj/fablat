@@ -199,7 +199,7 @@ public class Fabber implements java.io.Serializable {
 		this.lab = lab;
 	}
 
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "fabber")
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "fabber")
 	@Fetch(FetchMode.JOIN)
 	public FabberInfo getFabberInfo() {
 		return fabberInfo;
@@ -210,7 +210,6 @@ public class Fabber implements java.io.Serializable {
 	}
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "fabber")
-	@Fetch(FetchMode.JOIN)
 	@OrderBy("id")
 	public Set<GroupMember> getGroupMembers() {
 		return groupMembers;
@@ -220,7 +219,7 @@ public class Fabber implements java.io.Serializable {
 		this.groupMembers = groupMembers;
 	}
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "fabber")
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "fabber")
 	@Fetch(FetchMode.JOIN)
 	public Set<RoleFabber> getRoleFabbers() {
 		return roleFabbers;

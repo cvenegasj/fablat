@@ -160,9 +160,10 @@ app.config(function($mdThemingProvider, $mdIconProvider, $urlRouterProvider, $st
         url: '/group/:idGroup',
         templateUrl: 'group.html',
         resolve: {
-        	redirectIfNotMember: function($http, $stateParams, $state, $q, $timeout) {
+        	redirectIfNotMember: function($http, $stateParams, $state, $q, $timeout, $rootScope) {
+        		$rootScope.isLoading = true;
         		var deferred = $q.defer();
-        		$http.get('/resource/auth/groups/' + $stateParams.idGroup)
+        		$http.get('/resource/auth/groups/' + $stateParams.idGroup + "/verify-me")
 	        		.then(function(response) {
 	        			// if user is not member redirect to external page
 	        			if (response.data.amIMember) {
@@ -176,15 +177,16 @@ app.config(function($mdThemingProvider, $mdIconProvider, $urlRouterProvider, $st
 	        		});
         		return deferred.promise;
         	},
-        	group: function($http, $stateParams) {	
+        	group: function($http, $stateParams, $rootScope) {
         		return $http.get('/resource/auth/groups/' + $stateParams.idGroup)
             		.then(function(response) {
             			return response.data;
             		});
         	}
         },
-        controller: function($scope, group){
+        controller: function($scope, group, $rootScope){
             $scope.group = group;
+            $rootScope.isLoading = false;
         }
     });
     
@@ -208,53 +210,55 @@ app.config(function($mdThemingProvider, $mdIconProvider, $urlRouterProvider, $st
     });
     
     $stateProvider.state({
-        name: 'group.management',
-        abstract: true,
-        url: '/management',
-        templateUrl: 'group.management.html',
-        controller: function($scope){
-            $scope.currentNavItem = 'general';
-        }
-    });
-    
-    $stateProvider.state({
-        name: 'group.management.general',
-        url: '/general',
-        templateUrl: 'group.management.general.html',
-        controller: function($scope){
-            $scope.currentNavItem = 'general';
-        }
-    });
-    
-    $stateProvider.state({
-        name: 'group.management.members',
+        name: 'group.members',
         url: '/members',
-        templateUrl: 'group.management.members.html',
+        templateUrl: 'group.members.html',
         controller: function($scope){
             $scope.currentNavItem = 'members';
         }
     });
     
     $stateProvider.state({
-        name: 'group.management.subgroups',
+        name: 'group.subgroups',
         url: '/subgroups',
-        templateUrl: 'group.management.subgroups.html',
+        templateUrl: 'group.subgroups.html',
         controller: function($scope){
             $scope.currentNavItem = 'subgroups';
         }
     });
     
+    $stateProvider.state({
+        name: 'group.settings',
+        abstract: true,
+        url: '/settings',
+        templateUrl: 'group.settings.html',
+        controller: function($scope){
+            $scope.currentNavItem = 'general';
+        }
+    });
+    
+    $stateProvider.state({
+        name: 'group.settings.general',
+        url: '/general',
+        templateUrl: 'group.settings.general.html',
+        controller: function($scope){
+            $scope.currentNavItem = 'general';
+        }
+    });
+    
     
     /*=========== subgroup states ===========*/
+    
     $stateProvider.state({
         name: 'subgroup',
         abstract: true,
         url: '/subgroup/:idSubgroup',
         templateUrl: 'subgroup.html',
         resolve: {
-        	redirectIfNotMember: function($http, $stateParams, $state, $q, $timeout) {
+        	redirectIfNotMember: function($http, $stateParams, $state, $q, $timeout, $rootScope) {
+        		$rootScope.isLoading = true;
         		var deferred = $q.defer();
-        		$http.get('/resource/auth/subgroups/' + $stateParams.idSubgroup)
+        		$http.get('/resource/auth/subgroups/' + $stateParams.idSubgroup + '/verify-me')
         		.then(function(response) {
         			// if user is not member redirect to external page
         			if (response.data.amIMember) {
@@ -275,8 +279,9 @@ app.config(function($mdThemingProvider, $mdIconProvider, $urlRouterProvider, $st
             		});
         	}
         },
-        controller: function($scope, subgroup){
+        controller: function($scope, subgroup, $rootScope){
             $scope.subgroup = subgroup;
+            $rootScope.isLoading = false;
         }
     });
     
@@ -305,39 +310,39 @@ app.config(function($mdThemingProvider, $mdIconProvider, $urlRouterProvider, $st
     });
     
     $stateProvider.state({
-        name: 'subgroup.management',
-        abstract: true,
-        url: '/management',
-        templateUrl: 'subgroup.management.html',
-        controller: function($scope){
-            $scope.currentNavItem = 'general';
-        }
-    });
-    
-    $stateProvider.state({
-        name: 'subgroup.management.general',
-        url: '/general',
-        templateUrl: 'subgroup.management.general.html',
-        controller: function($scope){
-            $scope.currentNavItem = 'general';
-        }
-    });
-    
-    $stateProvider.state({
-        name: 'subgroup.management.members',
+        name: 'subgroup.members',
         url: '/members',
-        templateUrl: 'subgroup.management.members.html',
+        templateUrl: 'subgroup.members.html',
         controller: function($scope){
             $scope.currentNavItem = 'members';
         }
     });
     
     $stateProvider.state({
-        name: 'subgroup.management.workshops',
+        name: 'subgroup.workshops',
         url: '/workshops',
-        templateUrl: 'subgroup.management.workshops.html',
+        templateUrl: 'subgroup.workshops.html',
         controller: function($scope){
             $scope.currentNavItem = 'workshops';
+        }
+    });
+    
+    $stateProvider.state({
+        name: 'subgroup.settings',
+        abstract: true,
+        url: '/settings',
+        templateUrl: 'subgroup.settings.html',
+        controller: function($scope){
+            $scope.currentNavItem = 'general';
+        }
+    });
+    
+    $stateProvider.state({
+        name: 'subgroup.settings.general',
+        url: '/general',
+        templateUrl: 'subgroup.settings.general.html',
+        controller: function($scope){
+            $scope.currentNavItem = 'general';
         }
     });
     
@@ -391,28 +396,28 @@ app.config(function($mdThemingProvider, $mdIconProvider, $urlRouterProvider, $st
     });
     
     $stateProvider.state({
-        name: 'workshop.management',
-        abstract: true,
-        url: '/management',
-        templateUrl: 'workshop.management.html',
-        controller: function($scope){
-            $scope.currentNavItem = 'general';
-        }
-    });
-    
-    $stateProvider.state({
-        name: 'workshop.management.general',
-        url: '/general',
-        templateUrl: 'workshop.management.general.html',
-        controller: function($scope){
-            $scope.currentNavItem = 'general';
-        }
-    });
-    
-    $stateProvider.state({
-        name: 'workshop.management.tutors',
+        name: 'workshop.tutors',
         url: '/tutors',
-        templateUrl: 'workshop.management.tutors.html',
+        templateUrl: 'workshop.tutors.html',
+        controller: function($scope){
+            $scope.currentNavItem = 'general';
+        }
+    });
+    
+    $stateProvider.state({
+        name: 'workshop.settings',
+        abstract: true,
+        url: '/settings',
+        templateUrl: 'workshop.settings.html',
+        controller: function($scope){
+            $scope.currentNavItem = 'general';
+        }
+    });
+    
+    $stateProvider.state({
+        name: 'workshop.settings.general',
+        url: '/general',
+        templateUrl: 'workshop.settings.general.html',
         controller: function($scope){
             $scope.currentNavItem = 'general';
         }
@@ -572,9 +577,7 @@ app.controller('GroupsCtrl', function($rootScope, $scope, $http, $state, $mdDial
 	
 	$rootScope.isLoading = true;
 	$scope.loading1 = true;
-	$scope.groups1 = [];
-	$scope.groups2 = [];
-	$scope.groups3 = [];
+	$scope.groups = [];
 	
 	$scope.getMatches = function(searchText) {
 	    return $http
@@ -587,16 +590,7 @@ app.controller('GroupsCtrl', function($rootScope, $scope, $http, $state, $mdDial
 	
 	$http.get('/resource/auth/groups')
 		.then(function(response) {
-			// for displaying data in 3 columns
-			for (i = 0; i < response.data.length; i++) {
-				if (i % 3 == 0) {
-					$scope.groups1.push(response.data[i]);
-				} else if ((i + 2) % 3 == 0) {
-					$scope.groups2.push(response.data[i]);
-				} else {
-					$scope.groups3.push(response.data[i]);
-				}
-			}
+			$scope.groups = response.data;
 		}).finally(function() {
 		    // called no matter success or failure
 		    $scope.loading1 = false;
@@ -893,7 +887,7 @@ app.controller('GroupGeneralCtrl', function($scope, $http, $stateParams, $mdDial
 	
 });
 
-//Controller in: group.activity.html
+// Controller in: group.activity.html
 app.controller('GroupActivityCtrl', function($scope, $http, moment) {
 
 	$http.get('/resource/auth/activities/group/' + $scope.group.idGroup)
@@ -905,8 +899,159 @@ app.controller('GroupActivityCtrl', function($scope, $http, moment) {
 
 });
 
-// Controller in: group.management.general.html
-app.controller('GroupManagementGeneralCtrl', function($scope, $http, $state, $mdToast, $mdDialog) {
+// Controller in: group.members.html
+app.controller('GroupMembersCtrl', function($scope, $http, $state, $mdDialog, $mdToast, moment) {
+	
+	// Invite member dialog
+	$scope.addMember = function(ev) {
+	    $mdDialog.show({
+	      locals: { group: $scope.group }, // passing data to dialog
+	      controller: AddGroupMemberDialogController,
+	      templateUrl: 'add-group-member-dialog.tmpl.html',
+	      parent: angular.element(document.body),
+	      targetEvent: ev,
+	      clickOutsideToClose: true,
+	      fullscreen: true // Only for -xs, -sm breakpoints.
+	    })
+	    .then(function(answer) {
+	    	if (answer === 'ok') {
+	    		// reload current state
+	    		$state.go($state.current, {}, { reload: true });
+	    	}
+	    }, function() {
+	      // cancel
+	    });
+	};
+
+	$scope.leave = function(ev) {
+		var confirm = $mdDialog.confirm()
+        // .title('Are you sure you want to leave this group?')
+        .textContent($scope.group.members.length > 1 ? 'Are you sure you want to leave this group?' : 'You are the last member. If you leave, the group will disappear.')
+        .ariaLabel('Confirmation')
+        .targetEvent(ev)
+        .ok('Leave')
+        .cancel('Cancel');
+	
+		$mdDialog.show(confirm)
+		.then(function() {
+			// submit data
+			$http.post('/resource/auth/groups/' + $scope.group.idGroup + "/leave", {
+			}).then(function successCallback(response) {	
+				// redirect
+				$state.go("groups", {}, {reload: true});	
+			}, function errorCallback(response) {
+				$mdToast.show(
+			      $mdToast.simple()
+			        .textContent("Something went wrong :(")
+			        .position("bottom right")
+			        .hideDelay(1500)
+				);
+			});
+	    }, function() {
+	      // canceled
+	    });		
+	};
+	
+	$scope.nameCoordinator = function(item) {
+		// submit data
+		$http.post('/resource/auth/groups/' + $scope.group.idGroup + "/name-coordinator", JSON.stringify(item))
+		.then(function successCallback(response) {	
+			// redirect
+			$state.go($state.current, {}, { reload: true });	
+		}, function errorCallback(response) {
+			$mdToast.show(
+		      $mdToast.simple()
+		        .textContent("Something went wrong :(")
+		        .position("bottom right")
+		        .hideDelay(1500)
+			);
+		});	
+	};
+	
+	$scope.removeMember = function(ev, item) {
+		var confirm = $mdDialog.confirm()
+        // .title('Are you sure you want to leave this group?')
+        .textContent('Are you sure you want to remove this member?')
+        .ariaLabel('Confirmation')
+        .targetEvent(ev)
+        .ok('Remove')
+        .cancel('Cancel');
+	
+		$mdDialog.show(confirm)
+		.then(function() {
+			// submit data
+			$http.delete('/resource/auth/groups/' + $scope.group.idGroup + "/members/" + item.idGroupMember)
+			.then(function successCallback(response) {	
+				// redirect
+				$state.go($state.current, {}, { reload: true });	
+			}, function errorCallback(response) {
+				$mdToast.show(
+			      $mdToast.simple()
+			        .textContent("Something went wrong :(")
+			        .position("bottom right")
+			        .hideDelay(1500)
+				);
+			});
+	    }, function() {
+	      // canceled
+	    });		
+	};
+
+});
+
+// Controller in: group.subgroups.html
+app.controller('GroupSubgroupsCtrl', function($scope, $http, $state, $mdDialog, $mdToast) {
+
+	// New subgroup dialog
+	$scope.addSubgroup = function(ev) {
+	    $mdDialog.show({
+	      controller: AddSubgroupDialogController,
+	      templateUrl: 'add-subgroup-dialog.tmpl.html',
+	      parent: angular.element(document.body),
+	      targetEvent: ev,
+	      clickOutsideToClose: true,
+	      fullscreen: true // Only for -xs, -sm breakpoints.
+	    })
+	    .then(function(answer) {
+	      // ok
+	    }, function() {
+	      // cancel
+	    });
+	};
+	
+	$scope.removeSubgroup = function(ev, item) {
+		var confirm = $mdDialog.confirm()
+        // .title('Are you sure you want to leave this group?')
+        .textContent('Are you sure you want to remove this subgroup?')
+        .ariaLabel('Confirmation')
+        .targetEvent(ev)
+        .ok('Remove')
+        .cancel('Cancel');
+	
+		$mdDialog.show(confirm)
+		.then(function() {
+			// submit data
+			$http.delete('/resource/auth/subgroups/' + item.idSubGroup, {})
+			.then(function successCallback(response) {	
+				// redirect
+				$state.go($state.current, {}, { reload: true });	
+			}, function errorCallback(response) {
+				$mdToast.show(
+			      $mdToast.simple()
+			        .textContent("Something went wrong :(")
+			        .position("bottom right")
+			        .hideDelay(1500)
+				);
+			});
+	    }, function() {
+	      // canceled
+	    });		
+	};
+	
+});
+
+// Controller in: group.settings.general.html
+app.controller('GroupSettingsGeneralCtrl', function($scope, $http, $state, $mdToast, $mdDialog) {
 
 	$scope._group = {};
 	$scope._group.name = $scope.group.name;
@@ -997,137 +1142,6 @@ app.controller('GroupManagementGeneralCtrl', function($scope, $http, $state, $md
 	 
 });
 
-//Controller in: group.management.members.html
-app.controller('GroupManagementMembersCtrl', function($scope, $http, $state, $mdDialog, $mdToast, moment) {
-	
-	$scope.leave = function(ev) {
-		var confirm = $mdDialog.confirm()
-        // .title('Are you sure you want to leave this group?')
-        .textContent($scope.group.members.length > 1 ? 'Are you sure you want to leave this group?' : 'You are the last member. If you leave, the group will disappear.')
-        .ariaLabel('Confirmation')
-        .targetEvent(ev)
-        .ok('Leave')
-        .cancel('Cancel');
-	
-		$mdDialog.show(confirm)
-		.then(function() {
-			// submit data
-			$http.post('/resource/auth/groups/' + $scope.group.idGroup + "/leave", {
-			}).then(function successCallback(response) {	
-				// redirect
-				$state.go("groups", {}, {reload: true});	
-			}, function errorCallback(response) {
-				$mdToast.show(
-			      $mdToast.simple()
-			        .textContent("Something went wrong :(")
-			        .position("bottom right")
-			        .hideDelay(1500)
-				);
-			});
-	    }, function() {
-	      // canceled
-	    });		
-	};
-	
-	$scope.nameCoordinator = function(item) {
-		// submit data
-		$http.post('/resource/auth/groups/' + $scope.group.idGroup + "/name-coordinator", JSON.stringify(item))
-		.then(function successCallback(response) {	
-			// redirect
-			$state.go($state.current, {}, { reload: true });	
-		}, function errorCallback(response) {
-			$mdToast.show(
-		      $mdToast.simple()
-		        .textContent("Something went wrong :(")
-		        .position("bottom right")
-		        .hideDelay(1500)
-			);
-		});	
-	};
-	
-	$scope.removeMember = function(ev, item) {
-		var confirm = $mdDialog.confirm()
-        // .title('Are you sure you want to leave this group?')
-        .textContent('Are you sure you want to remove this member?')
-        .ariaLabel('Confirmation')
-        .targetEvent(ev)
-        .ok('Remove')
-        .cancel('Cancel');
-	
-		$mdDialog.show(confirm)
-		.then(function() {
-			// submit data
-			$http.post('/resource/auth/groups/' + $scope.group.idGroup + "/delete-member", JSON.stringify(item))
-			.then(function successCallback(response) {	
-				// redirect
-				$state.go($state.current, {}, { reload: true });	
-			}, function errorCallback(response) {
-				$mdToast.show(
-			      $mdToast.simple()
-			        .textContent("Something went wrong :(")
-			        .position("bottom right")
-			        .hideDelay(1500)
-				);
-			});
-	    }, function() {
-	      // canceled
-	    });		
-	};
-	
-});
-
-// Controller in: group.management.subgroups.html
-app.controller('GroupManagementSubgroupsCtrl', function($scope, $http, $state, $mdDialog, $mdToast) {
-
-	// New subgroup dialog
-	$scope.addSubgroup = function(ev) {
-	    $mdDialog.show({
-	      controller: AddSubgroupDialogController,
-	      templateUrl: 'add-subgroup-dialog.tmpl.html',
-	      parent: angular.element(document.body),
-	      targetEvent: ev,
-	      clickOutsideToClose: true,
-	      fullscreen: true // Only for -xs, -sm breakpoints.
-	    })
-	    .then(function(answer) {
-	      // ok
-	    }, function() {
-	      // cancel
-	    });
-	};
-	
-	$scope.removeSubgroup = function(ev, item) {
-		var confirm = $mdDialog.confirm()
-        // .title('Are you sure you want to leave this group?')
-        .textContent('Are you sure you want to remove this subgroup?')
-        .ariaLabel('Confirmation')
-        .targetEvent(ev)
-        .ok('Remove')
-        .cancel('Cancel');
-	
-		$mdDialog.show(confirm)
-		.then(function() {
-			// submit data
-			$http.delete('/resource/auth/subgroups/' + item.idSubGroup, {})
-			.then(function successCallback(response) {	
-				// redirect
-				$state.go($state.current, {}, { reload: true });	
-			}, function errorCallback(response) {
-				$mdToast.show(
-			      $mdToast.simple()
-			        .textContent("Something went wrong :(")
-			        .position("bottom right")
-			        .hideDelay(1500)
-				);
-			});
-	    }, function() {
-	      // canceled
-	    });		
-	};
-	
-});
-
-
 
 /*========== Subgroup controllers ==========*/
 
@@ -1155,8 +1169,138 @@ app.controller('SubgroupActivityCtrl', function($scope, $http, moment) {
 
 });
 
-// Controller in: subgroup.management.general.html
-app.controller('SubgroupManagementGeneralCtrl', function($scope, $http, $state, $mdToast, $mdDialog) {
+//Controller in: subgroup.members.html
+app.controller('SubgroupMembersCtrl', function($scope, $http, $state, $mdDialog, $mdToast, moment) {
+	
+	$scope.leave = function(ev) {
+		var confirm = $mdDialog.confirm()
+        // .title('Are you sure you want to leave this group?')
+        .textContent($scope.subgroup.members.length > 1 ? 'Are you sure you want to leave this subgroup?' : 'You are the last member. If you leave, the subgroup will disappear.')
+        .ariaLabel('Confirmation')
+        .targetEvent(ev)
+        .ok('Leave')
+        .cancel('Cancel');
+	
+		$mdDialog.show(confirm)
+		.then(function() {
+			// submit data
+			$http.post('/resource/auth/subgroups/' + $scope.subgroup.idSubGroup + "/leave", {
+			}).then(function successCallback(response) {	
+				// redirect
+				$state.go("group.general", { idGroup: $scope.subgroup.groupId }, { reload: true });
+			}, function errorCallback(response) {
+				$mdToast.show(
+			      $mdToast.simple()
+			        .textContent("Something went wrong :(")
+			        .position("bottom right")
+			        .hideDelay(1500)
+				);
+			});
+	    }, function() {
+	      // canceled
+	    });		
+	};
+	
+	$scope.nameCoordinator = function(item) {
+		// submit data
+		$http.post('/resource/auth/subgroups/' + $scope.subgroup.idSubGroup + "/name-coordinator", JSON.stringify(item))
+		.then(function successCallback(response) {	
+			// redirect
+			$state.go($state.current, {}, { reload: true });	
+		}, function errorCallback(response) {
+			$mdToast.show(
+		      $mdToast.simple()
+		        .textContent("Something went wrong :(")
+		        .position("bottom right")
+		        .hideDelay(1500)
+			);
+		});	
+	};
+	
+	$scope.removeMember = function(ev, item) {
+		var confirm = $mdDialog.confirm()
+        // .title('Are you sure you want to leave this group?')
+        .textContent('Are you sure you want to remove this member?')
+        .ariaLabel('Confirmation')
+        .targetEvent(ev)
+        .ok('Remove')
+        .cancel('Cancel');
+	
+		$mdDialog.show(confirm)
+		.then(function() {
+			// submit data
+			$http.post('/resource/auth/subgroups/' + $scope.subgroup.idSubGroup + "/delete-member", JSON.stringify(item))
+			.then(function successCallback(response) {	
+				// redirect
+				$state.go($state.current, {}, { reload: true });	
+			}, function errorCallback(response) {
+				$mdToast.show(
+			      $mdToast.simple()
+			        .textContent("Something went wrong :(")
+			        .position("bottom right")
+			        .hideDelay(1500)
+				);
+			});
+	    }, function() {
+	      // canceled
+	    });		
+	};
+	
+});
+
+// Controller in: subgroup.workshops.html
+app.controller('SubgroupWorkshopsCtrl', function($scope, $http, $state, $mdDialog, $mdToast) {
+
+	// New subgroup dialog
+	$scope.addSubgroup = function(ev) {
+	    $mdDialog.show({
+	      controller: AddSubgroupDialogController,
+	      templateUrl: 'add-subgroup-dialog.tmpl.html',
+	      parent: angular.element(document.body),
+	      targetEvent: ev,
+	      clickOutsideToClose: true,
+	      fullscreen: true // Only for -xs, -sm breakpoints.
+	    })
+	    .then(function(answer) {
+	      // ok
+	    }, function() {
+	      // cancel
+	    });
+	};
+	
+	$scope.removeWorkshop = function(ev, item) {
+		var confirm = $mdDialog.confirm()
+        // .title('Are you sure you want to leave this group?')
+        .textContent('Are you sure you want to remove this workshop?')
+        .ariaLabel('Confirmation')
+        .targetEvent(ev)
+        .ok('Remove')
+        .cancel('Cancel');
+	
+		$mdDialog.show(confirm)
+		.then(function() {
+			// submit data
+			$http.delete('/resource/auth/workshops/' + item.idWorkshop, {})
+			.then(function successCallback(response) {	
+				// redirect
+				$state.go($state.current, {}, { reload: true });	
+			}, function errorCallback(response) {
+				$mdToast.show(
+			      $mdToast.simple()
+			        .textContent("Something went wrong :(")
+			        .position("bottom right")
+			        .hideDelay(1500)
+				);
+			});
+	    }, function() {
+	      // canceled
+	    });		
+	};
+	
+});
+
+// Controller in: subgroup.settings.general.html
+app.controller('SubgroupSettingsGeneralCtrl', function($scope, $http, $state, $mdToast, $mdDialog) {
 
 	$scope._subgroup = {};
 	$scope._subgroup.name = $scope.subgroup.name;
@@ -1246,136 +1390,6 @@ app.controller('SubgroupManagementGeneralCtrl', function($scope, $http, $state, 
 	    });	
 	};
 	 
-});
-
-// Controller in: subgroup.management.members.html
-app.controller('SubgroupManagementMembersCtrl', function($scope, $http, $state, $mdDialog, $mdToast, moment) {
-	
-	$scope.leave = function(ev) {
-		var confirm = $mdDialog.confirm()
-        // .title('Are you sure you want to leave this group?')
-        .textContent($scope.subgroup.members.length > 1 ? 'Are you sure you want to leave this subgroup?' : 'You are the last member. If you leave, the subgroup will disappear.')
-        .ariaLabel('Confirmation')
-        .targetEvent(ev)
-        .ok('Leave')
-        .cancel('Cancel');
-	
-		$mdDialog.show(confirm)
-		.then(function() {
-			// submit data
-			$http.post('/resource/auth/subgroups/' + $scope.subgroup.idSubGroup + "/leave", {
-			}).then(function successCallback(response) {	
-				// redirect
-				$state.go("group.general", { idGroup: $scope.subgroup.groupId }, { reload: true });
-			}, function errorCallback(response) {
-				$mdToast.show(
-			      $mdToast.simple()
-			        .textContent("Something went wrong :(")
-			        .position("bottom right")
-			        .hideDelay(1500)
-				);
-			});
-	    }, function() {
-	      // canceled
-	    });		
-	};
-	
-	$scope.nameCoordinator = function(item) {
-		// submit data
-		$http.post('/resource/auth/subgroups/' + $scope.subgroup.idSubGroup + "/name-coordinator", JSON.stringify(item))
-		.then(function successCallback(response) {	
-			// redirect
-			$state.go($state.current, {}, { reload: true });	
-		}, function errorCallback(response) {
-			$mdToast.show(
-		      $mdToast.simple()
-		        .textContent("Something went wrong :(")
-		        .position("bottom right")
-		        .hideDelay(1500)
-			);
-		});	
-	};
-	
-	$scope.removeMember = function(ev, item) {
-		var confirm = $mdDialog.confirm()
-        // .title('Are you sure you want to leave this group?')
-        .textContent('Are you sure you want to remove this member?')
-        .ariaLabel('Confirmation')
-        .targetEvent(ev)
-        .ok('Remove')
-        .cancel('Cancel');
-	
-		$mdDialog.show(confirm)
-		.then(function() {
-			// submit data
-			$http.post('/resource/auth/subgroups/' + $scope.subgroup.idSubGroup + "/delete-member", JSON.stringify(item))
-			.then(function successCallback(response) {	
-				// redirect
-				$state.go($state.current, {}, { reload: true });	
-			}, function errorCallback(response) {
-				$mdToast.show(
-			      $mdToast.simple()
-			        .textContent("Something went wrong :(")
-			        .position("bottom right")
-			        .hideDelay(1500)
-				);
-			});
-	    }, function() {
-	      // canceled
-	    });		
-	};
-	
-});
-
-// Controller in: subgroup.management.workshops.html
-app.controller('SubgroupManagementWorkshopsCtrl', function($scope, $http, $state, $mdDialog, $mdToast) {
-
-	// New subgroup dialog
-	$scope.addSubgroup = function(ev) {
-	    $mdDialog.show({
-	      controller: AddSubgroupDialogController,
-	      templateUrl: 'add-subgroup-dialog.tmpl.html',
-	      parent: angular.element(document.body),
-	      targetEvent: ev,
-	      clickOutsideToClose: true,
-	      fullscreen: true // Only for -xs, -sm breakpoints.
-	    })
-	    .then(function(answer) {
-	      // ok
-	    }, function() {
-	      // cancel
-	    });
-	};
-	
-	$scope.removeWorkshop = function(ev, item) {
-		var confirm = $mdDialog.confirm()
-        // .title('Are you sure you want to leave this group?')
-        .textContent('Are you sure you want to remove this workshop?')
-        .ariaLabel('Confirmation')
-        .targetEvent(ev)
-        .ok('Remove')
-        .cancel('Cancel');
-	
-		$mdDialog.show(confirm)
-		.then(function() {
-			// submit data
-			$http.delete('/resource/auth/workshops/' + item.idWorkshop, {})
-			.then(function successCallback(response) {	
-				// redirect
-				$state.go($state.current, {}, { reload: true });	
-			}, function errorCallback(response) {
-				$mdToast.show(
-			      $mdToast.simple()
-			        .textContent("Something went wrong :(")
-			        .position("bottom right")
-			        .hideDelay(1500)
-				);
-			});
-	    }, function() {
-	      // canceled
-	    });		
-	};
-	
 });
 
 // Controller in: subgroup.add-workshop.html
@@ -1696,7 +1710,7 @@ function AddSubgroupDialogController($scope, $mdDialog, $http, $stateParams, $st
 			);
 			// pass data retrieved to parent controller
 			$mdDialog.hide(response.data);	
-			// reload current state
+			// go to subgroup state
 			$state.go("subgroup.general", { idSubgroup: response.data.idSubGroup }, {});
 		}, function errorCallback(response) {
 			$mdToast.show(
@@ -1707,6 +1721,91 @@ function AddSubgroupDialogController($scope, $mdDialog, $http, $stateParams, $st
 			);
 		});
 	  };
+};
+
+// Controller for: add-group-member-dialog.tmpl.html
+function AddGroupMemberDialogController($rootScope, $scope, $mdDialog, $http, $stateParams, $state, $mdToast, group) {
+	
+	$scope.group = group; // receiving data from parent controller
+	
+	$scope.hide = function() {
+	    $mdDialog.hide();
+	};
+	
+	$scope.cancel = function() {
+	    $mdDialog.cancel();
+	};
+	
+	$scope.answer = function(answer) {
+		$mdDialog.hide(answer);
+	};
+	
+	$scope.addMember = function(fabber) {
+		$rootScope.isLoading = true;
+		
+		$http.post('/resource/auth/groups/' + $stateParams.idGroup + '/members', {
+			fabberId: fabber.idFabber
+		}).then(function successCallback(response) {	
+			console.log("added!");
+			$mdToast.show(
+		      $mdToast.simple()
+		        .textContent('Member added!')
+		        .position("bottom right")
+		        .hideDelay(1500)
+			);
+			// pass data retrieved to parent controller
+			//$mdDialog.hide(response.data);
+			$scope.answer("ok");
+			$rootScope.isLoading = false;
+		}, function errorCallback(response) {
+			$mdToast.show(
+		      $mdToast.simple()
+		        .textContent('Something went wrong :(')
+		        .position("bottom right")
+		        .hideDelay(1500)
+			);
+			$scope.answer("error");
+			$rootScope.isLoading = false;
+		});
+	};
+	
+	$scope.sendInvitationEmail = function(email) {
+		$http.post('/resource/auth/groups/' + $stateParams.idGroup + '/members/send-invitation-email', {
+			email: email
+		}).then(function successCallback(response) {	
+			console.log("sent invitation!");
+			$mdToast.show(
+		      $mdToast.simple()
+		        .textContent('An email invitation has been sent!')
+		        .position("bottom right")
+		        .hideDelay(1500)
+			);
+			// pass data retrieved to parent controller
+			$mdDialog.hide(response.data);
+		}, function errorCallback(response) {
+			$mdToast.show(
+		      $mdToast.simple()
+		        .textContent('Something went wrong :(')
+		        .position("bottom right")
+		        .hideDelay(1500)
+			);
+		});
+	};
+	
+	$scope.getMatches = function(searchText) {
+	    return $http
+	      .get('/resource/auth/groups/' + $stateParams.idGroup + '/members/autocomplete/' + searchText)
+	      .then(function(response) {
+	    	  // Map the response object to the data object.
+	    	  return response.data;
+	      });
+	};
+	
+	$scope.validateEmail = function(email) {
+	    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+	    return re.test(String(email).toLowerCase());
+	}
+
 };
 
 

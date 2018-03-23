@@ -45,6 +45,20 @@ public class GroupMemberDAOImpl extends GenericDAOImpl<GroupMember, Integer> imp
 
 		return e;
 	}
+	
+	@Transactional
+	public GroupMember findByGroupAndFabber(Integer idGroup, Integer idFabber) {
+		GroupMember e = null;
+		e = (GroupMember) getSession()
+				.createQuery(
+						"select x from " + getDomainClassName() + " x "
+								+ "where x.group.id = :idGroup and x.fabber.id = :idFabber")
+				.setParameter("idGroup", idGroup)
+				.setParameter("idFabber", idFabber)
+				.setMaxResults(1).uniqueResult();
+
+		return e;
+	}
 
 	@SuppressWarnings("unchecked")
 	@Transactional
@@ -57,6 +71,34 @@ public class GroupMemberDAOImpl extends GenericDAOImpl<GroupMember, Integer> imp
 								+ "order by case when x.isCoordinator = 1 then 0 else 1 end, "
 								+ "date(x.creationDateTime) asc")
 				.setParameter("idGroup", idGroup)
+				.list();
+
+		return list;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Transactional
+	public List<GroupMember> findAllByFabber(String email) {
+		List<GroupMember> list = null;
+		list = (List<GroupMember>) getSession()
+				.createQuery(
+						"select x from " + getDomainClassName() + " x "
+								+ "where x.fabber.email = :email ")
+				.setParameter("email", email)
+				.list();
+
+		return list;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Transactional
+	public List<GroupMember> findAllByFabber(Integer idFabber) {
+		List<GroupMember> list = null;
+		list = (List<GroupMember>) getSession()
+				.createQuery(
+						"select x from " + getDomainClassName() + " x "
+								+ "where x.fabber.id = :idFabber ")
+				.setParameter("idFabber", idFabber)
 				.list();
 
 		return list;

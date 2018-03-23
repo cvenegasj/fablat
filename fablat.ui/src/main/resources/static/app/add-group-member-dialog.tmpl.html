@@ -1,0 +1,51 @@
+<md-dialog aria-label="Invite members" md-theme="default" class="dialog-add-member">   
+    <div layout="row" style="position: relative;">
+       	<h2 class="md-title title">Invite members to {{ group.name }}</h2>
+       	<md-button class="md-icon-button" style="position: absolute; right: 10px; top: 10px;" ng-click="cancel()">
+       		<md-icon md-font-set="material-icons" aria-label="Close dialog">close</md-icon>
+       	</md-button>
+   	</div>
+
+    <md-dialog-content style="min-width: 400px;">
+    	<div class="md-dialog-content">
+	    	<md-autocomplete id="autocomplete-members" 
+	    		md-selected-item="selectedItem" 
+	    		md-search-text="searchText"
+	    		md-selected-item-change="addMember(item)"
+	    		md-items="item in getMatches(searchText)" 
+				md-item-text="item.fullName" 
+				md-clear-button="false" 
+				md-min-length="1" 
+				placeholder="Search by full name or email address" 
+				md-menu-class="autocomplete-members-template" 
+				md-autofocus>
+				<md-item-template>
+					<span style="display: inline-block;">
+				    	<span class="item-main">
+				    		{{ item.fullName }}
+				    	</span>
+				    	<span class="item-secondary">
+				    		{{ item.email }}
+				    	</span>
+			    	</span>
+			    	<span style="float: right;">
+			    		<md-icon md-font-set="material-icons" aria-label="Add member">add</md-icon>
+			    	</span>	
+			  	</md-item-template>
+			  	<md-not-found>
+			  		<span ng-if="!validateEmail(searchText)">
+			  			<strong>{{ searchText }}</strong> is not a Fab Lat member
+			  		</span>
+			  		<div ng-if="validateEmail(searchText)" ng-click="sendInvitationEmail(searchText)">
+			  			<span style="display: inline-block;">
+				    		<strong>{{ searchText }}</strong> send invitation email
+			    		</span>
+				    	<span style="float: right;">
+				    		<md-icon md-font-set="material-icons" aria-label="Send email invitation">add</md-icon>
+				    	</span>	
+			  		</div>
+			  	</md-not-found>
+			</md-autocomplete>
+		</div>
+    </md-dialog-content>
+</md-dialog>

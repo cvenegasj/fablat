@@ -29,15 +29,6 @@ zuul:
     user:
       path: /user/**
       url: http://fablat-auth-env-1.2hyhxb24pj.sa-east-1.elasticbeanstalk.com/uaa/user
-  
-# Increase the Hystrix timeout to 60s (globally)
-hystrix:
-  command:
-    default:
-      execution:
-        isolation:
-          thread:
-            timeoutInMilliseconds: 60000
       
 logging:
   level:

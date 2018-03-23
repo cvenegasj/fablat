@@ -8,5 +8,7 @@ import org.fablat.resource.entities.Workshop;
 public interface WorkshopDAO extends GenericDAO<Workshop, Integer> {
 	
 	List<Workshop> findAllAfterDate(LocalDateTime date);
+	
+	List<Workshop> findAllBySubGroup(Integer idSubGroup);
 
 }

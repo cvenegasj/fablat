@@ -17,6 +17,7 @@ public class GroupDTO {
 	private List<GroupMemberDTO> members;
 	// additional
 	private Integer membersCount;
+	private Integer subGroupsCount;
 	private Boolean amIMember;
 	private Boolean amICoordinator;
 
@@ -114,6 +115,14 @@ public class GroupDTO {
 
 	public void setMembersCount(Integer membersCount) {
 		this.membersCount = membersCount;
+	}
+
+	public Integer getSubGroupsCount() {
+		return subGroupsCount;
+	}
+
+	public void setSubGroupsCount(Integer subGroupsCount) {
+		this.subGroupsCount = subGroupsCount;
 	}
 
 	public Boolean getAmIMember() {

@@ -61,4 +61,38 @@ public class SubGroupMemberDAOImpl extends GenericDAOImpl<SubGroupMember, Intege
 		return list;
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Transactional
+	public List<SubGroupMember> findAllByGroupAndFabber(Integer idGroup, String email) {
+		List<SubGroupMember> list = null;
+		list = (List<SubGroupMember>) getSession()
+				.createQuery(
+						"select x from " + getDomainClassName() + " x "
+								+ "where x.subGroup.group.id = :idGroup "
+								+ "and x.groupMember.fabber.email = :email "
+								+ "order by date(x.creationDateTime) asc")
+				.setParameter("idGroup", idGroup)
+				.setParameter("email", email)
+				.list();
+
+		return list;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Transactional
+	public List<SubGroupMember> findAllByGroupAndFabber(Integer idGroup, Integer idFabber) {
+		List<SubGroupMember> list = null;
+		list = (List<SubGroupMember>) getSession()
+				.createQuery(
+						"select x from " + getDomainClassName() + " x "
+								+ "where x.subGroup.group.id = :idGroup "
+								+ "and x.groupMember.fabber.id = :idFabber "
+								+ "order by date(x.creationDateTime) asc")
+				.setParameter("idGroup", idGroup)
+				.setParameter("idFabber", idFabber)
+				.list();
+
+		return list;
+	}
+	
 }

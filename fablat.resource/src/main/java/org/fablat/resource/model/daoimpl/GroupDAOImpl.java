@@ -3,6 +3,7 @@ package org.fablat.resource.model.daoimpl;
 import java.util.List;
 
 import org.fablat.resource.entities.Group;
+import org.fablat.resource.entities.GroupMember;
 import org.fablat.resource.model.dao.GroupDAO;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +34,58 @@ public class GroupDAOImpl extends GenericDAOImpl<Group, Integer> implements Grou
 				.list();
 		
 		return list;
+	}
+
+	@Transactional
+	public Integer getMembersCount(Integer idGroup) {
+		Long count = getSession()
+				.createQuery(
+						"select count(distinct x) from GroupMember x "
+								+ "where x.group.id = :idGroup", Long.class)
+				.setParameter("idGroup", idGroup)
+				.getSingleResult();
+		
+		return count.intValue();
+	}
+
+	@Transactional
+	public Integer getSubGroupsCount(Integer idGroup) {
+		Long count = getSession()
+				.createQuery(
+						"select count(distinct x) from SubGroup x "
+								+ "where x.group.id = :idGroup", Long.class)
+				.setParameter("idGroup", idGroup)
+				.getSingleResult();
+		
+		return count.intValue();
+	}
+
+	@Transactional
+	public Boolean checkIfMember(Integer idGroup, String email) {
+		GroupMember e = null;
+		e = (GroupMember) getSession()
+				.createQuery(
+						"select x from GroupMember x "
+								+ "where x.group.id = :idGroup and x.fabber.email = :email")
+				.setParameter("idGroup", idGroup)
+				.setParameter("email", email)
+				.setMaxResults(1).uniqueResult();
+		
+		return e != null;
+	}
+
+	@Transactional
+	public Boolean checkIfCoordinator(Integer idGroup, String email) {
+		GroupMember e = null;
+		e = (GroupMember) getSession()
+				.createQuery(
+						"select x from GroupMember x "
+								+ "where x.group.id = :idGroup and x.fabber.email = :email")
+				.setParameter("idGroup", idGroup)
+				.setParameter("email", email)
+				.setMaxResults(1).uniqueResult();
+		
+		return e != null ? e.getIsCoordinator() : false;
 	}
 
 }

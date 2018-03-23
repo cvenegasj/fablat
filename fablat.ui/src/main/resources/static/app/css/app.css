@@ -282,6 +282,11 @@ html {
 	color: inherit;
 }
 
+.custom-anchor-2 {
+	text-decoration: none;
+	color: inherit;
+}
+
 .custom-card-1 {
 	border-radius: 0 !important; 
 	height: 83px;
@@ -370,32 +375,67 @@ md-list.list-activities md-list-item.md-2-line::before {
 
 /* Groups and SubGroups in groups.html */
 .custom-card-4 {
+	margin: 15px 15px;
 	transition: box-shadow .15s;
+	-webkit-box-shadow: 1px 7px 11px -1px rgba(179,179,179,0.34);
+	-moz-box-shadow: 1px 7px 11px -1px rgba(179,179,179,0.34);
+	box-shadow: 1px 7px 11px -1px rgba(179,179,179,0.34);
 }
 
 .custom-card-4:hover {
-	box-shadow: 0 4px 20px 0 rgba(168,182,191,.6);
+	box-shadow: 0 3px 12px 0 rgba(168,182,191,.8);
 }
 
-.custom-card-4 md-card-content {
-	padding: 10px;
+.custom-card-4 .header {
+	padding: 10px 20px;
+}
+
+.custom-card-4 .header h3 {
+	padding: 0;
+	margin: 0;
+}
+
+.custom-card-4 .header h3 .title {
+	font-size: 16px;
+	line-height: 20px;
+	font-weight: 500;
+	color: #616161;
+	letter-spacing: .07em;
+}
+
+.custom-card-4 .content {
+	padding: 0 20px;
 	background-color: white;
 }
 
-.custom-card-4 md-card-content h3 {
-	color: #757575 !important;
+.custom-card-4 .content p.description {
+	margin-top: 5px;
+	margin-bottom: 5px;
+	font-size: 14px;
+	line-height: 16px;
+	font-weight: 400;
+	color: #757575;
+	height: 30px;
+	white-space: nowrap;
+	overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.custom-card-4 md-card-content p {
-	color: #9E9E9E !important;
+.custom-card-4 .content p.summary {
+	margin-top: 10px;
+	margin-bottom: 10px;
+	font-size: 12px;
+	line-height: 15px;
+	font-weight: 400;
+	color: #757575;
+	text-align: center;
 }
 
-.custom-card-4 md-card-content md-list md-list-item {
-	height: 31px;
-	min-height: 31px !important; 
-	padding-top: 5px; 
-	padding-bottom: 5px;
+.custom-card-4 .actions button, 
+.custom-card-4 .actions a {
+	margin: 0 !important;
 }
+
 /***********/
 
 /* group.html */
@@ -417,6 +457,17 @@ md-list.list-activities md-list-item.md-2-line::before {
 }
 /******/
 
+#autocomplete-groups {
+	border-radius: 20px;
+	border: 1px solid #E0E0E0;
+}
+
+#autocomplete-groups > md-autocomplete-wrap {
+	box-shadow: none;
+	margin-left: 12px;
+	margin-right: 12px;
+}
+
 #autocomplete-groups input {
     background: url(../images/ic_search_grey_24px.svg);
     background-repeat: no-repeat;
@@ -432,6 +483,19 @@ md-list.list-activities md-list-item.md-2-line::before {
 .autocomplete-groups-template .item-title md-icon {
 	height: 18px;
 	width: 18px;
+}
+
+.autocomplete-members-template .item-main {
+	font-weight: 500;	
+}
+
+.autocomplete-members-template .item-secondary {
+	font-size: 13px;
+	line-height: 15px;
+}
+
+.autocomplete-members-template li {
+  height: auto;
 }
 
 #autocomplete-locations,
@@ -731,7 +795,8 @@ div.workshop-list-2 .list-item .hour {
 }
 /******/
 
-/*** workshop.general.html  ****/
+
+/*** workshop.general.html ****/
 .workshop-container-1 {
 	border: 1px solid #E0E0E0;
 	border-radius: 3px;
@@ -775,9 +840,23 @@ div.workshop-list-2 .list-item .hour {
 /******/
 
 
+/*** add-group-member-dialog.tmpl.html ****/
+
+.dialog-add-member .title {
+	width: 85%;
+	margin: 25px auto;
+	text-align: center;
+	white-space: nowrap;
+  	overflow: hidden;
+  	text-overflow: ellipsis;
+}
+
+.dialog-add-member .md-dialog-content {
+	padding: 30px 20px;
+}
 
 
-
+/******/
 
 
 

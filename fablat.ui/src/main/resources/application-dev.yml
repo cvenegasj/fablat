@@ -10,22 +10,25 @@ spring:
 security:
   oauth2:
     client:
-      accessTokenUri: http://localhost:9999/uaa/oauth/token
-      userAuthorizationUri: http://localhost:9999/uaa/oauth/authorize
+      accessTokenUri: http://fablat-auth-env-1.2hyhxb24pj.sa-east-1.elasticbeanstalk.com/uaa/oauth/token
+      userAuthorizationUri: http://fablat-auth-env-1.2hyhxb24pj.sa-east-1.elasticbeanstalk.com/uaa/oauth/authorize
       clientId: fablat
       clientSecret: c6d4f0e6125fcc1879b8dc42983c73ea1b1adf4f67a1cba0010d29ed8895017c
       scope: openid
     resource:
-      userInfoUri: http://localhost:9999/uaa/user
+      userInfoUri: http://fablat-auth-env-1.2hyhxb24pj.sa-east-1.elasticbeanstalk.com/uaa/user
 
 zuul:
+  host:
+    connect-timeout-millis: 10000
+    socket-timeout-millis: 60000
   routes:
     resource:
       path: /resource/**
       url: http://localhost:9000
     user:
       path: /user/**
-      url: http://localhost:9999/uaa/user
+      url: http://fablat-auth-env-1.2hyhxb24pj.sa-east-1.elasticbeanstalk.com/uaa/user
       
 logging:
   level:

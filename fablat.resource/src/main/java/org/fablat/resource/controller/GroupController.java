@@ -8,8 +8,10 @@ import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import org.fablat.resource.dto.FabberDTO;
 import org.fablat.resource.dto.GroupDTO;
 import org.fablat.resource.dto.GroupMemberDTO;
 import org.fablat.resource.dto.SubGroupDTO;
@@ -23,7 +25,9 @@ import org.fablat.resource.model.dao.ActivityLogDAO;
 import org.fablat.resource.model.dao.FabberDAO;
 import org.fablat.resource.model.dao.GroupDAO;
 import org.fablat.resource.model.dao.GroupMemberDAO;
+import org.fablat.resource.model.dao.SubGroupDAO;
 import org.fablat.resource.model.dao.SubGroupMemberDAO;
+import org.fablat.resource.util.EmailServiceImpl;
 import org.fablat.resource.util.Resources;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -46,11 +50,15 @@ public class GroupController {
 	@Autowired
 	private GroupDAO groupDAO;
 	@Autowired
+	private SubGroupDAO subGroupDAO;
+	@Autowired
 	private GroupMemberDAO groupMemberDAO;
 	@Autowired
 	private SubGroupMemberDAO subGroupMemberDAO;
 	@Autowired
 	private ActivityLogDAO activityLogDAO;
+	@Autowired
+    public EmailServiceImpl emailService;
 
 	@RequestMapping(method = RequestMethod.GET)
 	public List<GroupDTO> findAll(Principal principal) {
@@ -58,30 +66,11 @@ public class GroupController {
 		
 		for (Group group : groupDAO.findAllOrderDate()) {
 			GroupDTO gDTO = convertToDTO(group);
+			gDTO.setMembersCount(groupDAO.getMembersCount(group.getIdGroup()));
+			gDTO.setSubGroupsCount(groupDAO.getSubGroupsCount(group.getIdGroup()));			
 			
-			GroupMember userAsGroupMember = groupMemberDAO.findByGroupAndFabber(group.getIdGroup(), principal.getName());
-			if (userAsGroupMember != null) {
-				gDTO.setAmIMember(true);
-				gDTO.setAmICoordinator(userAsGroupMember.getIsCoordinator());
-			} else {
-				gDTO.setAmIMember(false);
-			}
-      	  	
-			// subgroups
-			List<SubGroupDTO> subGroups = new ArrayList<SubGroupDTO>();
-			for (SubGroup sg : group.getSubGroups()) {
-				SubGroupDTO sDTO = convertToDTO(sg);
-				
-				SubGroupMember userAsSubGroupMember = subGroupMemberDAO.findBySubGroupAndFabber(sg.getIdSubGroup(), principal.getName());
-				if (userAsSubGroupMember != null) {
-					sDTO.setAmIMember(true);
-					sDTO.setAmICoordinator(userAsSubGroupMember.getIsCoordinator());
-				} else {
-					sDTO.setAmIMember(false);
-				}
-				subGroups.add(sDTO);
-			}
-			gDTO.setSubGroups(subGroups);
+			gDTO.setAmIMember(groupDAO.checkIfMember(group.getIdGroup(), principal.getName()));
+			
       	  	returnList.add(gDTO);
 		}
 	
@@ -90,20 +79,23 @@ public class GroupController {
 	
 	@RequestMapping(value = "/find-all-mine", method = RequestMethod.GET)
 	public List<GroupDTO> findAllMine(Principal principal) {
-		Fabber me = fabberDAO.findByEmail(principal.getName());
 		List<GroupDTO> returnList = new ArrayList<GroupDTO>();
 		
 		// Mapping user's group and subgroups
-		for (GroupMember gm : me.getGroupMembers()) {
+		for (GroupMember gm : groupMemberDAO.findAllByFabber(principal.getName())) {
 			GroupDTO gDTO = convertToDTO(gm.getGroup());
+			gDTO.setMembersCount(groupDAO.getMembersCount(gm.getGroup().getIdGroup()));
+			gDTO.setSubGroupsCount(groupDAO.getSubGroupsCount(gm.getGroup().getIdGroup()));
+			
 			// additional properties
 			gDTO.setAmIMember(true);
       	  	gDTO.setAmICoordinator(gm.getIsCoordinator());
 			
       	  	// subgroups
       	  	List<SubGroupDTO> subGroups = new ArrayList<SubGroupDTO>();
-      	  	for (SubGroupMember sgm : gm.getSubGroupMembers()) {
+      	  	for (SubGroupMember sgm : subGroupMemberDAO.findAllByGroupAndFabber(gm.getGroup().getIdGroup(), principal.getName())) {
       	  		SubGroupDTO sDTO = convertToDTO(sgm.getSubGroup());
+      	  		sDTO.setMembersCount(subGroupDAO.getMembersCount(sgm.getSubGroup().getIdSubGroup()));
 				sDTO.setAmIMember(true);
 				sDTO.setAmICoordinator(sgm.getIsCoordinator());
       	  		
@@ -118,19 +110,21 @@ public class GroupController {
 	
 	@RequestMapping(value = "/find-all-fabber/{idFabber}", method = RequestMethod.GET)
 	public List<GroupDTO> findAllFabber(@PathVariable("idFabber") Integer idFabber) {
-		Fabber fabber = fabberDAO.findById(idFabber);
 		List<GroupDTO> returnList = new ArrayList<GroupDTO>();
 		
 		// Mapping user's group and subgroups
-		for (GroupMember gm : fabber.getGroupMembers()) {
+		for (GroupMember gm : groupMemberDAO.findAllByFabber(idFabber)) {
 			GroupDTO gDTO = convertToDTO(gm.getGroup());
+			gDTO.setMembersCount(groupDAO.getMembersCount(gm.getGroup().getIdGroup()));
+			gDTO.setSubGroupsCount(groupDAO.getSubGroupsCount(gm.getGroup().getIdGroup()));
+			
 			// additional properties
 			gDTO.setAmIMember(true);
       	  	gDTO.setAmICoordinator(gm.getIsCoordinator());
 			
       	  	// subgroups
       	  	List<SubGroupDTO> subGroups = new ArrayList<SubGroupDTO>();
-      	  	for (SubGroupMember sgm : gm.getSubGroupMembers()) {
+      	  	for (SubGroupMember sgm : subGroupMemberDAO.findAllByGroupAndFabber(gm.getGroup().getIdGroup(), idFabber)) {
       	  		SubGroupDTO sDTO = convertToDTO(sgm.getSubGroup());
 				sDTO.setAmIMember(true);
 				sDTO.setAmICoordinator(sgm.getIsCoordinator());
@@ -173,8 +167,9 @@ public class GroupController {
 		
 		// group's subgroups
 		List<SubGroupDTO> subGroups = new ArrayList<SubGroupDTO>();
-		for (SubGroup sg : group.getSubGroups()) {
+		for (SubGroup sg : subGroupDAO.findAllByGroup(group.getIdGroup())) {
 			SubGroupDTO sDTO = convertToDTO(sg);
+			sDTO.setMembersCount(subGroupDAO.getMembersCount(sg.getIdSubGroup()));
 			
 			SubGroupMember userAsSubGroupMember = subGroupMemberDAO.findBySubGroupAndFabber(sg.getIdSubGroup(), principal.getName());
 			if (userAsSubGroupMember != null) {
@@ -195,6 +190,23 @@ public class GroupController {
 			members.add(gmDTO);
 		}
 		gDTO.setMembers(members);
+		
+        return gDTO;
+    }
+	
+	@RequestMapping(value = "/{idGroup}/verify-me", method = RequestMethod.GET)
+    public GroupDTO verifyMe(@PathVariable("idGroup") Integer idGroup, Principal principal) {
+		Group group = groupDAO.findById(idGroup);
+		GroupDTO gDTO = convertToDTO(group);
+		
+		// additional properties
+		GroupMember userAsGroupMember = groupMemberDAO.findByGroupAndFabber(idGroup, principal.getName());
+		if (userAsGroupMember != null) {
+			gDTO.setAmIMember(true);
+			gDTO.setAmICoordinator(userAsGroupMember.getIsCoordinator());
+		} else {
+			gDTO.setAmIMember(false);
+		}
 		
         return gDTO;
     }
@@ -317,17 +329,23 @@ public class GroupController {
         activityLogDAO.makePersistent(activity);
 	}
 	
-	@RequestMapping(value = "/{idGroup}/add-member", method = RequestMethod.POST)
+	@RequestMapping(value = "/{idGroup}/members", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.OK)
 	public void addMember(@PathVariable("idGroup") Integer idGroup, @RequestBody GroupMemberDTO groupMemberDTO, Principal principal) {
-		GroupMember me = groupMemberDAO.findByGroupAndFabber(idGroup, principal.getName());
+		//GroupMember me = groupMemberDAO.findByGroupAndFabber(idGroup, principal.getName());
 		// action only allowed to coordinators
-		if (!me.getIsCoordinator()) {
+		//if (!me.getIsCoordinator()) {
+		//	return;
+		//}
+		
+		GroupMember gm = groupMemberDAO.findByGroupAndFabber(idGroup, groupMemberDTO.getFabberId());
+		// check if already member
+		if (gm != null) {
 			return;
 		}
 		
-		GroupMember gm = new GroupMember();
-		gm.setIsCoordinator(groupMemberDTO.getIsCoordinator());
+		gm = new GroupMember();
+		gm.setIsCoordinator(false);
 		gm.setNotificationsEnabled(true);
 		Instant now = Instant.now();
 		gm.setCreationDateTime(LocalDateTime.ofInstant(now, ZoneOffset.UTC));
@@ -337,17 +355,51 @@ public class GroupController {
 		groupMemberDAO.makePersistent(gm);
 	}
 	
-	@RequestMapping(value = "/{idGroup}/delete-member", method = RequestMethod.POST)
+	@RequestMapping(value = "/{idGroup}/members/{idGroupMember}", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
-	public void deleteMember(@PathVariable("idGroup") Integer idGroup, @RequestBody GroupMemberDTO groupMemberDTO, Principal principal) {
+	public void deleteMember(@PathVariable("idGroup") Integer idGroup, @PathVariable("idGroupMember") Integer idGroupMember, Principal principal) {
 		GroupMember me = groupMemberDAO.findByGroupAndFabber(idGroup, principal.getName());
 		// action only allowed to coordinators
 		if (!me.getIsCoordinator()) {
 			return;
 		}
 		
-		GroupMember member = groupMemberDAO.findById(groupMemberDTO.getIdGroupMember());
+		GroupMember member = groupMemberDAO.findById(idGroupMember);
 		groupMemberDAO.makeTransient(member);
+	}
+	
+	@RequestMapping(value = "/{idGroup}/members/send-invitation-email", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+	public void sendInvitationEmail(@PathVariable("idGroup") Integer idGroup, @RequestBody FabberDTO fabberDTO) {
+		
+		Group g = groupDAO.findById(idGroup);
+		
+		emailService.sendHTMLMessage(fabberDTO.getEmail(),
+                "Invitation to join a Fab Lat group", 
+                "You have received an invitation to join the group " + g.getName() + ". <br />"
+                		+ "Join the Fab Lat platform on <a href=\"fablat.net\">fablat.net</a>.");
+	}
+	
+	@RequestMapping(value = "/{idGroup}/members/autocomplete/{searchText}", method = RequestMethod.GET)
+	public List<HashMap<String, Object>> searchAutocomplete(@PathVariable("idGroup") Integer idGroup, @PathVariable("searchText") String searchText) {
+		List<HashMap<String, Object>> models = new ArrayList<HashMap<String, Object>>();
+		
+		for (Fabber f : fabberDAO.findByTerm(searchText)) {
+			// do not include already members
+			if (groupMemberDAO.findByGroupAndFabber(idGroup, f.getIdFabber()) != null) {
+				continue;
+			}
+			HashMap<String, Object> model = new HashMap<String, Object>();
+			model.put("idFabber", f.getIdFabber());
+			model.put("email", f.getEmail());
+			model.put("firstName", f.getFirstName());
+			model.put("lastName", f.getLastName());
+			model.put("fullName", f.getFirstName() + " " + f.getLastName());
+			
+			models.add(model);
+		}
+		
+		return models;
 	}
 	
 	@RequestMapping(value = "/{idGroup}/name-coordinator", method = RequestMethod.POST)
@@ -379,8 +431,6 @@ public class GroupController {
 		groupDTO.setPhotoUrl(group.getPhotoUrl());
 		groupDTO.setCreationDateTime(DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(group.getCreationDateTime()));
 		
-		groupDTO.setMembersCount(group.getGroupMembers().size());
-		
 		return groupDTO;
 	}
 	
@@ -397,7 +447,6 @@ public class GroupController {
 		subGroupDTO.setIdSubGroup(subGroup.getIdSubGroup());
 		subGroupDTO.setName(subGroup.getName());
 		subGroupDTO.setDescription(subGroup.getDescription());
-		subGroupDTO.setMembersCount(subGroup.getSubGroupMembers().size());
 		
 		return subGroupDTO;
 	}
