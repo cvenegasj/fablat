@@ -699,7 +699,7 @@ app.controller('WorkshopOutCtrl', function($scope, $http, $stateParams) {
 /*========== Settings controllers ==========*/
 
 // Controller in: settings.profile.html
-app.controller('SettingsProfileCtrl', function($scope, $http, $stateParams, $state, $mdToast) {	
+app.controller('SettingsProfileCtrl', function($rootScope, $scope, $http, $stateParams, $state, $mdToast) {	
 	var self = this;
 	
 	$scope.newLab = false;
@@ -751,6 +751,43 @@ app.controller('SettingsProfileCtrl', function($scope, $http, $stateParams, $sta
 		        .position("bottom right")
 		        .hideDelay(1500)
 			);
+		});
+	};
+	
+	$scope.updateLabs = function() {
+		$rootScope.isLoading = true;
+		
+		$http.get('https://api.fablabs.io/v0/labs.json')
+		.then(function(response) {
+			// submit data
+			$http.post('/resource/auth/labs/update-all', {
+				labs: response.data.labs
+			}).then(function successCallback(response) {	
+				console.log("labs updated!");
+				$rootScope.isLoading = false;
+				
+				$mdToast.show(
+			      $mdToast.simple()
+			        .textContent('Labs info updated!')
+			        .position("bottom right")
+			        .hideDelay(1500)
+				);
+				// reload current state
+				$state.go($state.current, {}, {reload: true});	
+			}, function errorCallback(response) {
+				$rootScope.isLoading = false;
+				
+				$mdToast.show(
+			      $mdToast.simple()
+			        .textContent("Couldn't update labs info :(")
+			        .position("bottom right")
+			        .hideDelay(1500)
+				);
+			});
+		
+		}).finally(function() {
+		    // called no matter success or failure
+			
 		});
 	};
 	

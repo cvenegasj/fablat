@@ -1,5 +1,5 @@
 <div class="group-general-page md-padding" layout="column" flex ng-controller="GroupGeneralCtrl">
-	<div class="header" layout="column" layout-align="center center">
+	<div class="header" layout="column" layout-align="center start">
 		<div style="margin-bottom: 10px;">
 			<group-avatar group="group" avatar-w="65" avatar-h="65" avatar-font-size="26"></group-avatar>
 		</div>
@@ -17,7 +17,7 @@
 		<div ng-if="group.secondaryUrl"><md-icon md-svg-icon="web" class="icon-16"></md-icon>Secondary URL: <a href="{{ group.secondaryUrl }}" target="_blank" class="custom-anchor-1">{{ group.secondaryUrl }}</a></div>
 	</div>
 	<div class="members">
-		<div layout="row" layout-align="center center">
+		<div layout="row">
 			<h4>Members</h4>
 		</div>
 		<md-divider></md-divider>
@@ -32,7 +32,7 @@
 		</div>
 	</div>
 	<div class="subgroups">
-		<div layout="row" layout-align="center center">
+		<div layout="row">
 			<h4>Subgroups</h4>
 		</div>
 		<md-divider></md-divider>

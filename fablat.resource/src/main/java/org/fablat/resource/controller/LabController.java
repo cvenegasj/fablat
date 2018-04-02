@@ -2,6 +2,7 @@ package org.fablat.resource.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.fablat.resource.dto.LabDTO;
 import org.fablat.resource.dto.LabRequestWrapper;
@@ -10,18 +11,13 @@ import org.fablat.resource.entities.Location;
 import org.fablat.resource.model.dao.LabDAO;
 import org.fablat.resource.model.dao.LocationDAO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
 @RestController
 @RequestMapping("/auth/labs")
@@ -33,24 +29,11 @@ public class LabController {
 	private LocationDAO locationDAO;
 
 	// General method for fetching data of all labs
-	@RequestMapping(value = "/update-all", method = RequestMethod.GET)
-	public ResponseEntity<Void> updateAll() {
+	@RequestMapping(value = "/update-all", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.CREATED)
+	public void updateAll(@RequestBody Map<String, List<LabRequestWrapper>> labs) {
 		
-		RestTemplate restTemplate = new RestTemplate();
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
-		
-		HttpEntity<?> entity = new HttpEntity<>(headers);
-		
-		ResponseEntity<List<LabRequestWrapper>> labsResponse = restTemplate.exchange("https://api.fablabs.io/v0/labs.json", HttpMethod.GET, 
-				entity, new ParameterizedTypeReference<List<LabRequestWrapper>>() {});
-		
-		List<LabRequestWrapper> labs = labsResponse.getBody();
-		
-		System.out.println(labs);
-		
-		for (LabRequestWrapper item : labs) {
+		for (LabRequestWrapper item : labs.get("labs")) {
 			Lab lab = new Lab();
 			lab.setIdLab(item.getId());
 			lab.setName(item.getName());
@@ -72,8 +55,6 @@ public class LabController {
 			lab.setLocation(location);
 			labDAO.makePersistent(lab);
 		}
-
-		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 
 	
