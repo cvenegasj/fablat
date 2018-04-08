@@ -1202,6 +1202,8 @@ app.controller('GroupSettingsGeneralCtrl', function($scope, $http, $state, $mdTo
 	};
 	
 	$scope.uploadNewPicture = function(file) {
+		$rootScope.isLoading = true;
+		
 		Upload.upload({
             url: "https://api.cloudinary.com/v1_1/" + cloudinary.config().cloud_name + "/upload",
             data: {
@@ -1211,13 +1213,14 @@ app.controller('GroupSettingsGeneralCtrl', function($scope, $http, $state, $mdTo
         }).then(function(response) {
             //console.log('Success ' + response.config.data.file.name + ' uploaded. Response: ' + response.data);
             //console.log(response.data);
-            $scope.group.photoUrl = response.data.public_id + '.png';
+            //$scope.group.photoUrl = response.data.public_id + '.png';
             
             // update group
     		$http.put('/resource/auth/groups/' + $scope.group.idGroup + '/update-avatar', {
     			photoUrl: $scope.group.photoUrl
     		}).then(function successCallback(response) {	
     			console.log("URL set in model!");
+    			
     			$mdToast.show(
     		      $mdToast.simple()
     		        .textContent('Avatar updated!')
@@ -1250,6 +1253,7 @@ app.controller('GroupSettingsGeneralCtrl', function($scope, $http, $state, $mdTo
             console.log('progress: ' + progressPercentage + '%');
         });
 		
+		$rootScope.isLoading = false;
 	};
 	 
 });
