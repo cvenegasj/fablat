@@ -1113,7 +1113,7 @@ app.controller('GroupSubgroupsCtrl', function($scope, $http, $state, $mdDialog, 
 });
 
 // Controller in: group.settings.general.html
-app.controller('GroupSettingsGeneralCtrl', function($scope, $http, $state, $mdToast, $mdDialog, Upload, cloudinary) {
+app.controller('GroupSettingsGeneralCtrl', function($rootScope, $scope, $http, $state, $mdToast, $mdDialog, Upload, cloudinary) {
 	$scope._group = {};
 	$scope._group.name = $scope.group.name;
 	$scope._group.description = decodeURIComponent($scope.group.description);
