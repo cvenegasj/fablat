@@ -22,6 +22,9 @@ security:
       userInfoUri: http://fablat-auth-env-1.2hyhxb24pj.sa-east-1.elasticbeanstalk.com/uaa/user
 
 zuul:
+  host:
+    connect-timeout-millis: 10000
+    socket-timeout-millis: 60000
   routes:
     resource:
       path: /resource/**

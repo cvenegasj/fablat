@@ -1213,13 +1213,15 @@ app.controller('GroupSettingsGeneralCtrl', function($rootScope, $scope, $http, $
         }).then(function(response) {
             //console.log('Success ' + response.config.data.file.name + ' uploaded. Response: ' + response.data);
             //console.log(response.data);
-            //$scope.group.photoUrl = response.data.public_id + '.png';
+            $scope.group.photoUrl = response.data.public_id + '.png';
             
             // update group
     		$http.put('/resource/auth/groups/' + $scope.group.idGroup + '/update-avatar', {
     			photoUrl: $scope.group.photoUrl
     		}).then(function successCallback(response) {	
     			console.log("URL set in model!");
+    			
+    			$rootScope.isLoading = false;
     			
     			$mdToast.show(
     		      $mdToast.simple()
@@ -1231,6 +1233,8 @@ app.controller('GroupSettingsGeneralCtrl', function($rootScope, $scope, $http, $
     			// reload current state
     			$state.go($state.current, {}, {reload: true});
     		}, function errorCallback(response) {
+    			$rootScope.isLoading = false;
+    			
     			$mdToast.show(
     		      $mdToast.simple()
     		        .textContent('Something went wrong :(')
@@ -1242,6 +1246,9 @@ app.controller('GroupSettingsGeneralCtrl', function($rootScope, $scope, $http, $
         }, function(response) {
             console.log('Error status: ' + response.status);
             console.log(response);
+            
+            $rootScope.isLoading = false;
+            
             $mdToast.show(
   		      $mdToast.simple()
   		        .textContent('Something went wrong :(')
@@ -1252,8 +1259,7 @@ app.controller('GroupSettingsGeneralCtrl', function($rootScope, $scope, $http, $
             var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
             console.log('progress: ' + progressPercentage + '%');
         });
-		
-		$rootScope.isLoading = false;
+
 	};
 	 
 });
