@@ -203,7 +203,7 @@ public class SubGroupController {
 		SubGroup subGroup = subGroupDAO.findById(idSubGroup);
 		
 		SubGroupMember member = new SubGroupMember();
-		member.setIsCoordinator(subGroup.getSubGroupMembers().size() == 0 ? true : false);
+		member.setIsCoordinator(subGroupMemberDAO.findAllBySubGroup(subGroup.getIdSubGroup()).size() == 0 ? true : false);
 		member.setNotificationsEnabled(true);
 		// set creation datetime 
         Instant now = Instant.now();
@@ -244,14 +244,14 @@ public class SubGroupController {
 		SubGroup subGroup = subGroupDAO.findById(idSubGroup);
 		
 		// if the user was the last member, the subgroup disappears
-		if (subGroup.getSubGroupMembers().size() == 0) {
+		if (subGroupMemberDAO.findAllBySubGroup(subGroup.getIdSubGroup()).size() == 0) {
 			subGroupDAO.makeTransient(subGroup);
 			return;
 		}
 		
 		// if the user was the only coordinator, assign the oldest member as coordinator
-		if (!subGroup.getSubGroupMembers().stream().anyMatch(item -> item.getIsCoordinator())) {
-			SubGroupMember oldestMember = subGroup.getSubGroupMembers().stream().findFirst().get();
+		if (!subGroupMemberDAO.findAllBySubGroup(subGroup.getIdSubGroup()).stream().anyMatch(item -> item.getIsCoordinator())) {
+			SubGroupMember oldestMember = subGroupMemberDAO.findAllBySubGroup(subGroup.getIdSubGroup()).stream().findFirst().get();
 			oldestMember.setIsCoordinator(true);		
 			subGroupMemberDAO.makePersistent(oldestMember);		
 		}

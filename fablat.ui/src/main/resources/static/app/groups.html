@@ -3,7 +3,7 @@
     	<div class="md-toolbar-tools" >
 	    	<h2 flex md-truncate>Groups</h2>
 	    	<span flex></span>
-	    	<md-button class="md-raised" md-colors="{background: 'accent-600'}" ng-click="addGroup($event)">New group</md-button> 
+	    	<md-button class="md-raised md-accent" ng-click="addGroup($event)">New group</md-button> 
 	    	
 	    	<md-autocomplete id="autocomplete-groups" md-selected-item="selectedItem" md-search-text="searchText" md-items="item in getMatches(searchText)" 
 				md-item-text="item.name" md-clear-button="true" md-min-length="1" placeholder="Search group" md-menu-class="autocomplete-groups-template" flex="30">
@@ -24,7 +24,16 @@
 	<div layout="row" layout-align="none" layout-wrap style="margin: 35px 45px;">
 		<div flex-xs="100" flex-sm="50" flex-gt-sm="25" ng-repeat="item in groups">
 			<md-card class="custom-card-4" flex>
-				<img src="http://via.placeholder.com/350x200" class="md-card-image" alt="Group image">
+		        
+		        <img ng-if="!item.photoUrl" src="images/no-image.jpg" style="width: 100%; height: auto;" />
+		        
+				<cl-image ng-if="item.photoUrl" public-id="{{item.photoUrl}}">
+					<cl-transformation aspect-ratio="4:3" crop="fill" quality="auto">
+					</cl-transformation>
+					<cl-transformation width="auto" dpr="auto" crop="scale">
+  					</cl-transformation>
+				</cl-image>
+		        
 		        <div class="header">
 		        	<h3>
 		        		<a ui-sref="group.general({ idGroup: item.idGroup })" class="custom-anchor-2"><span class="title">{{ item.name }}</span></a>
@@ -46,123 +55,7 @@
 	     </div>
 	</div>
 	
-	
-	
-	
-	
-	
-	
-	<!--
-	<div style="padding-left: 10%; padding-right: 10%;" layout-xs="column" layout="row" flex>
-		<div flex layout="column" class="md-padding">
-			<md-card class="custom-card-4" md-theme="" ng-repeat="item in groups1">
-		    	<md-card-header md-colors="{background: 'lime-background-600'}" ng-if="!item.amIMember">
-		        	<md-card-header-text>
-			            <a ui-sref="group.general({ idGroup: item.idGroup })" class="custom-anchor-1"><span class="md-title font-16">{{ item.name }}</span></a>
-			            <span class="md-subhead font-12">{{ item.membersCount === 1 ? "1 member" : item.membersCount + " members" }}</span>
-		        	</md-card-header-text>
-		        	<md-button class="md-icon-button" aria-label="toggle" ng-init="item.showSubgroups = false;" ng-click="item.showSubgroups = !item.showSubgroups;">
-		            	<md-icon md-font-set="material-icons">{{ item.showSubgroups ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</md-icon>
-		            </md-button>      
-		            <button class="aux-button-1" ng-click="joinGroup(item.idGroup)" ng-if="!item.amIMember">Join</button>
-		        </md-card-header>
-		        <md-card-header md-colors="{background: 'lime-background-800'}" ng-if="item.amIMember">
-		        	<md-card-header-text>
-			            <a ui-sref="group.general({ idGroup: item.idGroup })" class="custom-anchor-1"><span class="md-title font-16">{{ item.name }}</span></a>
-			            <span class="md-subhead font-12">{{ item.membersCount === 1 ? "1 member" : item.membersCount + " members" }}</span>
-		        	</md-card-header-text>
-		        	<md-button class="md-icon-button" aria-label="toggle" ng-init="item.showSubgroups = false;" ng-click="item.showSubgroups = !item.showSubgroups;">
-		            	<md-icon md-font-set="material-icons">{{ item.showSubgroups ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</md-icon>
-		            </md-button>      
-		            <button class="aux-button-1" ng-click="joinGroup(item.idGroup)" ng-if="!item.amIMember">Join</button>
-		        </md-card-header>
-		        <md-card-content ng-show="item.showSubgroups">
-		        	<div ng-if="item.subGroups.length === 0" class="centered no-data-2">No subgroups created yet.</div>
-		        	<md-list class="md-dense" flex style="padding: 0;">
-		        		<md-list-item class="md-2-line" ng-repeat="subItem in item.subGroups">					    
-				          <div class="md-list-item-text" style="margin: 0;">
-				            <a ui-sref="subgroup.general({ idSubgroup: subItem.idSubGroup })" class="custom-anchor-1"><h3 class="font-13">{{ subItem.name }}</h3></a>
-				            <p class="font-12" style="font-weight: 400;">{{ subItem.membersCount === 1 ? "1 member" : subItem.membersCount + " members" }}</p>
-				          </div>
-				        </md-list-item>    
-		        	</md-list>
-		        </md-card-content>
-		     </md-card>    
-		</div>
-		<div flex layout="column" class="md-padding">
-			<md-card class="custom-card-4" md-theme="" ng-repeat="item in groups2">
-		    	<md-card-header md-colors="{background: 'lime-background-600'}" ng-if="!item.amIMember">
-		        	<md-card-header-text>
-			            <a ui-sref="group.general({ idGroup: item.idGroup })" class="custom-anchor-1"><span class="md-title font-16">{{ item.name }}</span></a>
-			            <span class="md-subhead font-12">{{ item.membersCount === 1 ? "1 member" : item.membersCount + " members" }}</span>
-		        	</md-card-header-text>
-		        	<md-button class="md-icon-button" aria-label="toggle" ng-init="item.showSubgroups = false;" ng-click="item.showSubgroups = !item.showSubgroups;">
-		            	<md-icon md-font-set="material-icons">{{ item.showSubgroups ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</md-icon>
-		            </md-button>      
-		            <button class="aux-button-1" ng-click="joinGroup(item.idGroup)" ng-if="!item.amIMember">Join</button>
-		        </md-card-header>
-		        <md-card-header md-colors="{background: 'lime-background-800'}" ng-if="item.amIMember">
-		        	<md-card-header-text>
-			            <a ui-sref="group.general({ idGroup: item.idGroup })" class="custom-anchor-1"><span class="md-title font-16">{{ item.name }}</span></a>
-			            <span class="md-subhead font-12">{{ item.membersCount === 1 ? "1 member" : item.membersCount + " members" }}</span>
-		        	</md-card-header-text>
-		        	<md-button class="md-icon-button" aria-label="toggle" ng-init="item.showSubgroups = false;" ng-click="item.showSubgroups = !item.showSubgroups;">
-		            	<md-icon md-font-set="material-icons">{{ item.showSubgroups? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</md-icon>
-		            </md-button>      
-		            <button class="aux-button-1" ng-click="joinGroup(item.idGroup)" ng-if="!item.amIMember">Join</button>
-		        </md-card-header>
-		        <md-card-content ng-show="item.showSubgroups">
-		        	<div ng-if="item.subGroups.length === 0" class="centered no-data-2">No subgroups created yet</div>
-		        	<md-list class="md-dense" flex style="padding: 0;">
-		        		<md-list-item class="md-2-line" ng-repeat="subItem in item.subGroups">					    
-				          <div class="md-list-item-text" style="margin: 0;">
-				            <a ui-sref="subgroup.general({ idSubgroup: subItem.idSubGroup })" class="custom-anchor-1"><h3 class="font-13">{{ subItem.name }}</h3></a>
-				            <p class="font-12" style="font-weight: 400;">{{ subItem.membersCount === 1 ? "1 member" : subItem.membersCount + " members" }}</p>
-				          </div>
-				        </md-list-item>    
-		        	</md-list>
-		        </md-card-content>
-		     </md-card>
-		</div>
-		<div flex layout="column" class="md-padding">
-			<md-card class="custom-card-4" md-theme="" ng-repeat="item in groups3">
-		    	<md-card-header md-colors="{background: 'lime-background-600'}" ng-if="!item.amIMember">
-		        	<md-card-header-text>
-			            <a ui-sref="group.general({ idGroup: item.idGroup })" class="custom-anchor-1"><span class="md-title font-16">{{ item.name }}</span></a>
-			            <span class="md-subhead font-12">{{ item.membersCount === 1 ? "1 member" : item.membersCount + " members" }}</span>
-		        	</md-card-header-text>
-		        	<md-button class="md-icon-button" aria-label="toggle" ng-init="item.showSubgroups = false;" ng-click="item.showSubgroups = !item.showSubgroups;">
-		            	<md-icon md-font-set="material-icons">{{ item.showSubgroups? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</md-icon>
-		            </md-button>      
-		            <button class="aux-button-1" ng-click="joinGroup(item.idGroup)" ng-if="!item.amIMember">Join</button>
-		        </md-card-header>
-		        <md-card-header md-colors="{background: 'lime-background-800'}" ng-if="item.amIMember">
-		        	<md-card-header-text>
-			            <a ui-sref="group.general({ idGroup: item.idGroup })" class="custom-anchor-1"><span class="md-title font-16">{{ item.name }}</span></a>
-			            <span class="md-subhead font-12">{{ item.membersCount === 1 ? "1 member" : item.membersCount + " members" }}</span>
-		        	</md-card-header-text>
-		        	<md-button class="md-icon-button" aria-label="toggle" ng-init="item.showSubgroups = false;" ng-click="item.showSubgroups = !item.showSubgroups;">
-		            	<md-icon md-font-set="material-icons">{{ item.showSubgroups? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</md-icon>
-		            </md-button>      
-		            <button class="aux-button-1" ng-click="joinGroup(item.idGroup)" ng-if="!item.amIMember">Join</button>
-		        </md-card-header>
-		        <md-card-content ng-show="item.showSubgroups">
-		        	<div ng-if="item.subGroups.length === 0" class="centered no-data-2">No subgroups created yet</div>
-		        	<md-list class="md-dense" flex style="padding: 0;">
-		        		<md-list-item class="md-2-line" ng-repeat="subItem in item.subGroups">					    
-				          <div class="md-list-item-text" style="margin: 0;">
-				            <a ui-sref="subgroup.general({ idSubgroup: subItem.idSubGroup })" class="custom-anchor-1"><h3 class="font-13">{{ subItem.name }}</h3></a>
-				            <p class="font-12" style="font-weight: 400;">{{ subItem.membersCount === 1 ? "1 member" : subItem.membersCount + " members" }}</p>
-				          </div>
-				        </md-list-item>    
-		        	</md-list>
-		        </md-card-content>
-		     </md-card>	
-		</div>
-	</div> -->
-	<!-- **** Cards containder **** -->
-	
-	<md-button class="md-fab md-fab-bottom-right" style="position: fixed !important;" aria-label="Add" ng-click="addGroup($event)">
+	<md-button class="md-fab md-fab-bottom-right md-accent" style="position: fixed !important;" aria-label="Add" ng-click="addGroup($event)">
 		<md-tooltip md-direction="left" md-visible="tooltipVisible">Create a group</md-tooltip>
     	<md-icon md-font-set="material-icons" aria-label="Add">add</md-icon>
     </md-button>

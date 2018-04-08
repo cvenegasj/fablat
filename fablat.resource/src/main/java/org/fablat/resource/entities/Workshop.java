@@ -187,7 +187,7 @@ public class Workshop implements java.io.Serializable {
 		this.subGroup = subGroup;
 	}
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "workshop")
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "workshop")
 	@Fetch(FetchMode.JOIN)
 	public Set<WorkshopTutor> getWorkshopTutors() {
 		return workshopTutors;

@@ -259,6 +259,16 @@ public class GroupController {
 		groupDAO.makePersistent(group);
     }
 	
+	@RequestMapping(value = "/{idGroup}/update-avatar", method = RequestMethod.PUT)
+    @ResponseStatus(HttpStatus.OK)
+    public void updateAvatar(@PathVariable("idGroup") Integer idGroup, @RequestBody GroupDTO groupDTO) {
+		Group group = groupDAO.findById(idGroup);
+		group.setPhotoUrl(groupDTO.getPhotoUrl());
+		System.out.println("PHOTO URL: " + groupDTO.getPhotoUrl());
+		
+		groupDAO.makePersistent(group);
+    }
+	
 	@RequestMapping(value = "/{idGroup}", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
 	public void delete(@PathVariable("idGroup") Integer idGroup) {
@@ -276,7 +286,7 @@ public class GroupController {
 		Group group = groupDAO.findById(idGroup);
 		
 		GroupMember member = new GroupMember();
-		member.setIsCoordinator(group.getGroupMembers().size() == 0 ? true : false);
+		member.setIsCoordinator(groupDAO.getMembersCount(group.getIdGroup()) == 0 ? true : false);
 		member.setNotificationsEnabled(true);
 		// set creation datetime 
         Instant now = Instant.now();
@@ -305,14 +315,14 @@ public class GroupController {
 		Group group = groupDAO.findById(idGroup);
 		
 		// if the user was the last member, the group disappears
-		if (group.getGroupMembers().size() == 0) {
+		if (groupDAO.getMembersCount(group.getIdGroup()) == 0) {
 			groupDAO.makeTransient(group);
 			return;
 		}
 		
 		// if the user was the only coordinator, assign the oldest member as coordinator
-		if (!group.getGroupMembers().stream().anyMatch(item -> item.getIsCoordinator())) {
-			GroupMember oldestMember = group.getGroupMembers().stream().findFirst().get();
+		if (!groupMemberDAO.findAllByGroup(idGroup).stream().anyMatch(item -> item.getIsCoordinator())) {
+			GroupMember oldestMember = groupMemberDAO.findAllByGroup(idGroup).stream().findFirst().get();
 			oldestMember.setIsCoordinator(true);		
 			groupMemberDAO.makePersistent(oldestMember);		
 		}

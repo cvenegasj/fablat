@@ -1,6 +1,10 @@
 @import "https://fonts.googleapis.com/css?family=Material+Icons";
 @import "https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic";
 
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}
+
 html {
 	text-rendering: optimizeLegibility;
 }
@@ -436,6 +440,11 @@ md-list.list-activities md-list-item.md-2-line::before {
 	margin: 0 !important;
 }
 
+.custom-card-4 .md-card-image {
+	width: 100%;
+	height: auto;
+}
+
 /***********/
 
 /* group.html */
@@ -579,7 +588,7 @@ div.group-general-page div.subgroups {
 }
 
 div.group-general-page div.header h3 {
-	margin: 0 0 10px 0;
+	margin: 0;
 	font-size: 40px;
 	line-height: 45px;
 	font-weight: 400;
@@ -908,6 +917,15 @@ div.workshop-list-2 .list-item .hour {
 	margin: 0 auto;
 }
 
+.avatar-squared {
+	display: block;
+	width: 100%;
+	height: 100%;
+	background: transparent;
+	border-radius: 5px;
+	margin: 0 auto;
+}
+
 .name {
 	display: block;
 	width: 100%;
@@ -924,10 +942,12 @@ div.workshop-list-2 .list-item .hour {
 }
 
 .img-avatar {
-	top: 1px;
-	background-size: contain;
-	border-radius: 100%;
-	position: absolute;
+}
+
+.img-avatar img {
+	border-radius: 5px;
+	display: block;
+	margin: 0 auto;
 }
 
 .menu-custom-1 {

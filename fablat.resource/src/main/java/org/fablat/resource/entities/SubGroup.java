@@ -19,6 +19,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 @SuppressWarnings("serial")
 @Entity
 @Table(name = "SubGroup")
@@ -155,8 +158,8 @@ public class SubGroup implements java.io.Serializable {
 		this.subGroupMembers = subGroupMembers;
 	}
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "subGroup")
-	//@Fetch(FetchMode.JOIN)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "subGroup")
+	@Fetch(FetchMode.JOIN)
 	@OrderBy("date(startDateTime) asc")
 	public Set<Workshop> getWorkshops() {
 		return workshops;
@@ -166,8 +169,8 @@ public class SubGroup implements java.io.Serializable {
 		this.workshops = workshops;
 	}
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "subGroup")
-	//@Fetch(FetchMode.JOIN)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "subGroup")
+	@Fetch(FetchMode.JOIN)
 	public Set<ActivityLog> getActivities() {
 		return activities;
 	}

@@ -1,4 +1,4 @@
-var app = angular.module('FabLatApp', [ 'ui.router', 'ngMaterial', 'ngMessages', 'angularMoment', 'vsGoogleAutocomplete' ]);
+var app = angular.module('FabLatApp', [ 'ui.router', 'ngMaterial', 'ngMessages', 'angularMoment', 'vsGoogleAutocomplete', 'ngFileUpload', 'cloudinary' ]);
 
 app.config(function($mdThemingProvider, $mdIconProvider, $urlRouterProvider, $stateProvider) {
 
@@ -9,11 +9,11 @@ app.config(function($mdThemingProvider, $mdIconProvider, $urlRouterProvider, $st
 			'hue-2': '700',
 			'hue-3': '800' 
 		})
-		.accentPalette('light-blue', {
+		.accentPalette('pink', {
 			'default': '500',
 			'hue-1': '300', 
-			'hue-2': '700',
-			'hue-3': '900' 
+			'hue-2': '600',
+			'hue-3': '800' 
 		})
 		.warnPalette('deep-orange', { 
 			
@@ -29,7 +29,9 @@ app.config(function($mdThemingProvider, $mdIconProvider, $urlRouterProvider, $st
 	
 	// Dark palettes
 	$mdThemingProvider.theme('darkRed').backgroundPalette('red').dark();
-	$mdThemingProvider.theme('darkPink').backgroundPalette('pink').dark();
+	$mdThemingProvider.theme('darkPink').backgroundPalette('pink', { 
+		'default': '500', 
+		'hue-1': '500' }).dark();
 	$mdThemingProvider.theme('darkPurple').backgroundPalette('purple').dark();
 	$mdThemingProvider.theme('darkDeepPurple').backgroundPalette('deep-purple').dark();
 	$mdThemingProvider.theme('darkIndigo').backgroundPalette('indigo').dark();
@@ -180,13 +182,13 @@ app.config(function($mdThemingProvider, $mdIconProvider, $urlRouterProvider, $st
         	group: function($http, $stateParams, $rootScope) {
         		return $http.get('/resource/auth/groups/' + $stateParams.idGroup)
             		.then(function(response) {
+            			$rootScope.isLoading = false;
             			return response.data;
             		});
         	}
         },
-        controller: function($scope, group, $rootScope){
+        controller: function($scope, group){
             $scope.group = group;
-            $rootScope.isLoading = false;
         }
     });
     
@@ -272,16 +274,16 @@ app.config(function($mdThemingProvider, $mdIconProvider, $urlRouterProvider, $st
         		});
         		return deferred.promise;
         	},
-        	subgroup: function($http, $stateParams) {	
+        	subgroup: function($http, $stateParams, $rootScope) {	
         		return $http.get('/resource/auth/subgroups/' + $stateParams.idSubgroup)
             		.then(function(response) {
+            			$rootScope.isLoading = false;
             			return response.data;
             		});
         	}
         },
-        controller: function($scope, subgroup, $rootScope){
+        controller: function($scope, subgroup){
             $scope.subgroup = subgroup;
-            $rootScope.isLoading = false;
         }
     });
     
@@ -424,6 +426,23 @@ app.config(function($mdThemingProvider, $mdIconProvider, $urlRouterProvider, $st
     });
     
 });
+
+app.config(['cloudinaryProvider', function (cloudinaryProvider) {
+	cloudinaryProvider
+		.set("cloud_name", "dymje6shc")
+		.set("secure", true)
+		.set("upload_preset", "u6pnku96");
+}]);
+
+app.config(function($sceDelegateProvider) {
+	$sceDelegateProvider.resourceUrlWhitelist([
+	 // Allow same origin resource loads.
+     'self',
+     // Allow loading from our assets domain.  Notice the difference between * and **.
+     'http://res.cloudinary.com/**'
+   ]);
+ });
+
 
 // General controller, runs on top of everything
 app.controller('AppCtrl', ['$rootScope', '$http', '$state', '$location', '$window', '$scope', '$mdSidenav', '$mdDialog', function($rootScope, $http, $state, $location, $window, $scope, $mdSidenav, $mdDialog) { 
@@ -642,7 +661,9 @@ app.controller('WorkshopsCtrl', function($rootScope, $scope, $http) {
 });
 
 // Controller in: group-out.html
-app.controller('GroupOutCtrl', function($scope, $http, $state, $stateParams) {
+app.controller('GroupOutCtrl', function($rootScope, $scope, $http, $state, $stateParams) {
+	
+	$rootScope.isLoading = true;
 	
 	// Injects the group object in the parent scope
 	$http.get('/resource/auth/groups/' + $stateParams.idGroup)
@@ -650,6 +671,7 @@ app.controller('GroupOutCtrl', function($scope, $http, $state, $stateParams) {
 			$scope.group = response.data;
 		}).finally(function() {
 		    // called no matter success or failure
+			$rootScope.isLoading = false;
 		});
 	
 	$scope.joinGroup = function(idGroup) {
@@ -662,7 +684,9 @@ app.controller('GroupOutCtrl', function($scope, $http, $state, $stateParams) {
 });
 
 // Controller in: subgroup-out.html
-app.controller('SubgroupOutCtrl', function($scope, $http, $state, $stateParams) {
+app.controller('SubgroupOutCtrl', function($rootScope, $scope, $http, $state, $stateParams) {
+	
+	$rootScope.isLoading = true;
 	
 	// Injects the subgroup object in the parent scope
 	$http.get('/resource/auth/subgroups/' + $stateParams.idSubgroup)
@@ -671,6 +695,7 @@ app.controller('SubgroupOutCtrl', function($scope, $http, $state, $stateParams) 
 			$scope.subgroup.description = decodeURIComponent($scope.subgroup.description);
 		}).finally(function() {
 		    // called no matter success or failure
+			$rootScope.isLoading = false;
 		});
 	
 	$scope.joinSubgroup = function(idSubGroup) {
@@ -1088,8 +1113,7 @@ app.controller('GroupSubgroupsCtrl', function($scope, $http, $state, $mdDialog, 
 });
 
 // Controller in: group.settings.general.html
-app.controller('GroupSettingsGeneralCtrl', function($scope, $http, $state, $mdToast, $mdDialog) {
-
+app.controller('GroupSettingsGeneralCtrl', function($scope, $http, $state, $mdToast, $mdDialog, Upload, cloudinary) {
 	$scope._group = {};
 	$scope._group.name = $scope.group.name;
 	$scope._group.description = decodeURIComponent($scope.group.description);
@@ -1175,6 +1199,57 @@ app.controller('GroupSettingsGeneralCtrl', function($scope, $http, $state, $mdTo
 	    }, function() {
 	      
 	    });
+	};
+	
+	$scope.uploadNewPicture = function(file) {
+		Upload.upload({
+            url: "https://api.cloudinary.com/v1_1/" + cloudinary.config().cloud_name + "/upload",
+            data: {
+            	upload_preset: cloudinary.config().upload_preset,
+            	file: file
+            }
+        }).then(function(response) {
+            //console.log('Success ' + response.config.data.file.name + ' uploaded. Response: ' + response.data);
+            //console.log(response.data);
+            $scope.group.photoUrl = response.data.public_id + '.png';
+            
+            // update group
+    		$http.put('/resource/auth/groups/' + $scope.group.idGroup + '/update-avatar', {
+    			photoUrl: $scope.group.photoUrl
+    		}).then(function successCallback(response) {	
+    			console.log("URL set in model!");
+    			$mdToast.show(
+    		      $mdToast.simple()
+    		        .textContent('Avatar updated!')
+    		        .position("bottom right")
+    		        .hideDelay(1500)
+    			);
+    			
+    			// reload current state
+    			$state.go($state.current, {}, {reload: true});
+    		}, function errorCallback(response) {
+    			$mdToast.show(
+    		      $mdToast.simple()
+    		        .textContent('Something went wrong :(')
+    		        .position("bottom right")
+    		        .hideDelay(1500)
+    			);
+    		});
+            
+        }, function(response) {
+            console.log('Error status: ' + response.status);
+            console.log(response);
+            $mdToast.show(
+  		      $mdToast.simple()
+  		        .textContent('Something went wrong :(')
+  		        .position("bottom right")
+  		        .hideDelay(1500)
+  			);
+        }, function(evt) {
+            var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+            console.log('progress: ' + progressPercentage + '%');
+        });
+		
 	};
 	 
 });
@@ -1934,15 +2009,21 @@ app.directive('userAvatar', ["avatarService", function (avatarService) {
 });
 
 // Group avatar
-app.directive('groupAvatar', ["groupAvatarService", function (groupAvatarService) {
+app.directive('groupAvatar', ["groupAvatarService", "$sce", function (groupAvatarService, $sce) {
 	var controller = function ($scope) {		
 		$scope.$watch("mGroup", function(newValue, oldValue, scope) {
 			if (newValue) {
 				$scope.imageAvailable = false;
-				if (!$scope.mGroup.avatar) {
+				if (!$scope.mGroup.photoUrl) {
 					$scope.genericAvatar = groupAvatarService.getAvatar($scope.mGroup);
 				} else {
 					$scope.imageAvailable = true;
+					// create url with fit parameters
+					//var fileName = $scope.mGroup.photoUrl.split("/").pop();				
+					//var url = "http://res.cloudinary.com/dymje6shc/image/upload/w_220,h_165,c_fit/" + fileName;
+					
+					//$scope.mGroup.photoUrlWithParameters = url;
+					//console.log($scope.mGroup.photoUrlWithParameters);
 				}	
 			}
         });
@@ -1955,11 +2036,13 @@ app.directive('groupAvatar', ["groupAvatarService", function (groupAvatarService
 			avatarHeight: '@avatarH',
 			avatarFontSize: '@avatarFontSize'
 		},
-		template: '<div class="generic-avatar" style="width: {{avatarWidth}}px; height: {{avatarHeight}}px;">' +
-			'<div class="avatar-circle" style="background-color: {{genericAvatar.background}};"></div>' +
-			'<span class="name" style="font-size: {{avatarFontSize}}px;">{{genericAvatar.initials}}</span>' +
-			'<div class="img-avatar" data-ng-if="imageAvailable" style="background-image:url({{mFabber.avatar}})"></div>' +
-			'</div>',
+		template: '<div ng-if="!imageAvailable" class="generic-avatar" style="width: {{avatarWidth}}px; height: {{avatarHeight}}px;">' +
+				  	'<div class="avatar-squared" style="background-color: {{genericAvatar.background}};"></div>' +
+				  	'<span class="name" style="font-size: {{avatarFontSize}}px;">{{genericAvatar.initials}}</span>' +
+				  '</div>' +
+				  '<div ng-if="imageAvailable" class="img-avatar">' +
+				  	'<img ng-src="http://res.cloudinary.com/dymje6shc/image/upload/w_220,h_165,c_fit/{{mGroup.photoUrl}}" />' +
+				  '</div>',
 		controller: controller
 	};
 }])
